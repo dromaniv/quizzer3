@@ -513,10 +513,8 @@ function startDrag(e) {
     e.preventDefault();
   }
 
-  // Don't initiate drag if the target is the close button or a child of the close button
-  if (e.target === closeVideo || closeVideo.contains(e.target)) {
-    return;
-  }
+  // Only handle drag on the container itself, not on the close button
+  if (e.target === closeVideo) return;
 
   isDragging = true;
 
@@ -619,6 +617,31 @@ parkourBtn.addEventListener('click', () => {
 
 // Hide video when close button is clicked
 closeVideo.addEventListener('click', () => {
+  // Animate container back to button
+  videoContainer.classList.remove('active');
+
+  // After animation completes, hide container and show button
+  setTimeout(() => {
+    videoContainer.style.display = 'none';
+    parkourVideo.src = ''; // Clear iframe source to stop video
+    parkourBtn.style.display = 'flex';
+
+    // Fade in button
+    setTimeout(() => {
+      parkourBtn.style.opacity = '1';
+    }, 10);
+  }, 300);
+});
+
+// Add specific touch event for mobile devices
+closeVideo.addEventListener('touchstart', (e) => {
+  e.stopPropagation(); // Prevent the container's touchstart from capturing this event
+});
+
+closeVideo.addEventListener('touchend', (e) => {
+  e.preventDefault(); // Prevent default behavior
+  e.stopPropagation(); // Prevent the event from bubbling up
+
   // Animate container back to button
   videoContainer.classList.remove('active');
 
