@@ -167,7 +167,7 @@ while not stop:
 
 ---
 
-### 3.1 Maintaining Diversity and Niching  
+### 13.1 Maintaining Diversity and Niching  
 
 | Goal | Key ideas | Typical knobs |
 |------|-----------|---------------|
@@ -178,7 +178,7 @@ while not stop:
 
 ---
 
-### 3.2 Coevolutionary Algorithms  
+### 13.2 Coevolutionary Algorithms  
 
 | Flavour | How it works | Typical pitfalls / fixes |
 |---------|--------------|--------------------------|
@@ -188,7 +188,7 @@ while not stop:
 
 ---
 
-### 3.3 Nature-Inspired Mechanisms inside Evolutionary Algorithms  
+### 13.3 Nature-Inspired Mechanisms inside Evolutionary Algorithms  
 
 * **Diploidy & dominance** – storing several chromosomes per individual acts as a latent memory that lets the EA respond faster to changing environments
 * **Gene duplication, pleiotropy & redundancy** – introduce extra copies of genes, allow one gene to affect many traits, or let a trait depend on many genes; useful when modelling complex genotype–phenotype maps
@@ -196,20 +196,20 @@ while not stop:
 
 ---
 
-### 3.4 Hybrid / Memetic Approaches  
+### 13.4 Hybrid / Memetic Approaches  
 
 
 ---
 
-### 3.5 Beyond Classical EA: Modern Hybrids & Representations  
+### 13.5 Beyond Classical EA: Modern Hybrids & Representations  
 
 * **CMA-ES & Differential Evolution** – state-of-the-art real-valued optimisers that self-adapt covariance (CMA-ES) or use differential mutation vectors (DE) for robust, rotation-invariant search   
-* **Genetic Programming (tree & linear forms)** – evolves executable program trees; well-suited for symbolic regression, controller synthesis and automatic algorithm design  [oai_citation:9‡Biologically Inspired Algorithms 3.pdf](file-service://file-K6yi1gcecjZCs9yF6disVJ)  
-* **Regularised evolution for Neural Architecture Search (NAS)** – applies age-based removal (aging) and simple mutations to discover CNN topologies; combines diploidy-style diversity with deep-learning objectives  [oai_citation:10‡Biologically Inspired Algorithms 4.pdf](file-service://file-G6ZrKwgJrkBbNNXo4Whuxs)  
+* **Genetic Programming (tree & linear forms)** – evolves executable program trees; well-suited for symbolic regression, controller synthesis and automatic algorithm design
+* **Regularised evolution for Neural Architecture Search (NAS)** – applies age-based removal (aging) and simple mutations to discover CNN topologies; combines diploidy-style diversity with deep-learning objectives
 
 ---
 
-### 3.6 Open Research Directions  
+### 13.6 Open Research Directions  
 
 * **Quality-diversity in high-dimensional descriptor spaces** (scalable MAP-Elites)  
 * **Coevolutionary curriculum learning** for reinforcement-learning agents  
