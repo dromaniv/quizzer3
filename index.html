@@ -17,6 +17,7 @@
   --border:#d1d5db;
   --green:#16a34a;      --red:#dc2626;
   --radius:.75rem;      --shadow:0 4px 14px rgb(0 0 0/.06);
+  --transition-speed: 0.3s; /* Added transition speed variable */
 }
 /* dark */
 html.dark{
@@ -104,6 +105,16 @@ textarea{
 /* notes */
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
 
+/* collapsible animation */
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-speed) ease;
+}
+.collapsible.expanded {
+  max-height: 1000px; /* Large enough to fit any content */
+}
+
 /* floating selection btn */
 #selAsk{position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;background:var(--brand);color:#fff;border:0;border-radius:var(--radius);font-weight:600;box-shadow:var(--shadow)}
 @media(max-width:600px){.card{height:200px}.btn{flex:1}}
@@ -152,7 +163,7 @@ textarea{
       <p id="waQ" style="font-weight:600"></p>
       <textarea id="waInput" placeholder="Your answer…"></textarea>
       <button id="waToggle" class="btn fill">Show model answer</button>
-      <div id="waA" style="font-weight:600;display:none"></div>
+      <div id="waA" class="collapsible" style="font-weight:600;padding-top:1rem;"></div>
       <div class="row"><button id="waPrev" class="btn neutral">Prev</button><button id="waNext" class="btn fill">Next</button></div>
       <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
@@ -231,12 +242,34 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
 (async()=>{
  const arr=(await dataPromise).writtenAnswer;shuffle(arr);let i=0;
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
- const render=()=>{q.textContent=arr[i].q;aBox.style.display='none';tBtn.textContent='Show model answer'};
+
+ const render=()=>{
+   q.textContent=arr[i].q;
+   aBox.textContent = '';
+   aBox.classList.remove('expanded');
+   tBtn.textContent='Show model answer';
+ };
+
  render();
- tBtn.onclick=()=>{const vis=aBox.style.display==='none';aBox.textContent=arr[i].a;aBox.style.display=vis?'block':'none';tBtn.textContent=vis?'Hide answer':'Show model answer'};
+
+ tBtn.onclick=()=>{
+   const isExpanded = aBox.classList.contains('expanded');
+
+   if(!isExpanded) {
+     // Set content before expanding
+     aBox.textContent = arr[i].a;
+   }
+
+   // Toggle expanded class for animation
+   aBox.classList.toggle('expanded');
+
+   // Update button text
+   tBtn.textContent = isExpanded ? 'Show model answer' : 'Hide answer';
+ };
+
  $('#waPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
  $('#waNext').onclick=()=>{i=(i+1)%arr.length;render()};
- $('#waAsk').onclick=()=>ask(`I’m studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"`);
+ $('#waAsk').onclick=()=>ask(`I'm studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"`);
 })();
 
 /* TRUE/FALSE */
