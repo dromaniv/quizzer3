@@ -14,8 +14,6 @@
       --bg: #f0f4f8;
       --card: #fff;
       --txt: #333;
-      --button-bg: #f9f9f9;
-      --button-text: #333;
       --button-border: #ccc;
       --radius: 8px;
       --shadow: rgba(0,0,0,0.1);
@@ -24,9 +22,11 @@
       --bg: #121212;
       --card: #1e1e1e;
       --txt: #eee;
-      --button-bg: #2a2a2a;
-      --button-text: #eee;
       --button-border: #555;
+    }
+    body.notes-mode main {
+      max-width: none;
+      width: 100%;
     }
     * { box-sizing: border-box; margin:0; padding:0; }
     body {
@@ -60,6 +60,7 @@
     }
     main {
       flex: 1; padding: 2rem; max-width: 800px; margin: auto; width: 100%;
+      transition: max-width 0.3s;
     }
     .mode-section { display: none; }
     .mode-section.active { display: block; }
@@ -87,31 +88,37 @@
       background: var(--brand); color: #fff; cursor: pointer;
     }
 
-    /* Quiz / TrueFalse buttons */
-    .quiz-item {
-      margin-bottom: 1.5rem; padding: 1rem;
-      background: var(--card); border-radius: var(--radius);
+    /* Multiple Choice & True/False */
+    .quiz-item,
+    .tf-container button {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--card);
+      border-radius: var(--radius);
       box-shadow: 0 2px 4px var(--shadow);
     }
     .quiz-item p { margin-bottom: 0.75rem; }
     .quiz-item button,
     .tf-container button {
-      width: 100%; margin: 0.25rem 0; padding: 0.5rem;
+      width: 100%; margin: 0.25rem 0; padding: 0.75rem;
       border: 1px solid var(--button-border); border-radius: var(--radius);
-      background: var(--button-bg); color: var(--button-text);
+      background: var(--card); color: var(--txt);
       cursor: pointer; transition: background 0.3s, border-color 0.3s;
+      text-align: center;
     }
     .quiz-item button.correct { border-color: #4caf50; background: #e8f5e9; }
     .quiz-item button.wrong   { border-color: #f44336; background: #ffebee; }
     #quiz-score { text-align: center; font-weight: bold; margin-top: 1rem; }
 
     /* Written Answer */
-    .wa-container, .tf-container {
+    .wa-container,
+    .tf-container {
       display: flex; flex-direction: column; gap: 1rem; align-items: center;
     }
     .wa-container textarea {
-      width: 100%; min-height: 80px; padding: 0.5rem; border: 1px solid var(--button-border);
-      border-radius: var(--radius); font-size: 1rem; resize: vertical;
+      width: 100%; min-height: 80px; padding: 0.75rem;
+      border: 1px solid var(--button-border); border-radius: var(--radius);
+      font-size: 1rem; resize: vertical;
       background: var(--card); color: var(--txt);
     }
     .wa-container button {
@@ -125,19 +132,22 @@
 
     /* Notes */
     #notes-container {
-      background: var(--card); padding: 1rem; border-radius: var(--radius);
-      box-shadow: 0 2px 4px var(--shadow); line-height: 1.6;
+      background: var(--card); padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 4px var(--shadow);
+      line-height: 1.6;
+      max-width: none;
     }
 
     /* Mobile tweaks */
     @media (max-width: 600px) {
       main { padding: 1rem; }
       nav button { font-size: 0.9rem; padding: 0.6rem; }
-      .quiz-item { padding: 0.75rem; }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Biologically-Inspired Algorithms &amp; Models</h1>
     <button id="dark-toggle" aria-label="Toggle Dark Mode">🌙</button>
@@ -174,7 +184,7 @@
       <div class="wa-container">
         <p id="wa-q"></p>
         <textarea id="wa-input" placeholder="Type your answer..."></textarea>
-        <button id="wa-check">Check Answer</button>
+        <button id="wa-check">Show Answer</button>
         <div id="wa-feedback" class="feedback"></div>
         <button id="wa-next" class="next-btn">Next Question</button>
       </div>
@@ -183,10 +193,8 @@
     <section id="truefalse" class="mode-section">
       <div class="tf-container">
         <p id="tf-q"></p>
-        <div>
-          <button data-val="true">True</button>
-          <button data-val="false">False</button>
-        </div>
+        <button data-val="true">True</button>
+        <button data-val="false">False</button>
         <div id="tf-feedback" class="feedback"></div>
         <button id="tf-next" class="next-btn">Next Question</button>
       </div>
@@ -231,13 +239,15 @@
       localStorage.setItem('darkMode', on ? 'enabled' : 'disabled');
     };
 
-    // nav
+    // navigation & notes-mode toggle
     document.querySelectorAll('nav button').forEach(b => {
       b.onclick = () => {
         document.querySelectorAll('nav button').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         document.querySelectorAll('.mode-section').forEach(s => s.classList.remove('active'));
         document.getElementById(b.dataset.mode).classList.add('active');
+        if (b.dataset.mode === 'notes') document.body.classList.add('notes-mode');
+        else document.body.classList.remove('notes-mode');
       };
     });
 
@@ -286,7 +296,7 @@
     }
     buildMC();
 
-    // WRITTEN ANSWER
+    // WRITTEN ANSWER (no grading)
     let wa = 0;
     const waQ = document.getElementById('wa-q'),
           waIn = document.getElementById('wa-input'),
@@ -297,12 +307,10 @@
       wa = i; waQ.textContent = data.writtenAnswer[i].q;
       waIn.value = ''; waFb.textContent = ''; waNx.style.display = 'none';
     }
+    waChk.textContent = 'Show Answer';
     waChk.onclick = () => {
-      const u = waIn.value.trim().toLowerCase(),
-            r = data.writtenAnswer[wa].a.trim().toLowerCase();
-      if (!u) return;
-      if (u === r) waFb.textContent = '✅ Correct!', waFb.className = 'feedback correct';
-      else waFb.textContent = `❌ Wrong. Answer: ${data.writtenAnswer[wa].a}`, waFb.className = 'feedback wrong';
+      waFb.textContent = `Answer: ${data.writtenAnswer[wa].a}`;
+      waFb.className = 'feedback';
       waNx.style.display = 'inline-block';
     };
     waNx.onclick = () => showWA((wa + 1) % data.writtenAnswer.length);
@@ -317,14 +325,17 @@
     function showTF(i) {
       tf = i; tfQ.textContent = data.trueFalse[i].q;
       tfFb.textContent = ''; tfN.style.display = 'none';
-      tfB.forEach(b => (b.disabled = false, b.classList.remove('correct','wrong')));
+      tfB.forEach(b => (b.disabled=false, b.classList.remove('correct','wrong')));
     }
     tfB.forEach(b => {
       b.onclick = () => {
         const val = b.dataset.val === 'true',
               ok  = data.trueFalse[tf].a;
-        if (val === ok) b.classList.add('correct'), tfFb.textContent = '✅ Correct!', tfFb.className = 'feedback correct';
-        else b.classList.add('wrong'), tfFb.textContent = `❌ Wrong. Answer: ${ok?'True':'False'}`, tfFb.className = 'feedback wrong';
+        if (val === ok) {
+          b.classList.add('correct'); tfFb.textContent = '✅ Correct!'; tfFb.className='feedback correct';
+        } else {
+          b.classList.add('wrong'); tfFb.textContent = `❌ Wrong. Answer: ${ok?'True':'False'}`; tfFb.className='feedback wrong';
+        }
         tfB.forEach(x => x.disabled = true);
         tfN.style.display = 'inline-block';
       };
@@ -340,5 +351,6 @@
 
   })();
   </script>
+
 </body>
 </html>
