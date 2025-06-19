@@ -3,307 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>B.I.A.M – Study Suite</title>
+<title>B.I.A.M Study Suite</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- --------- THEME & DESIGN SYSTEM --------- -->
+<!-- -----------------------  DESIGN SYSTEM  ----------------------- -->
 <style>
 :root{
-  /* colour tokens – light */
-  --brand : #2563eb;
-  --brand-h:#1d4ed8;
-  --bg    : #f9fafb;
-  --bg-h  : #f3f4f6;
-  --card  : #ffffff;
-  --card-h: #e5e7eb;
-  --text  : #111827;
-  --text-sub:#475569;
+  /* light palette */
+  --brand : #2563eb; --brand-h:#1d4ed8;
+  --bg    : #f9fafb; --bg-h:#f3f4f6;
+  --card  : #ffffff; --card-h:#e5e7eb;
+  --text  : #111827; --text-sub:#475569;
   --border:#d1d5db;
-  --green : #22c55e;
-  --red   : #ef4444;
-  --radius:.75rem;
-  --shadow:0 4px 12px rgb(0 0 0/.07);
-  --z-nav : 200;
+  --green : #22c55e; --green-bg:#16a34a;
+  --red   : #ef4444; --red-bg:#b91c1c;
+  --radius:.75rem;   --shadow:0 4px 12px rgb(0 0 0/.07);
 }
 /* dark palette toggled via .dark on <html> */
 html.dark{
-  --bg   : #0f172a;
-  --bg-h : #1e293b;
-  --card : #1e293b;
-  --card-h:#334155;
-  --text : #f1f5f9;
-  --text-sub:#94a3b8;
-  --border:#475569;
-  --shadow:0 4px 20px rgb(0 0 0/.5);
+  --bg   : #0f172a; --bg-h:#1e293b;
+  --card : #1e293b; --card-h:#334155;
+  --text : #f1f5f9; --text-sub:#94a3b8;
+  --border:#475569; --shadow:0 4px 18px rgb(0 0 0/.5);
 }
-*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+*{box-sizing:border-box;margin:0;padding:0} html,body{height:100%}
 body{
   font:400 1rem/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   background:var(--bg);color:var(--text);display:flex;flex-direction:column;
   -webkit-font-smoothing:antialiased;scroll-behavior:smooth;
 }
 
-/* header / nav */
-header{background:var(--brand);color:#fff;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center}
-header h1{font-size:1.15rem;font-weight:600;white-space:nowrap}
-.theme-toggle{appearance:none;background:none;border:0;color:inherit;font-size:1.25rem;cursor:pointer}
+/* -------- header / elegant toggle -------- */
+header{
+  background:var(--brand);color:#fff;padding:.9rem 1rem;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:var(--shadow);z-index:200
+}
+header h1{font-size:1.1rem;font-weight:600}
+.switch{
+  --s:30px; /* size */
+  display:inline-block;width:var(--s);height:var(--s)/2;border-radius:var(--s);
+  background:#fff44f;position:relative;cursor:pointer;transition:.3s
+}
+.switch::before{
+  content:'🌞';position:absolute;top:50%;left:4px;transform:translateY(-50%);
+  font-size:.55rem;transition:.3s
+}
+input[type=checkbox]{display:none}
+input[type=checkbox]:checked + .switch{
+  background:#334155
+}
+input[type=checkbox]:checked + .switch::before{
+  content:'🌙';left:calc(100% - 15px)
+}
 
+/* -------- nav strip -------- */
 nav{
-  position:sticky;top:0;z-index:var(--z-nav);
-  background:var(--card);display:flex;border-bottom:1px solid var(--border)
+  position:sticky;top:0;z-index:150;background:var(--card);display:flex;
+  border-bottom:1px solid var(--border)
 }
 nav button{
-  flex:1 0 110px;padding:.8rem .5rem;background:none;border:0;
-  color:var(--text-sub);font-weight:600;letter-spacing:.01em;cursor:pointer;
-}
-nav button.active{color:var(--brand);position:relative}
-nav button.active::after{
-  content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
-  background:var(--brand)
+  flex:1 0 110px;padding:.85rem .5rem;background:none;border:0;
+  color:var(--text-sub);font-weight:600;cursor:pointer;letter-spacing:.01em
 }
 nav button:hover{background:var(--bg-h)}
-
+nav button.active{color:var(--brand);position:relative}
+nav button.active::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--brand)
+}
+/* main wrapper */
 main{flex:1;padding:1.25rem;display:flex;justify-content:center}
 .view{display:none;width:100%;max-width:960px;margin:auto}
 .view.active{display:block}
 
-/* ---------- COMPONENT TOKENS ---------- */
+/* -------- generic buttons -------- */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
-  border-radius:var(--radius);font-weight:600;font-size:.95rem;
-  padding:.6rem 1.25rem;cursor:pointer;transition:background .25s,border-color .25s,color .25s
+  border-radius:var(--radius);font-weight:600;font-size:.94rem;
+  padding:.6rem 1.3rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:.25s background,.25s color,.25s border-color
 }
-.btn-fill{background:var(--brand);color:#fff;border:1px solid var(--brand)}
-.btn-fill:hover{background:var(--brand-h);border-color:var(--brand-h)}
-.btn-ghost{background:none;border:2px solid var(--brand);color:var(--brand)}
-.btn-ghost:hover{background:var(--brand);color:#fff}
-.btn-neutral{background:var(--bg-h);border:1px solid var(--border)}
-.btn-neutral:hover{background:var(--card-h)}
-/* cards */
-.card-box{
-  perspective:1200px;margin:auto;max-width:500px;width:100%;
-}
+.fill {background:var(--brand);color:#fff;border:1px solid var(--brand)}
+.fill:hover{background:var(--brand-h);border-color:var(--brand-h)}
+.ghost{background:none;border:2px solid var(--brand);color:var(--brand)}
+.ghost:hover{background:var(--brand);color:#fff}
+.neutral{background:var(--bg-h);border:1px solid var(--border)}
+.neutral:hover{background:var(--card-h)}
+/* -------- flashcards -------- */
+.card-box{perspective:1200px;margin:auto;width:100%;max-width:500px}
 .card{
-  position:relative;width:100%;height:260px;border-radius:var(--radius);
-  background:var(--card);box-shadow:var(--shadow);
-  display:flex;align-items:center;justify-content:center;text-align:center;padding:1rem;
-  font-size:1.15rem;font-weight:500;transform-style:preserve-3d;transition:transform .6s;
+  width:100%;height:260px;border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);
+  transform-style:preserve-3d;transition:.6s transform;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:1rem;font-size:1.15rem;font-weight:500
 }
 .card.flipped{transform:rotateY(180deg)}
-.card .side{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:1rem}
-.card .back{transform:rotateY(180deg)}
-/* lists */
-.option{border:1px solid var(--border);background:var(--card-h);padding:.9rem;
-  border-radius:var(--radius);width:100%;text-align:left;font:inherit}
-.option:hover:not([disabled]){background:var(--bg-h)}
-.correct{background:var(--green)!important;color:#fff;border-color:var(--green)!important}
-.wrong  {background:var(--red )!important;color:#fff;border-color:var(--red )!important}
-/* quiz block spacing */
-.block{display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem}
+.side{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:1rem}
+.back{transform:rotateY(180deg)}
+/* toolbar layout */
+.row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1rem}
+
+/* -------- mcq / options -------- */
+.block{margin-bottom:2.5rem;display:flex;flex-direction:column;gap:1rem}
+.option{
+  width:100%;padding:1rem;border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--card-h);text-align:left;font:inherit;cursor:pointer;transition:.2s
+}
+.option:hover:not(.opt-disabled){background:var(--bg-h)}
+.opt-disabled{cursor:not-allowed;opacity:.7}
+.correct{background:var(--green-bg)!important;color:#fff;border-color:var(--green)!important}
+.wrong  {background:var(--red-bg)!important;color:#fff;border-color:var(--red)!important}
+
 /* textarea */
 textarea{
-  width:100%;min-height:140px;background:var(--card-h);border:1px solid var(--border);
-  border-radius:var(--radius);padding:1rem;color:inherit;resize:vertical
+  width:100%;min-height:140px;padding:1rem;background:var(--card-h);border-radius:var(--radius);
+  border:1px solid var(--border);resize:vertical;color:inherit
 }
-/* notes */
-.notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow)}
-/* floating selection ask */
+/* notes box */
+.notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
+
+/* floating ask on selection  */
 #selAsk{
-  position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;
-  background:var(--brand);color:#fff;border:0;border-radius:var(--radius);
-  box-shadow:var(--shadow);font-weight:600;font-size:.9rem;cursor:pointer
+  position:fixed;z-index:9999;display:none;padding:.5rem 1rem;
+  background:var(--brand);color:#fff;border:0;border-radius:var(--radius);box-shadow:var(--shadow);
+  font-weight:600;font-size:.9rem;cursor:pointer
 }
-@media(max-width:600px){
-  .card{height:200px}.btn{flex:1}
-}
+
+/* responsive tweak */
+@media(max-width:600px){.card{height:200px}.btn{flex:1}}
 </style>
 </head>
 
 <body>
 <header>
-  <h1>B.I.A.M&nbsp;Study&nbsp;Suite</h1>
-  <button id="themeBtn" class="theme-toggle" aria-label="Toggle colour scheme">🌙</button>
+  <h1>B.I.A.M Study Suite</h1>
+  <label>
+    <input type="checkbox" id="themeChk">
+    <span class="switch"></span>
+  </label>
 </header>
 
 <nav>
-  <button class="active" data-view="flash">Flashcards</button>
+  <button data-view="flash"  class="active">Flashcards</button>
   <button data-view="mcq">Multiple-Choice</button>
   <button data-view="written">Written</button>
-  <button data-view="tf">True / False</button>
+  <button data-view="tf">True/False</button>
   <button data-view="notes">Notes</button>
 </nav>
 
 <main>
-  <!-- Flashcards -->
+  <!-- FLASHCARDS -->
   <section id="flash" class="view active">
-    <div class="card-box">
-      <div id="fcCard" class="card">
-        <div class="side front" id="fcQ"></div>
-        <div class="side back"  id="fcA"></div>
-      </div>
-    </div>
-    <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
-      <button id="fcPrev" class="btn btn-neutral">Prev</button>
-      <button id="fcNext" class="btn btn-fill">Next</button>
-      <button id="fcAsk"  class="btn btn-ghost">Ask ChatGPT</button>
-    </div>
+    <div class="card-box"><div id="fcCard" class="card">
+      <div class="side front" id="fcQ"></div><div class="side back" id="fcA"></div>
+    </div></div>
+    <div class="row"><button id="fcPrev" class="btn neutral">Prev</button><button id="fcNext" class="btn fill">Next</button></div>
+    <div class="row" style="margin-top:.5rem"><button id="fcAsk" class="btn ghost">Ask ChatGPT</button></div>
   </section>
 
   <!-- MCQ -->
-  <section id="mcq" class="view">
-    <div id="mcqWrap"></div>
-    <p id="mcqScore" style="font-weight:700;text-align:center"></p>
-  </section>
+  <section id="mcq" class="view"><div id="mcqWrap"></div><p id="mcqScore" style="font-weight:700;text-align:center"></p></section>
 
-  <!-- Written -->
+  <!-- WRITTEN -->
   <section id="written" class="view">
-    <div class="block">
-      <p id="waQ" style="font-weight:600"></p>
-      <textarea id="waInput" placeholder="Type your answer…"></textarea>
-      <button id="waShow" class="btn btn-fill">Show Model Answer</button>
+    <div class="block"><p id="waQ" style="font-weight:600"></p>
+      <textarea id="waInput" placeholder="Your answer…"></textarea>
+      <button id="waShow" class="btn fill">Show Model Answer</button>
       <div id="waA" style="font-weight:600"></div>
-      <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center">
-        <button id="waPrev" class="btn btn-neutral">Prev</button>
-        <button id="waNext" class="btn btn-fill">Next</button>
-        <button id="waAsk" class="btn btn-ghost">Ask ChatGPT</button>
-      </div>
+      <div class="row"><button id="waPrev" class="btn neutral">Prev</button><button id="waNext" class="btn fill">Next</button></div>
+      <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
   </section>
 
-  <!-- True / False -->
+  <!-- TRUE / FALSE -->
   <section id="tf" class="view">
-    <div class="block">
-      <p id="tfQ" style="font-weight:600"></p>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <button class="btn option" data-val="true">True</button>
-        <button class="btn option" data-val="false">False</button>
-      </div>
+    <div class="block"><p id="tfQ" style="font-weight:600"></p>
+      <div class="row"><button class="btn option" data-val="true">True</button><button class="btn option" data-val="false">False</button></div>
       <p id="tfFeedback" style="font-weight:700"></p>
-      <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center">
-        <button id="tfPrev" class="btn btn-neutral">Prev</button>
-        <button id="tfNext" class="btn btn-fill">Next</button>
-        <button id="tfAsk" class="btn btn-ghost">Ask ChatGPT</button>
-      </div>
+      <div class="row"><button id="tfPrev" class="btn neutral">Prev</button><button id="tfNext" class="btn fill">Next</button></div>
+      <div class="row" style="margin-top:.5rem"><button id="tfAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
   </section>
 
-  <!-- Notes -->
-  <section id="notes" class="view">
-    <article id="notesBox" class="notes">Loading…</article>
-  </section>
+  <!-- NOTES -->
+  <section id="notes" class="view"><article id="notesBox" class="notes">Loading…</article></section>
 </main>
 
-<button id="selAsk">Ask&nbsp;ChatGPT</button>
+<button id="selAsk">Ask ChatGPT</button>
 
+<!-- -----------------------  APP ----------------------- -->
 <script>
-/* ---------- utilities ---------- */
-const $ = sel => document.querySelector(sel);
-const $$ = sel => [...document.querySelectorAll(sel)];
-const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}};
-const promptLink = p=>`https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q=${encodeURIComponent(p)}`;
-const loadJSON = fetch('data.json').then(r=>r.json());
-/* ---------- theme toggle ---------- */
-const themeBtn = $('#themeBtn');
-themeBtn.onclick=()=>{
-  document.documentElement.classList.toggle('dark');
-  themeBtn.textContent=document.documentElement.classList.contains('dark')?'☀️':'🌙';
-};
+/* helpers */
+const $  = s=>document.querySelector(s);
+const $$ = s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}};
+const ask=(prompt)=>window.open(
+  'https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(prompt),'_blank');
+/* theme persistence */
+const chk=$('#themeChk');
+const setTheme=on=>{document.documentElement.classList.toggle('dark',on);chk.checked=on;localStorage.theme=on?'dark':'light'};
+setTheme(localStorage.theme==='dark');
+chk.onchange=e=>setTheme(e.target.checked);
 
-/* ---------- navigation ---------- */
+/* nav switching + clear selection */
 $$('nav button').forEach(btn=>{
   btn.onclick=()=>{
     $('nav button.active').classList.remove('active');btn.classList.add('active');
     $('.view.active').classList.remove('active');$('#'+btn.dataset.view).classList.add('active');
+    getSelection().removeAllRanges();$('#selAsk').style.display='none';
   };
 });
 
-/* ---------- flashcards ---------- */
-(async ()=>{
-  const data = (await loadJSON).flashcards;
-  shuffle(data);let i=0;
+/* data loading once */
+const load=fetch('data.json').then(r=>r.json());
+
+/* FLASHCARDS */
+(async()=>{
+  const data=(await load).flashcards;shuffle(data);let i=0;
   const q=$('#fcQ'),a=$('#fcA'),card=$('#fcCard');
   const show=_=>{q.textContent=data[i].q;a.textContent=data[i].a;card.classList.remove('flipped')};
   show();
   card.onclick=_=>card.classList.toggle('flipped');
   $('#fcPrev').onclick=_=>{i=(i-1+data.length)%data.length;show()};
   $('#fcNext').onclick=_=>{i=(i+1)%data.length;show()};
-  $('#fcAsk').onclick=_=>window.open(promptLink(
-    `I’m studying biologically-inspired algorithms.\nExplain the following concept to me in simple terms:\n“${data[i].q}”\n`),'_blank');
+  $('#fcAsk').onclick=_=>ask(`Explain this concept from biologically-inspired algorithms:\n\n${data[i].q}`);
 })();
 
-/* ---------- MCQ ---------- */
-(async ()=>{
-  const data=(await loadJSON).multipleChoice;shuffle(data);
-  const wrap=$('#mcqWrap'),scoreEl=$('#mcqScore');let score=0;
+/* MCQ */
+(async()=>{
+  const data=(await load).multipleChoice;shuffle(data);
+  const wrap=$('#mcqWrap'),score=$('#mcqScore');let sc=0;
   data.forEach((q,idx)=>{
     shuffle(q.choices);
     const block=document.createElement('div');block.className='block';
     block.innerHTML=`<p>${idx+1}. ${q.question}</p>`;
-    const opts=document.createElement('div');opts.style.display='grid';opts.style.gap='.75rem';
-    const buttons=[];
+    const optWrap=document.createElement('div');optWrap.style.display='grid';optWrap.style.gap='.75rem';
+    const opts=[];
     q.choices.forEach(c=>{
-      const bt=document.createElement('button');bt.className='btn option';bt.textContent=c;
-      bt.onclick=_=>{
-        buttons.forEach(b=>b.disabled=true);
-        if(c===q.answer){bt.classList.add('correct');score++;}
-        else{bt.classList.add('wrong');buttons.find(b=>b.textContent===q.answer).classList.add('correct');}
-        scoreEl.textContent=`Score: ${score}/${data.length}`;
+      const b=document.createElement('button');b.className='btn option';b.textContent=c;
+      b.onclick=_=>{
+        opts.forEach(o=>{o.disabled=true;o.classList.add('opt-disabled')});
+        if(c===q.answer){b.classList.add('correct');sc++;}
+        else{b.classList.add('wrong');opts.find(o=>o.textContent===q.answer).classList.add('correct');}
+        score.textContent=`Score ${sc}/${data.length}`;
       };
-      buttons.push(bt);opts.appendChild(bt);
+      opts.push(b);optWrap.appendChild(b);
     });
-    const ask=document.createElement('button');ask.className='btn btn-ghost';ask.textContent='Ask ChatGPT';
-    ask.onclick=_=>window.open(promptLink(
-      `I’m practicing exam MCQs on biologically-inspired algorithms.\nQuestion: ${q.question}\nOptions: ${q.choices.join(', ')}\nThe correct answer is “${q.answer}”.\nGive an explanation of why it's correct and why the others are not.`),'_blank');
-    block.append(opts,ask);wrap.appendChild(block);
+    const askBtn=document.createElement('button');askBtn.className='btn ghost';askBtn.textContent='Ask ChatGPT';
+    askBtn.onclick=_=>ask(`Question about biologically-inspired algorithms:\n${q.question}\nOptions: ${q.choices.join(', ')}\nProvide an explanation of the correct choice.`);
+    block.append(optWrap,askBtn);wrap.appendChild(block);
   });
 })();
 
-/* ---------- Written ---------- */
-(async ()=>{
-  const data=(await loadJSON).writtenAnswer;shuffle(data);
-  let i=0;const q=$('#waQ'),a=$('#waA');
-  const render=_=>{const item=data[i];q.textContent=item.q;a.textContent='';};
+/* WRITTEN */
+(async()=>{
+  const data=(await load).writtenAnswer;shuffle(data);let i=0;
+  const q=$('#waQ'),a=$('#waA');
+  const render=_=>{q.textContent=data[i].q;a.textContent='';};
   render();
   $('#waShow').onclick=_=>a.textContent=data[i].a;
   $('#waPrev').onclick=_=>{i=(i-1+data.length)%data.length;render()};
   $('#waNext').onclick=_=>{i=(i+1)%data.length;render()};
-  $('#waAsk').onclick=_=>window.open(promptLink(
-    `Explain the following exam concept from biologically-inspired algorithms in clear detail: ${data[i].q}`),'_blank');
+  $('#waAsk').onclick=_=>ask(`I’m studying biologically-inspired algorithms.\nCould you explain: "${data[i].q}" in simple terms?`);
 })();
 
-/* ---------- True / False ---------- */
-(async ()=>{
-  const data=(await loadJSON).trueFalse;shuffle(data);
-  let i=0;const q=$('#tfQ'),fb=$('#tfFeedback'),buttons=$$('#tf button.option');
-  const show=_=>{q.textContent=data[i].q;fb.textContent='';buttons.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong')})};
-  show();
-  buttons.forEach(b=>b.onclick=()=>{
-    const ans=b.dataset.val==='true',correct=data[i].a;
-    buttons.forEach(btn=>btn.disabled=true);
-    if(ans===correct){b.classList.add('correct');fb.textContent='✓ Correct';}
-    else{b.classList.add('wrong');fb.textContent=`✗ Incorrect – it is ${correct}`;}
+/* TRUE/FALSE */
+(async()=>{
+  const data=(await load).trueFalse;shuffle(data);let i=0;
+  const q=$('#tfQ'),fb=$('#tfFeedback'),btns=$$('#tf button.option');
+  const show=_=>{q.textContent=data[i].q;fb.textContent='';btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','opt-disabled')})};
+  btns.forEach(b=>b.onclick=_=>{
+    const ans=b.dataset.val==='true',ok=data[i].a;
+    btns.forEach(x=>{x.disabled=true;x.classList.add('opt-disabled')});
+    (ans===ok?b.classList.add('correct'):b.classList.add('wrong'));
+    fb.textContent=ans===ok?'✓ Correct':`✗ Incorrect – it is ${ok}`;
   });
   $('#tfPrev').onclick=_=>{i=(i-1+data.length)%data.length;show()};
   $('#tfNext').onclick=_=>{i=(i+1)%data.length;show()};
-  $('#tfAsk').onclick=_=>window.open(promptLink(
-    `In the context of biologically-inspired algorithms, evaluate the statement:\n“${data[i].q}”\nPlease give a brief explanation.`),'_blank');
+  $('#tfAsk').onclick=_=>ask(`Is the following statement about biologically-inspired algorithms true?\n"${data[i].q}"\nPlease justify your answer.`);
+  show();
 })();
 
-/* ---------- Notes ---------- */
+/* NOTES + floating ask */
 (async()=>{
   const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
   const float=$('#selAsk');
   document.addEventListener('selectionchange',()=>{
     const sel=getSelection();
-    if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
+    if(!sel || sel.isCollapsed || !box.contains(sel.anchorNode)){float.style.display='none';return;}
     const r=sel.getRangeAt(0).getBoundingClientRect();
-    float.style.top=`${r.bottom+window.scrollY+8}px`;
-    float.style.left=`${r.left+window.scrollX}px`;
-    float.style.display='block';
+    float.style.top=`${r.bottom+scrollY+8}px`;float.style.left=`${r.left+scrollX}px`;float.style.display='block';
   });
   float.onclick=_=>{
-    const text=getSelection().toString().trim();
-    if(text)window.open(promptLink(`Please explain the following excerpt from my study notes on biologically-inspired algorithms:\n“${text}”`),'_blank');
+    const t=getSelection().toString().trim();
+    if(t)ask(`Explain this excerpt from my biologically-inspired algorithms notes:\n"${t}"`);
   };
 })();
 </script>
