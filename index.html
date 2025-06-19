@@ -374,10 +374,24 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
   }
  };
 
+ // Handle both mouse and touch events for selection
  document.addEventListener('selectionchange', updateFloatPosition);
+
+ // Special handling for mobile touch end events
+ document.addEventListener('touchend', () => {
+   // Small delay to let the selection register properly on mobile
+   setTimeout(updateFloatPosition, 100);
+ });
 
  // Also update position on scroll to handle any edge cases
  document.addEventListener('scroll', () => {
+   if (getSelection() && !getSelection().isCollapsed) {
+     updateFloatPosition();
+   }
+ });
+
+ // Handle window resize events to ensure proper positioning
+ window.addEventListener('resize', () => {
    if (getSelection() && !getSelection().isCollapsed) {
      updateFloatPosition();
    }
