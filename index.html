@@ -217,7 +217,6 @@ textarea{
     <div class="block">
       <p id="tfQ" style="font-weight:600"></p>
       <div class="row"><button class="btn option" data-val="true">True</button><button class="btn option" data-val="false">False</button></div>
-      <p id="tfFeedback" style="font-weight:700"></p>
       <div class="row"><button id="tfPrev" class="btn neutral">Prev</button><button id="tfNext" class="btn fill">Next</button></div>
       <div class="row" style="margin-top:.5rem"><button id="tfAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
@@ -324,7 +323,8 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
  btns.forEach(b=>b.onclick=()=>{
   const ans=b.dataset.val==='true',ok=arr[i].a;
   btns.forEach(x=>{x.disabled=true;x.classList.add('disabled')});
-  b.classList.add(ans===ok?'correct':'wrong');fb.textContent=ans===ok?'✓ Correct':`✗ Incorrect — it is ${ok}`;
+  b.classList.add(ans===ok?'correct':'wrong');
+  // Removed text feedback
  });
  $('#tfPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
  $('#tfNext').onclick=()=>{i=(i+1)%arr.length;render()};
