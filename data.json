@@ -1,4 +1,3 @@
-// data.json
 {
   "flashcards": [
     {"q":"What is a tabu list in Tabu Search?","a":"A memory structure that records recent moves or solutions to prevent revisiting them and avoid cycles."},
