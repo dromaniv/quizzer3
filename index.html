@@ -291,7 +291,7 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
    aBox.textContent = '';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
-   tBtn.textContent='Model answer';
+   tBtn.textContent='Correct answer';
  };
 
  render();
@@ -313,7 +313,7 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
 
  $('#waPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
  $('#waNext').onclick=()=>{i=(i+1)%arr.length;render()};
- $('#waAsk').onclick=()=>ask(`I'm studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"`);
+ $('#waAsk').onclick=()=>ask(`I'm studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
 })();
 
 /* TRUE/FALSE */
@@ -328,7 +328,7 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
  });
  $('#tfPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
  $('#tfNext').onclick=()=>{i=(i+1)%arr.length;render()};
- $('#tfAsk').onclick=()=>ask(`Is the following statement about biologically-inspired algorithms true or false? Explain.\n"${arr[i].q}"`);
+ $('#tfAsk').onclick=()=>ask(`Is the following statement about biologically-inspired algorithms true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
  render();
 })();
 
