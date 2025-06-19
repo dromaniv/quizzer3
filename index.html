@@ -6,61 +6,51 @@
 <title>B.I.A.M Study Suite</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- ----------------  DESIGN SYSTEM  ---------------- -->
 <style>
-:root{
-  /* light */
-  --brand:#2563eb;--brand-h:#1d4ed8;
-  --bg:#f9fafb;--bg-h:#f3f4f6;
-  --card:#ffffff;--card-h:#e5e7eb;
-  --text:#111827;--text-sub:#475569;
-  --border:#d1d5db;--green:#16a34a;--red:#b91c1c;
-  --radius:.75rem;--shadow:0 4px 12px rgb(0 0 0/.07);
-}
-/* dark palette on .dark */
-html.dark{
-  --bg:#0f172a;--bg-h:#1e293b;
-  --card:#1e293b;--card-h:#334155;
-  --text:#f1f5f9;--text-sub:#94a3b8;
-  --border:#475569;--shadow:0 4px 18px rgb(0 0 0/.5);
-}
+/* ———- DESIGN TOKENS (unchanged) ——— */
+:root{--brand:#2563eb;--brand-h:#1d4ed8;--bg:#f9fafb;--bg-h:#f3f4f6;
+ --card:#ffffff;--card-h:#e5e7eb;--text:#111827;--text-sub:#475569;
+ --border:#d1d5db;--green:#16a34a;--red:#b91c1c;--radius:.75rem;
+ --shadow:0 4px 12px rgb(0 0 0/.07)}
+html.dark{--bg:#0f172a;--bg-h:#1e293b;--card:#1e293b;--card-h:#334155;
+ --text:#f1f5f9;--text-sub:#94a3b8;--border:#475569;
+ --shadow:0 4px 18px rgb(0 0 0/.5)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{
-  font:400 1rem/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);color:var(--text);display:flex;flex-direction:column;
-  -webkit-font-smoothing:antialiased;scroll-behavior:smooth;
-}
+body{font:400 1rem/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+ background:var(--bg);color:var(--text);display:flex;flex-direction:column;
+ -webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 
-/* ---------- header & switch ---------- */
-header{background:var(--brand);color:#fff;padding:.9rem 1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);z-index:200}
+/* —— header & toggle —— */
+header{position:sticky;top:0;z-index:250;background:var(--brand);color:#fff;
+ padding:.9rem 1rem;display:flex;justify-content:space-between;align-items:center;
+ box-shadow:var(--shadow)}
 header h1{font-size:1.1rem;font-weight:600}
+input#themeChk{display:none}                /* <-- 1. hide checkbox */
 .t-switch{--w:48px;--h:24px;position:relative;width:var(--w);height:var(--h);cursor:pointer}
-.t-switch input{display:none}
-.t-track{width:100%;height:100%;border-radius:var(--h);background:#facc15;display:flex;align-items:center;transition:.25s}
-.t-thumb{
-  width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgb(0 0 0/.25);
-  margin-left:2px;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:.25s
-}
-input:checked+label .t-track{background:#334155}
-input:checked+label .t-thumb{transform:translateX(calc(var(--w) - 22px))}
-input:not(:checked)+label .t-thumb::after{content:"☀";}
-input:checked+label .t-thumb::after{content:"🌙";color:#facc15}
+.t-track{width:100%;height:100%;border-radius:var(--h);
+ background:#facc15;display:flex;align-items:center;transition:.25s}
+.t-thumb{width:20px;height:20px;border-radius:50%;background:#fff;
+ margin-left:2px;display:flex;justify-content:center;align-items:center;
+ font-size:.7rem;box-shadow:0 2px 5px rgb(0 0 0/.25);transition:.25s}
+#themeChk:checked + label .t-track{background:#334155}
+#themeChk:not(:checked) + label .t-thumb::after{content:"☀";}
+#themeChk:checked      + label .t-thumb::after{content:"🌙";color:#facc15}
+#themeChk:checked + label .t-thumb{transform:translateX(calc(var(--w) - 22px))}
 
-/* ---------- nav ---------- */
-nav{position:sticky;top:0;z-index:150;background:var(--card);display:flex;border-bottom:1px solid var(--border)}
-nav button{flex:1 0 110px;padding:.85rem .5rem;background:none;border:0;color:var(--text-sub);font-weight:600;cursor:pointer}
+/* —— nav —— */
+nav{position:sticky;top:calc(0px + 56px); /* header≈56px */   /* 3. stay visible */
+ z-index:200;background:var(--card);display:flex;border-bottom:1px solid var(--border)}
+nav button{flex:1 0 110px;padding:.85rem .5rem;background:none;border:0;
+ color:var(--text-sub);font-weight:600;cursor:pointer}
 nav button:hover{background:var(--bg-h)}
 nav button.active{color:var(--brand);position:relative}
-nav button.active::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--brand)}
+nav button.active::after{content:'';position:absolute;left:0;right:0;bottom:0;
+ height:3px;background:var(--brand)}
 
-/* ---------- layout ---------- */
-main{flex:1;padding:1.25rem;display:flex;justify-content:center}
-.view{display:none;width:100%;max-width:960px;margin:auto}
-.view.active{display:block}
-
-/* ---------- buttons ---------- */
-.btn{border-radius:var(--radius);font-weight:600;font-size:.94rem;padding:.6rem 1.3rem;cursor:pointer;transition:.25s}
+/* —— generic buttons —— */
+.btn{border-radius:var(--radius);font-weight:600;font-size:.94rem;
+ padding:.6rem 1.3rem;cursor:pointer;transition:.25s}
 .fill{background:var(--brand);color:#fff;border:1px solid var(--brand)}
 .fill:hover{background:var(--brand-h)}
 .ghost{background:none;border:2px solid var(--brand);color:var(--brand)}
@@ -68,41 +58,41 @@ main{flex:1;padding:1.25rem;display:flex;justify-content:center}
 .neutral{background:var(--bg-h);color:var(--text);border:1px solid var(--border)}
 .neutral:hover{background:var(--card-h)}
 
-/* ---------- flashcards ---------- */
+/* —— card —— */
 .card-box{perspective:1200px;margin:auto;width:100%;max-width:520px}
-.card{
-  position:relative;width:100%;height:260px;border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);
-  transform-style:preserve-3d;transition:transform .6s;display:flex;align-items:center;justify-content:center
-}
+.card{position:relative;width:100%;height:260px;border-radius:var(--radius);
+ background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;
+ transform-style:preserve-3d;transition:.6s transform}
 .card.flipped{transform:rotateY(180deg)}
-.side{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.15rem;font-weight:500;padding:1rem;
-  backface-visibility:hidden;border-radius:var(--radius);
-}
+.side{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+ text-align:center;font-size:1.15rem;font-weight:500;padding:1rem;backface-visibility:hidden}
 .back{transform:rotateY(180deg)}
 .row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1rem}
 
-/* ---------- mcq / options ---------- */
+/* —— collapse animation —— */
+.collapse{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.collapse.open{max-height:400px}
+
+/* —— mcq / option —— */
 .block{margin-bottom:2.5rem;display:flex;flex-direction:column;gap:1rem}
-.option{
-  width:100%;padding:1rem;border-radius:var(--radius);border:1px solid var(--border);
-  background:var(--card-h);color:var(--text);text-align:left;font:inherit;cursor:pointer;transition:.2s
-}
-.option:hover:not(.disabled){background:var(--bg-h)}
-.disabled{cursor:not-allowed;opacity:.75}
+.option{width:100%;padding:1rem;border-radius:var(--radius);border:1px solid var(--border);
+ background:var(--card-h);color:var(--text);text-align:left;cursor:pointer;transition:.2s}
+.option:hover:not(.disabled){background:var(--bg-h)} .disabled{cursor:not-allowed;opacity:.75}
 .correct{background:var(--green)!important;color:#fff;border-color:var(--green)!important}
-.wrong  {background:var(--red)!important;color:#fff;border-color:var(--red)!important}
+.wrong  {background:var(--red)!important  ;color:#fff;border-color:var(--red)!important}
 
-/* textarea */
-textarea{width:100%;min-height:140px;padding:1rem;background:var(--card-h);border:1px solid var(--border);border-radius:var(--radius);resize:vertical;color:inherit}
+/* —— textarea —— */
+textarea{width:100%;min-height:140px;padding:1rem;background:var(--card-h);
+ border:1px solid var(--border);border-radius:var(--radius);resize:vertical;color:inherit}
 
-/* notes */
+/* —— notes —— */
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
 
-/* floating ask */
-#selAsk{position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;border-radius:var(--radius);background:var(--brand);color:#fff;border:0;font-weight:600;font-size:.9rem;box-shadow:var(--shadow);cursor:pointer}
+/* —— floating ask —— */
+#selAsk{position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;border-radius:var(--radius);
+ background:var(--brand);color:#fff;border:0;font-weight:600;font-size:.9rem;box-shadow:var(--shadow);cursor:pointer}
 
-/* responsive tweak */
+/* responsive */
 @media(max-width:600px){.card{height:200px}.btn{flex:1}}
 </style>
 </head>
@@ -111,14 +101,14 @@ textarea{width:100%;min-height:140px;padding:1rem;background:var(--card-h);borde
 <!-- header -->
 <header>
   <h1>B.I.A.M Study Suite</h1>
-  <input type="checkbox" id="themeChk"><label class="t-switch" for="themeChk">
+  <input id="themeChk" type="checkbox"><label class="t-switch" for="themeChk">
     <span class="t-track"><span class="t-thumb"></span></span>
   </label>
 </header>
 
 <!-- nav -->
 <nav>
-  <button data-view="flash" class="active">Flashcards</button>
+  <button data-view="flash"  class="active">Flashcards</button>
   <button data-view="mcq">Multiple-Choice</button>
   <button data-view="written">Written</button>
   <button data-view="tf">True / False</button>
@@ -127,33 +117,31 @@ textarea{width:100%;min-height:140px;padding:1rem;background:var(--card-h);borde
 
 <!-- content -->
 <main>
-  <!-- Flash -->
+  <!-- flash -->
   <section id="flash" class="view active">
-    <div class="card-box">
-      <div id="fcCard" class="card">
-        <div class="side front" id="fcQ"></div>
-        <div class="side back"  id="fcA"></div>
-      </div>
-    </div>
+    <div class="card-box"><div id="fcCard" class="card">
+      <div class="side front" id="fcQ"></div><div class="side back" id="fcA"></div>
+    </div></div>
     <div class="row"><button id="fcPrev" class="btn neutral">Prev</button><button id="fcNext" class="btn fill">Next</button></div>
     <div class="row" style="margin-top:.5rem"><button id="fcAsk" class="btn ghost">Ask ChatGPT</button></div>
   </section>
 
-  <!-- MCQ -->
+  <!-- mcq -->
   <section id="mcq" class="view"><div id="mcqWrap"></div><p id="mcqScore" style="font-weight:700;text-align:center"></p></section>
 
-  <!-- Written -->
+  <!-- written -->
   <section id="written" class="view">
     <div class="block">
       <p id="waQ" style="font-weight:600"></p>
-      <details id="waDetails"><summary class="btn fill" style="cursor:pointer;list-style:none">Show Model Answer</summary><div id="waA" style="margin-top:.75rem;font-weight:600"></div></details>
       <textarea id="waInput" placeholder="Your answer…"></textarea>
+      <div id="waCollapse" class="collapse"><div id="waA" style="padding-top:.75rem;font-weight:600"></div></div>
+      <button id="waToggle" class="btn fill">Show Model Answer</button>
       <div class="row"><button id="waPrev" class="btn neutral">Prev</button><button id="waNext" class="btn fill">Next</button></div>
       <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
   </section>
 
-  <!-- True/False -->
+  <!-- tf -->
   <section id="tf" class="view">
     <div class="block">
       <p id="tfQ" style="font-weight:600"></p>
@@ -164,114 +152,79 @@ textarea{width:100%;min-height:140px;padding:1rem;background:var(--card-h);borde
     </div>
   </section>
 
-  <!-- Notes -->
+  <!-- notes -->
   <section id="notes" class="view"><article id="notesBox" class="notes">Loading …</article></section>
 </main>
 
 <button id="selAsk">Ask ChatGPT</button>
 
-<!-- ----------------  JS APP  ---------------- -->
 <script>
 /* util */
-const $ = s => document.querySelector(s);
-const $$= s => [...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}};
-const ask = prompt => window.open(
-  'https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(prompt),'_blank');
-const load = fetch('data.json').then(r=>r.json());
+const ask=p=>window.open('https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(p),'_blank');
+const dataP=fetch('data.json').then(r=>r.json());
 
 /* theme persistence */
-const themeChk=$('#themeChk');
-const applyTheme=dark=>{document.documentElement.classList.toggle('dark',dark);themeChk.checked=dark;localStorage.theme=dark?'dark':'light'};
-applyTheme(localStorage.theme==='dark');
-themeChk.onchange=e=>applyTheme(e.target.checked);
+const apply=d=>{document.documentElement.classList.toggle('dark',d);$('#themeChk').checked=d;localStorage.theme=d?'dark':'light'};
+apply(localStorage.theme==='dark');
+$('#themeChk').onchange=e=>apply(e.target.checked);
 
-/* nav */
-$$('nav button').forEach(btn=>{
-  btn.onclick=()=>{
-    $('nav button.active').classList.remove('active');btn.classList.add('active');
-    $('.view.active').classList.remove('active');$('#'+btn.dataset.view).classList.add('active');
-    getSelection().removeAllRanges();$('#selAsk').style.display='none';
-  };
-});
+/* nav switching / clear float */
+$$('nav button').forEach(btn=>btn.onclick=()=>{ $('nav .active').classList.remove('active');btn.classList.add('active');
+ $('.view.active').classList.remove('active');$('#'+btn.dataset.view).classList.add('active');
+ getSelection().removeAllRanges();$('#selAsk').style.display='none';});
 
 /* flashcards */
 (async()=>{
-  const cards=(await load).flashcards;shuffle(cards);let i=0;
-  const q=$('#fcQ'),a=$('#fcA'),card=$('#fcCard');
-  const show=_=>{q.textContent=cards[i].q;a.textContent=cards[i].a;card.classList.remove('flipped')};
-  show();
-  card.onclick=_=>card.classList.toggle('flipped');
-  $('#fcPrev').onclick=_=>{i=(i-1+cards.length)%cards.length;show()};
-  $('#fcNext').onclick=_=>{i=(i+1)%cards.length;show()};
-  $('#fcAsk').onclick=_=>ask(`Explain the following concept from biologically-inspired algorithms:\n"${cards[i].q}"`);
-})();
+ const d=(await dataP).flashcards;shuffle(d);let i=0;const q=$('#fcQ'),a=$('#fcA'),card=$('#fcCard');
+ const show=_=>{q.textContent=d[i].q;a.textContent=d[i].a;card.classList.remove('flipped')};show();
+ card.onclick=_=>card.classList.toggle('flipped');
+ $('#fcPrev').onclick=_=>{i=(i-1+d.length)%d.length;show()};$('#fcNext').onclick=_=>{i=(i+1)%d.length;show()};
+ $('#fcAsk').onclick=_=>ask(`Explain simply: "${d[i].q}"`);})();
 
-/* MCQ */
+/* mcq */
 (async()=>{
-  const data=(await load).multipleChoice;shuffle(data);
-  const wrap=$('#mcqWrap'),score=$('#mcqScore');let sc=0;
-  data.forEach((q,idx)=>{
-    shuffle(q.choices);
-    const blk=document.createElement('div');blk.className='block';
-    blk.innerHTML=`<p>${idx+1}. ${q.question}</p>`;
-    const optWrap=document.createElement('div');optWrap.style.display='grid';optWrap.style.gap='.75rem';
-    const opts=[];
-    q.choices.forEach(ch=>{
-      const btn=document.createElement('button');btn.className='btn option';btn.textContent=ch;
-      btn.onclick=_=>{
-        opts.forEach(o=>{o.disabled=true;o.classList.add('disabled')});
-        (ch===q.answer?btn.classList.add('correct'):(btn.classList.add('wrong'),opts.find(o=>o.textContent===q.answer).classList.add('correct')));
-        if(ch===q.answer)sc++;score.textContent=`Score ${sc}/${data.length}`;
-      };
-      opts.push(btn);optWrap.appendChild(btn);
-    });
-    const askBtn=document.createElement('button');askBtn.className='btn ghost';askBtn.textContent='Ask ChatGPT';
-    askBtn.onclick=_=>ask(`Please explain why the correct answer to this question is right, and the others are wrong:\n${q.question}\nOptions: ${q.choices.join(', ')}\nCorrect: ${q.answer}`);
-    blk.append(optWrap,askBtn);wrap.appendChild(blk);
-  });
-})();
+ const d=(await dataP).multipleChoice;shuffle(d);const wrap=$('#mcqWrap'),score=$('#mcqScore');let sc=0;
+ d.forEach((q,n)=>{shuffle(q.choices);const blk=document.createElement('div');blk.className='block';
+ blk.innerHTML=`<p>${n+1}. ${q.question}</p>`;const oWrap=document.createElement('div');oWrap.style.display='grid';oWrap.style.gap='.75rem';
+ const opts=[];q.choices.forEach(c=>{const b=document.createElement('button');b.className='btn option';b.textContent=c;
+ b.onclick=_=>{opts.forEach(o=>{o.disabled=true;o.classList.add('disabled')});
+ (c===q.answer?b.classList.add('correct'):(b.classList.add('wrong'),opts.find(x=>x.textContent===q.answer).classList.add('correct')));
+ if(c===q.answer)sc++;score.textContent=`Score ${sc}/${d.length}`;};opts.push(b);oWrap.appendChild(b)});
+ const ask=document.createElement('button');ask.className='btn ghost';ask.textContent='Ask ChatGPT';
+ ask.onclick=_=>ask(`MCQ Help:\n${q.question}\nOptions: ${q.choices.join(', ')}\nWhy "${q.answer}" is correct?`);
+ blk.append(oWrap,ask);wrap.appendChild(blk);});})();
 
 /* written */
 (async()=>{
-  const data=(await load).writtenAnswer;shuffle(data);let i=0;
-  const q=$('#waQ'),ans=$('#waA'),details=$('#waDetails');
-  const render=_=>{q.textContent=data[i].q;ans.textContent=data[i].a;details.open=false};
-  render();
-  $('#waPrev').onclick=_=>{i=(i-1+data.length)%data.length;render()};
-  $('#waNext').onclick=_=>{i=(i+1)%data.length;render()};
-  $('#waAsk').onclick=_=>ask(`Could you clarify the following exam concept from biologically-inspired algorithms?\n"${data[i].q}"`);
-})();
+ const d=(await dataP).writtenAnswer;shuffle(d);let i=0;
+ const q=$('#waQ'),ans=$('#waA'),col=$('#waCollapse'),tgl=$('#waToggle');
+ const render=_=>{q.textContent=d[i].q;ans.textContent=d[i].a;col.classList.remove('open');tgl.textContent='Show Model Answer';};
+ render();$('#waPrev').onclick=_=>{i=(i-1+d.length)%d.length;render()};
+ $('#waNext').onclick=_=>{i=(i+1)%d.length;render()};
+ tgl.onclick=_=>{col.classList.toggle('open');tgl.textContent=col.classList.contains('open')?'Hide Answer':'Show Model Answer'};
+ $('#waAsk').onclick=_=>ask(`Explain: "${d[i].q}"`);})();
 
-/* true / false */
+/* tf */
 (async()=>{
-  const data=(await load).trueFalse;shuffle(data);let i=0;
-  const q=$('#tfQ'),fb=$('#tfFeedback'),btns=$$('#tf button.option');
-  const show=_=>{q.textContent=data[i].q;fb.textContent='';btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')})};
-  btns.forEach(b=>b.onclick=_=>{
-    const correct=data[i].a,val=b.dataset.val==='true';
-    btns.forEach(x=>{x.disabled=true;x.classList.add('disabled')});
-    (val===correct?b.classList.add('correct'):b.classList.add('wrong'));
-    fb.textContent=val===correct?'✓ Correct':`✗ Incorrect – actually ${correct}`;
-  });
-  $('#tfPrev').onclick=_=>{i=(i-1+data.length)%data.length;show()};
-  $('#tfNext').onclick=_=>{i=(i+1)%data.length;show()};
-  $('#tfAsk').onclick=_=>ask(`True or False?\n"${data[i].q}"\nExplain your reasoning.`);
-  show();
-})();
+ const d=(await dataP).trueFalse;shuffle(d);let i=0;const q=$('#tfQ'),fb=$('#tfFeedback'),btns=$$('#tf .option');
+ const show=_=>{q.textContent=d[i].q;fb.textContent='';btns.forEach(b=>{b.disabled=false;b.classList.remove('disabled','correct','wrong')})};
+ btns.forEach(b=>b.onclick=_=>{const val=b.dataset.val==='true',ok=d[i].a;
+ btns.forEach(x=>{x.disabled=true;x.classList.add('disabled')});(val===ok?b.classList.add('correct'):b.classList.add('wrong'));
+ fb.textContent=val===ok?'✓ Correct':`✗ Incorrect – it is ${ok}`;});
+ $('#tfPrev').onclick=_=>{i=(i-1+d.length)%d.length;show()};$('#tfNext').onclick=_=>{i=(i+1)%d.length;show()};
+ $('#tfAsk').onclick=_=>ask(`Is this true? "${d[i].q}" Explain.`);show();})();
 
-/* notes & floating ask */
+/* notes + floating ask */
 (async()=>{
-  $('#notesBox').innerHTML=marked.parse(await (await fetch('notes.md')).text());
-  const float=$('#selAsk'),box=$('#notesBox');
-  document.addEventListener('selectionchange',()=>{
-    const sel=getSelection();
-    if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
-    const r=sel.getRangeAt(0).getBoundingClientRect();
-    float.style.top=`${r.bottom+scrollY+8}px`;float.style.left=`${r.left+scrollX}px`;float.style.display='block';
-  });
-  float.onclick=_=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt:\n"${txt}"`);}
-})();
+ $('#notesBox').innerHTML=marked.parse(await (await fetch('notes.md')).text());
+ const float=$('#selAsk'),box=$('#notesBox');
+ document.addEventListener('selectionchange',()=>{const sel=getSelection();
+ if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
+ const r=sel.getRangeAt(0).getBoundingClientRect();float.style.top=`${r.bottom+scrollY+8}px`;
+ float.style.left=`${r.left+scrollX}px`;float.style.display='block';});
+ float.onclick=_=>{const t=getSelection().toString().trim();if(t)ask(`Explain this excerpt:\n"${t}"`);};})();
 </script>
 </body>
 </html>
