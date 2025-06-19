@@ -342,12 +342,47 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
 (async()=>{
  const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
  const float=$('#selAsk');
- document.addEventListener('selectionchange',()=>{
+
+ // Function to update the position of the floating button
+ const updateFloatPosition = () => {
   const sel=getSelection();
-  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
+  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){
+    float.style.display='none';
+    return;
+  }
+
   const r=sel.getRangeAt(0).getBoundingClientRect();
-  float.style.top=`${r.bottom+scrollY+8}px`;float.style.left=`${r.left+scrollX}px`;float.style.display='block';
+
+  // Check if selection is visible in the viewport
+  if(r.width === 0 && r.height === 0) {
+    float.style.display='none';
+    return;
+  }
+
+  // Position relative to the viewport (fixed position)
+  float.style.position = 'fixed';
+  float.style.top=`${r.bottom+8}px`;
+  float.style.left=`${r.left}px`;
+  float.style.display='block';
+
+  // Ensure the button stays within the viewport
+  const floatRect = float.getBoundingClientRect();
+  const viewportWidth = document.documentElement.clientWidth;
+
+  if (floatRect.right > viewportWidth) {
+    float.style.left = `${viewportWidth - floatRect.width - 10}px`;
+  }
+ };
+
+ document.addEventListener('selectionchange', updateFloatPosition);
+
+ // Also update position on scroll to handle any edge cases
+ document.addEventListener('scroll', () => {
+   if (getSelection() && !getSelection().isCollapsed) {
+     updateFloatPosition();
+   }
  });
+
  float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on biologically-inspired algorithms:\n"${txt}"`)};
 })();
 </script>
