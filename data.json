@@ -1,4 +1,3 @@
-// data.json
 {
   "flashcards": [
     {"q":"What is a tabu list in Tabu Search?","a":"A memory structure that records recent moves or solutions to prevent revisiting them and avoid cycles."},
@@ -47,7 +46,7 @@
     {"q":"What is Genetic Programming (GP)?","a":"An EA that evolves computer programs represented as trees."},
     {"q":"What are classifier systems in GBML?","a":"Rule-based systems that evolve condition-action pairs for decision-making."},
     {"q":"What is the MAP-Elites algorithm?","a":"A quality-diversity algorithm storing elites in a grid over behavioral features."},
-    {"q":"What is Novelty Search?","a":"A search that rewards behavioral novelty instead of objective fitness."},
+    {"q":"What is Novelty Search?","a":"A method that rewards behavioral novelty rather than fitness to drive exploration."},
     {"q":"What is NSLC?","a":"Novelty Search with Local Competition, balancing exploration and fitness."},
     {"q":"What is cooperative coevolution?","a":"An approach where subcomponents evolve in separate populations and combine for evaluation."},
     {"q":"What is competitive coevolution?","a":"An approach where populations evolve adversarially, such as predators vs. prey."}
@@ -72,7 +71,7 @@
     {"question":"Swap mutation is an example of:","choices":["Crossover","Selection","Mutation","Scaling"],"answer":"Mutation"},
     {"question":"Roulette-wheel selection is based on:","choices":["Random picks","Fitness proportion","Tournament results","Fixed ranks"],"answer":"Fitness proportion"},
     {"question":"Tournament selection pits:","choices":["All at once","Pairs randomly","Groups vs. best","Best vs. worst"],"answer":"Groups vs. best"},
-    {"question":"Rank-based selection uses:","choices":["Raw fitness","Individual ranks","Mutation rate","Crossover rate"],"answer":"Individual ranks"},
+    {"question":"Rank-based selection uses:","choices":["Raw fitness","Individual ranks","Mutation rate","Population size"],"answer":"Individual ranks"},
     {"question":"Lexicase selection filters by:","choices":["Aggregated fitness","Random test-case order","Genotype similarity","Mutation potential"],"answer":"Random test-case order"},
     {"question":"Linear scaling aims to:","choices":["Normalize fitness","Reduce population","Increase mutation","Prevent crossover"],"answer":"Normalize fitness"},
     {"question":"Power-law scaling applies:","choices":["Linear transform","Exponential growth","Fitness^k","Rank adjustment"],"answer":"Fitness^k"},
@@ -152,7 +151,9 @@
     {"q":"Why use Novelty Search?","a":"To avoid deceptive gradients by rewarding new behaviors rather than objective fitness."},
     {"q":"How does NSLC work?","a":"It combines novelty with local fitness competition to balance exploration and exploitation."},
     {"q":"Outline cooperative coevolution.","a":"Divide a problem into subcomponents, evolve each separately, and combine for evaluation."},
-    {"q":"What are challenges in competitive coevolution?","a":"Non-transitive fitness relationships, cycling, and need for diversity maintenance."}
+    {"q":"What are challenges in competitive coevolution?","a":"Non-transitive fitness relationships, cycling, and need for diversity maintenance."},
+    {"q":"What is the 'big valley' hypothesis?","a":"High-quality solutions cluster centrally in the search space, aiding local search."},
+    {"q":"What is strategic oscillation in Tabu Search?","a":"Alternating between feasible and infeasible regions to explore boundaries and escape optima."}
   ],
   "trueFalse": [
     {"q":"A tabu list permanently prevents moves from being revisited.","a":false},
