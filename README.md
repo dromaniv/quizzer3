@@ -2,8 +2,6 @@
 
 A modern, interactive study application for Biologically-Inspired Algorithms and Methods (B.I.A.M). This web-based tool helps students learn and test their knowledge through multiple study modes.
 
-![B.I.A.M Study Suite Screenshot](https://via.placeholder.com/800x450.png?text=B.I.A.M+Study+Suite)
-
 ## Features
 
 ### 📚 Multiple Study Modes
@@ -38,7 +36,7 @@ A modern, interactive study application for Biologically-Inspired Algorithms and
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/quizzer3.git
+   git clone https://github.com/dromaniv/quizzer3.git
    ```
 
 2. Open `index.html` in your browser:
