@@ -156,7 +156,89 @@ textarea{
 
 /* floating selection btn */
 #selAsk{position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;background:var(--brand);color:#fff;border:0;border-radius:var(--radius);font-weight:600;box-shadow:var(--shadow)}
-@media(max-width:600px){.card{height:200px}.btn{flex:1}}
+
+/* Minecraft parkour video button and player */
+#parkourBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+#parkourBtn:hover {
+  transform: scale(1.1);
+  background: var(--brand-h);
+}
+#videoContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 280px; /* Desktop width */
+  height: 500px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 9997;
+  overflow: hidden;
+  transform-origin: bottom right;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: move; /* Indicate the element is draggable */
+}
+#videoContainer.active {
+  transform: scale(1);
+  opacity: 1;
+}
+#videoContainer iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  aspect-ratio: 9/16;
+  object-fit: cover;
+  pointer-events: none; /* Prevents iframe from capturing mouse events when dragging */
+}
+#closeVideo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+#closeVideo:hover {
+  background: var(--brand-h);
+}
+/* Make video smaller on mobile */
+@media (max-width: 768px) {
+  #videoContainer {
+    width: 200px;
+    height: 356px;
+  }
+}
 </style>
 </head>
 
@@ -227,6 +309,11 @@ textarea{
 </main>
 
 <button id="selAsk">Ask ChatGPT</button>
+<button id="parkourBtn">🧠</button>
+<div id="videoContainer">
+  <button id="closeVideo">✖</button>
+  <iframe id="parkourVideo" src="" frameborder="0" allowfullscreen></iframe>
+</div>
 
 <!-- ----------------------- APP ----------------------- -->
 <script>
@@ -399,6 +486,152 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
 
  float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on biologically-inspired algorithms:\n"${txt}"`)};
 })();
+
+/* PARKOUR VIDEO */
+const parkourBtn = document.getElementById('parkourBtn');
+const videoContainer = document.getElementById('videoContainer');
+const closeVideo = document.getElementById('closeVideo');
+const parkourVideo = document.getElementById('parkourVideo');
+
+// Variables for dragging functionality
+let isDragging = false;
+let initialX, initialY;
+let currentX = 0, currentY = 0; // Will be set on open
+
+// Add touch and mouse event listeners for dragging
+videoContainer.addEventListener('mousedown', startDrag);
+videoContainer.addEventListener('touchstart', startDrag, { passive: false });
+document.addEventListener('mousemove', drag);
+document.addEventListener('touchmove', drag, { passive: false });
+document.addEventListener('mouseup', stopDrag);
+document.addEventListener('touchend', stopDrag);
+
+// Function to start dragging
+function startDrag(e) {
+  // Prevent default behavior only for touch events
+  if (e.type === 'touchstart') {
+    e.preventDefault();
+  }
+
+  // Only handle drag on the container itself, not on the close button
+  if (e.target === closeVideo) return;
+
+  isDragging = true;
+
+  const containerRect = videoContainer.getBoundingClientRect();
+
+  // Get initial position
+  if (e.type === 'touchstart') {
+    initialX = e.touches[0].clientX - containerRect.left;
+    initialY = e.touches[0].clientY - containerRect.top;
+  } else {
+    initialX = e.clientX - containerRect.left;
+    initialY = e.clientY - containerRect.top;
+  }
+
+  // Add a class to indicate active dragging (optional)
+  videoContainer.classList.add('dragging');
+}
+
+// Function to handle dragging
+function drag(e) {
+  if (!isDragging) return;
+
+  // Prevent default to avoid scroll on mobile
+  e.preventDefault();
+
+  // Calculate new position
+  if (e.type === 'touchmove') {
+    currentX = e.touches[0].clientX - initialX;
+    currentY = e.touches[0].clientY - initialY;
+  } else {
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
+  }
+
+  // Apply constraints to keep within viewport
+  const containerRect = videoContainer.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  // Constrain X position
+  if (currentX < 0) currentX = 0;
+  if (currentX + containerRect.width > viewportWidth) {
+    currentX = viewportWidth - containerRect.width;
+  }
+
+  // Constrain Y position
+  if (currentY < 0) currentY = 0;
+  if (currentY + containerRect.height > viewportHeight) {
+    currentY = viewportHeight - containerRect.height;
+  }
+
+  // Apply new position
+  videoContainer.style.right = 'auto';
+  videoContainer.style.bottom = 'auto';
+  videoContainer.style.left = currentX + 'px';
+  videoContainer.style.top = currentY + 'px';
+}
+
+// Function to stop dragging
+function stopDrag() {
+  if (!isDragging) return;
+  isDragging = false;
+  videoContainer.classList.remove('dragging');
+}
+
+// Video URLs - using embed links that work with autoplay and loop with minimal UI
+const parkourVideos = [
+  'https://www.youtube.com/embed/7yl7Wc1dtWc?autoplay=1&mute=1&loop=1&playlist=7yl7Wc1dtWc&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1',
+  'https://www.youtube.com/embed/tCBOhczn6Ok?autoplay=1&mute=1&loop=1&playlist=tCBOhczn6Ok&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1'
+];
+
+// Show random video when button is clicked
+parkourBtn.addEventListener('click', () => {
+  // Get random video URL
+  const randomIndex = Math.floor(Math.random() * parkourVideos.length);
+  const videoUrl = parkourVideos[randomIndex];
+
+  // Set the iframe source
+  parkourVideo.src = videoUrl;
+
+  // Hide button and show container with animation
+  parkourBtn.style.opacity = '0';
+  setTimeout(() => {
+    parkourBtn.style.display = 'none';
+
+    // Reset position to default bottom-right before showing
+    videoContainer.style.right = '20px';
+    videoContainer.style.bottom = '20px';
+    videoContainer.style.left = 'auto';
+    videoContainer.style.top = 'auto';
+
+    videoContainer.style.display = 'block';
+
+    // Start animation after a small delay
+    setTimeout(() => {
+      videoContainer.classList.add('active');
+    }, 10);
+  }, 300);
+});
+
+// Hide video when close button is clicked
+closeVideo.addEventListener('click', () => {
+  // Animate container back to button
+  videoContainer.classList.remove('active');
+
+  // After animation completes, hide container and show button
+  setTimeout(() => {
+    videoContainer.style.display = 'none';
+    parkourVideo.src = ''; // Clear iframe source to stop video
+    parkourBtn.style.display = 'flex';
+
+    // Fade in button
+    setTimeout(() => {
+      parkourBtn.style.opacity = '1';
+    }, 10);
+  }, 300);
+});
 </script>
 </body>
 </html>
