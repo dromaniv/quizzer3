@@ -109,10 +109,49 @@ textarea{
 .collapsible {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--transition-speed) ease;
+  transition: max-height var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out, padding var(--transition-speed) ease-out;
+  opacity: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--card-h);
+  padding: 0 1rem;
+  border: 1px solid var(--border);
+  border-top: none;
+  font-weight: 600;
 }
 .collapsible.expanded {
   max-height: 1000px; /* Large enough to fit any content */
+  opacity: 1;
+  padding: 1rem;
+}
+.accordion {
+  margin-bottom: 1rem;
+}
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1.2rem;
+}
+.toggle-btn.active {
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: none;
+}
+.toggle-btn::after {
+  content: "▼";
+  transition: transform var(--transition-speed) ease;
+  margin-left: auto;
+  font-size: 0.75rem;
+}
+.toggle-btn.active::after {
+  transform: rotate(180deg);
 }
 
 /* floating selection btn */
@@ -162,8 +201,12 @@ textarea{
     <div class="block">
       <p id="waQ" style="font-weight:600"></p>
       <textarea id="waInput" placeholder="Your answer…"></textarea>
-      <button id="waToggle" class="btn fill">Show model answer</button>
-      <div id="waA" class="collapsible" style="font-weight:600;padding-top:1rem;"></div>
+
+      <div class="accordion">
+        <button id="waToggle" class="btn toggle-btn">Correct answer</button>
+        <div id="waA" class="collapsible"></div>
+      </div>
+
       <div class="row"><button id="waPrev" class="btn neutral">Prev</button><button id="waNext" class="btn fill">Next</button></div>
       <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">Ask ChatGPT</button></div>
     </div>
@@ -247,7 +290,8 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
    q.textContent=arr[i].q;
    aBox.textContent = '';
    aBox.classList.remove('expanded');
-   tBtn.textContent='Show model answer';
+   tBtn.classList.remove('active');
+   tBtn.textContent='Model answer';
  };
 
  render();
@@ -263,8 +307,8 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
    // Toggle expanded class for animation
    aBox.classList.toggle('expanded');
 
-   // Update button text
-   tBtn.textContent = isExpanded ? 'Show model answer' : 'Hide answer';
+   // Toggle active class on button for style changes
+   tBtn.classList.toggle('active');
  };
 
  $('#waPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
