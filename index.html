@@ -318,8 +318,14 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
 /* TRUE/FALSE */
 (async()=>{
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
- const q=$('#tfQ'),fb=$('#tfFeedback'),btns=$$('#tf button.option');
- const render=()=>{q.textContent=arr[i].q;fb.textContent='';btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')})};
+ const q=$('#tfQ'),btns=$$('#tf button.option');
+ const render=()=>{
+   q.textContent=arr[i].q;
+   btns.forEach(b=>{
+     b.disabled=false;
+     b.classList.remove('correct','wrong','disabled');
+   });
+ };
  btns.forEach(b=>b.onclick=()=>{
   const ans=b.dataset.val==='true',ok=arr[i].a;
   btns.forEach(x=>{x.disabled=true;x.classList.add('disabled')});
