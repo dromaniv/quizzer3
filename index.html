@@ -513,8 +513,10 @@ function startDrag(e) {
     e.preventDefault();
   }
 
-  // Only handle drag on the container itself, not on the close button
-  if (e.target === closeVideo) return;
+  // Don't initiate drag if the target is the close button or a child of the close button
+  if (e.target === closeVideo || closeVideo.contains(e.target)) {
+    return;
+  }
 
   isDragging = true;
 
