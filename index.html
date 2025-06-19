@@ -1,442 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Biologically-Inspired Algorithms &amp; Models Study App</title>
-  <!-- Markdown parser -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    :root {
-      --brand: #4a90e2;
-      --bg: #f0f4f8;
-      --card: #fff;
-      --txt: #333;
-      --border: #ccc;
-      --radius: 8px;
-      --shadow: rgba(0,0,0,0.1);
-      --font: 1rem;
-    }
-    body.dark {
-      --bg: #121212;
-      --card: #1e1e1e;
-      --txt: #eee;
-      --border: #555;
-    }
-    body.notes-mode main {
-      max-width: none;
-      width: 100%;
-    }
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      font-size: var(--font);
-      background: var(--bg);
-      color: var(--txt);
-      display: flex; flex-direction: column; min-height: 100vh;
-      transition: background .3s, color .3s;
-    }
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--brand); color: #fff; padding: 1rem;
-      box-shadow: 0 2px 4px var(--shadow);
-    }
-    header h1 { font-size:1.25rem; }
-    #dark-toggle {
-      background: transparent; border: none; font-size: 1.2rem;
-      cursor: pointer; color: #fff;
-    }
-    nav {
-      display: flex; background: var(--card);
-      box-shadow: 0 2px 4px var(--shadow); overflow-x: auto;
-    }
-    nav button {
-      flex: 1 0 auto; padding: 0.75rem; border: none;
-      background: var(--card); color: var(--txt);
-      font-size: 1rem; cursor: pointer; transition: background .3s;
-    }
-    nav button.active,
-    nav button:hover {
-      background: var(--brand); color: #fff;
-    }
-    main {
-      flex: 1; padding: 2rem; max-width: 800px; margin: auto; width: 100%;
-      transition: max-width .3s;
-    }
-    .mode-section { display: none; }
-    .mode-section.active { display: block; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>B.I.A.M. Study Suite</title>
+<!-- external tiny-footprint markdown parser -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    /* Flashcards */
-    .flashcard-container { perspective: 1200px; text-align: center; }
-    .card {
-      width: 90%; max-width: 360px; height: 220px; margin: auto; cursor: pointer;
-      transform-style: preserve-3d; transition: transform .6s;
-      border-radius: var(--radius); box-shadow: 0 4px 8px var(--shadow);
-      position: relative;
-    }
-    .card.flipped { transform: rotateY(180deg); }
-    .card-face {
-      position: absolute; width: 100%; height: 100%;
-      backface-visibility: hidden; background: var(--card);
-      border-radius: var(--radius); display: flex;
-      align-items: center; justify-content: center;
-      padding: 1rem; text-align: center; font-size: 1.1rem;
-    }
-    .card-face.back { transform: rotateY(180deg); }
-    .fc-nav{
-      display:flex;
-      gap:1rem;
-      width:100%;
-    }
-    .fc-controls {
-      margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;
-    }
-    .fc-controls button {
-      padding: .5rem 1rem; border: none; border-radius: var(--radius);
-      background: var(--brand); color: #fff; cursor: pointer;
-      transition: background .3s;
-      flex: 1;
-    }
-    #ask-fc {
-      background: transparent; border: 1px solid #fff; color: #fff;
-    }
-    .ask-btn.standalone{
-      width:100%;
-      margin-top:1rem;
-    }
+<!-- ============  DESIGN SYSTEM  ============ -->
+<style>
+:root{
+  /* palette */
+  --blue:#3b82f6;          --blue-hover:#2563eb;
+  --green:#10b981;         --red:#ef4444;
+  --surface:#ffffff;       --surface-h:#f3f4f6;
+  --text:#111827;          --muted:#6b7280;
+  --border:#e5e7eb;        --shadow:0 4px 10px rgb(0 0 0/.07);
+  --radius:0.75rem;
+  /* typo & sizing */
+  --font-base:clamp(.9rem,2.2vw,.98rem);
+  --line:1.55;
+  --container:960px;
+}
+/* dark */
+@media (prefers-color-scheme:dark){
+ :root{
+  --surface:#1f2937;  --surface-h:#374151;
+  --text:#f9fafb;     --muted:#9ca3af; --border:#374151;
+  --shadow:0 4px 16px rgb(0 0 0/.4);
+ }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:var(--font-base);line-height:var(--line);
+  background:var(--surface);color:var(--text);display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;scroll-behavior:smooth;
+}
+a{text-decoration:none;color:var(--blue)}
+button{font:inherit;cursor:pointer;transition:.2s ease all}
+svg{pointer-events:none}
 
-    /* Quiz & True/False */
-    .quiz-item, .tf-container button {
-      margin-bottom: 1rem; padding: 1rem;
-      background: var(--card); border-radius: var(--radius);
-      box-shadow: 0 2px 4px var(--shadow); transition: transform .2s;
-    }
-    .quiz-item:hover, .tf-container button:hover {
-      transform: translateY(-2px);
-    }
-    .quiz-item p { margin-bottom: .75rem; font-weight: bold; }
-    .quiz-item button, .tf-container button {
-      width: 100%; margin: .25rem 0; padding: .75rem;
-      border: 1px solid var(--border); border-radius: var(--radius);
-      background: var(--card); color: var(--txt);
-      cursor: pointer; transition: background .3s, border-color .3s;
-      text-align: center; font-size: 1rem;
-    }
-    .quiz-item button.correct {
-      border-color: #4caf50; background: #2e4a2e; color: #fff;
-    }
-    .quiz-item button.wrong {
-      border-color: #f44336; background: #4a1e1e; color: #fff;
-    }
-    .ask-btn {
-      margin-top: .5rem; background: var(--brand); color: #fff;
-      border: none; padding: .5rem; border-radius: var(--radius);
-    }
-    #selection-ask{
-      padding:.35rem .75rem;
-      font-size:.9rem;
-      background:var(--brand);
-      color:#fff;
-      border:none;
-      border-radius:var(--radius);
-      cursor:pointer;
-      position:absolute;
-      display:none;
-      z-index:999;
-    }
-    #quiz-score { text-align: center; font-weight: bold; margin-top: 1rem; }
+header{
+  background:var(--blue);color:#fff;padding:0.8rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow);z-index:100;
+}
+header h1{font-size:1.1rem;letter-spacing:.01em;font-weight:600}
+.btn-icon{background:none;border:0;color:inherit;font-size:1.2rem;line-height:1}
 
-    /* Written Answer */
-    .wa-container, .tf-container {
-      display: flex; flex-direction: column; gap: 1rem; align-items: center;
-    }
-    .wa-container textarea {
-      width: 100%; min-height: 80px; padding: .75rem;
-      border: 1px solid var(--border); border-radius: var(--radius);
-      font-size: 1rem; resize: vertical;
-      background: var(--card); color: var(--txt);
-    }
-    .wa-container button {
-      padding: .5rem 1.5rem; border: none; border-radius: var(--radius);
-      background: var(--brand); color: #fff; cursor: pointer;
-    }
-    .feedback { font-weight: bold; font-size: 1.1rem; }
-    .next-btn { background: #333; color: #fff; }
+nav{
+  background:var(--surface-h);box-shadow:var(--shadow);overflow-x:auto;
+  display:flex;gap:.25rem;padding:.25rem 0;position:sticky;top:0;z-index:90;
+}
+nav button{
+  flex:1 0 115px;padding:.55rem .75rem;background:none;border:0;
+  color:var(--muted);font-weight:600;white-space:nowrap;border-radius:var(--radius);
+}
+nav button.active,nav button:hover{
+  background:var(--blue);color:#fff;
+}
 
-    /* Notes */
-    #notes-container {
-      background: var(--card); padding: 2rem;
-      border-radius: var(--radius); box-shadow: 0 2px 4px var(--shadow);
-      line-height: 1.6;
-    }
+main{flex:1;width:100%;display:flex;justify-content:center;padding:1rem}
+.view{display:none;max-width:var(--container);width:100%}
+.view.active{display:block}
 
-    /* Mobile tweaks */
-    @media (max-width: 600px) {
-      body { font-size: .95rem; }
-      main { padding: 1rem; }
-      nav button { font-size: .85rem; padding: .6rem; }
-    }
-  </style>
+.card-stack{perspective:1200px;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.card{
+  width:100%;max-width:450px;height:260px;position:relative;
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  transform-style:preserve-3d;transition:.6s transform;
+  background:var(--surface-h);display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:1rem;font-size:1.15rem;font-weight:500
+}
+.card.flipped{transform:rotateY(180deg)}
+.card .side{
+  position:absolute;width:100%;height:100%;backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center
+}
+.card .back{transform:rotateY(180deg)}
+
+.fc-toolbar{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center}
+.btn{
+  border:1px solid var(--border);border-radius:var(--radius);padding:.55rem 1.25rem;
+  background:var(--surface);color:var(--text);font-weight:600
+}
+.btn.blue{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.outline{background:none;border:2px solid var(--blue);color:var(--blue)}
+.btn.blue:hover{background:var(--blue-hover)}
+.btn.outline:hover{background:var(--blue);color:#fff}
+
+.quiz-block{display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2.5rem}
+.option-btn{
+  border:1px solid var(--border);padding:.9rem;border-radius:var(--radius);
+  background:var(--surface-h);text-align:left;width:100%;
+}
+.option-btn:hover:not(.disabled){background:var(--surface)}
+.correct{background:rgba(16,185,129,.85)!important;color:#fff;border-color:var(--green)!important}
+.wrong{background:rgba(239,68,68,.85)!important;color:#fff;border-color:var(--red)!important}
+.option-btn.disabled{opacity:.6;cursor:not-allowed}
+
+.score{text-align:center;font-weight:700;margin-top:-1rem}
+
+.wa-wrap, .tf-wrap{display:flex;flex-direction:column;gap:1rem}
+textarea{
+  width:100%;padding:1rem;border-radius:var(--radius);
+  background:var(--surface-h);border:1px solid var(--border);min-height:140px;
+  resize:vertical;color:inherit
+}
+
+.notes-box{
+  background:var(--surface-h);border-radius:var(--radius);
+  padding:2rem;box-shadow:var(--shadow);position:relative
+}
+#sel-ask{
+  position:fixed;top:0;left:0;transform:translate(-50%,-50%);
+  display:none;padding:.45rem .9rem;font-weight:600;
+  border-radius:var(--radius);background:var(--blue);color:#fff;
+  box-shadow:var(--shadow);z-index:9999;border:0
+}
+
+/* small devices */
+@media(max-width:650px){
+  .card{height:200px}
+  .btn{flex:1}
+}
+</style>
 </head>
+
 <body>
+<header>
+  <h1>B.I.A.M. Study Suite</h1>
+  <button id="theme-btn" class="btn-icon" aria-label="Toggle colour scheme">🌙</button>
+</header>
 
-  <header>
-    <h1>Biologically-Inspired Algorithms &amp; Models</h1>
-    <button id="dark-toggle" aria-label="Toggle Dark Mode">🌙</button>
-  </header>
+<nav>
+  <button data-view="flash"  class="active">Flashcards</button>
+  <button data-view="mcq">Multiple&nbsp;Choice</button>
+  <button data-view="written">Written</button>
+  <button data-view="tf">True / False</button>
+  <button data-view="notes">Notes</button>
+</nav>
 
-  <nav>
-    <button data-mode="flash" class="active">Flashcards</button>
-    <button data-mode="mcq">Multiple Choice</button>
-    <button data-mode="written">Written Answer</button>
-    <button data-mode="truefalse">True / False</button>
-    <button data-mode="notes">Notes</button>
-  </nav>
-
-  <main>
-    <!-- Flashcards -->
-    <section id="flash" class="mode-section active">
-      <div class="flashcard-container">
-        <div id="card" class="card">
-          <div class="card-face front" id="fc-q"></div>
-          <div class="card-face back" id="fc-a"></div>
-        </div>
-        <div class="fc-nav">
-          <button id="prev-fc">Previous</button>
-          <button id="next-fc">Next</button>
-        </div>
-        <button id="ask-fc" class="ask-btn standalone">Ask ChatGPT</button>
+<main>
+  <!-- Flashcards -->
+  <section id="flash" class="view active">
+    <div class="card-stack">
+      <div class="card" id="fc-card">
+        <div class="side front" id="fc-q"></div>
+        <div class="side back"  id="fc-a"></div>
       </div>
-    </section>
-
-    <!-- Multiple Choice -->
-    <section id="mcq" class="mode-section">
-      <div id="mcq-container"></div>
-      <div id="quiz-score"></div>
-    </section>
-
-    <!-- Written Answer -->
-    <section id="written" class="mode-section">
-      <div class="wa-container">
-        <p id="wa-q"></p>
-        <textarea id="wa-input" placeholder="Type your answer..."></textarea>
-        <button id="wa-check">Show Answer</button>
-        <div id="wa-feedback" class="feedback"></div>
-        <button id="wa-ask" class="ask-btn">Ask ChatGPT</button>
-        <button id="wa-next" class="next-btn">Next Question</button>
+      <div class="fc-toolbar">
+        <button id="fc-prev" class="btn">Prev</button>
+        <button id="fc-next" class="btn blue">Next</button>
+        <button id="fc-ask"  class="btn outline">Ask ChatGPT</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- True / False -->
-    <section id="truefalse" class="mode-section">
-      <div class="tf-container">
-        <p id="tf-q"></p>
-        <button data-val="true">True</button>
-        <button data-val="false">False</button>
-        <div id="tf-feedback" class="feedback"></div>
-        <button id="tf-ask" class="ask-btn">Ask ChatGPT</button>
-        <button id="tf-next" class="next-btn">Next Question</button>
+  <!-- Multiple-Choice -->
+  <section id="mcq" class="view">
+    <div id="mcq-wrapper"></div>
+    <p class="score" id="mcq-score"></p>
+  </section>
+
+  <!-- Written -->
+  <section id="written" class="view">
+    <div class="wa-wrap">
+      <p id="wa-q" style="font-weight:bold"></p>
+      <textarea id="wa-input" placeholder="Jot your answer here…"></textarea>
+      <button id="wa-show" class="btn blue">Show Answer</button>
+      <div id="wa-a" style="font-weight:600"></div>
+      <div style="display:flex;gap:.75rem;justify-content:center">
+        <button class="btn" id="wa-prev">Prev</button>
+        <button class="btn blue" id="wa-next">Next</button>
+        <button class="btn outline" id="wa-ask">Ask ChatGPT</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Notes -->
-    <section id="notes" class="mode-section">
-      <div id="notes-container">Loading notes…</div>
-    </section>
-  </main>
+  <!-- True / False -->
+  <section id="tf" class="view">
+    <div class="tf-wrap">
+      <p id="tf-q" style="font-weight:bold"></p>
+      <div style="display:flex;gap:1rem">
+        <button class="btn option-btn" data-val="true">True</button>
+        <button class="btn option-btn" data-val="false">False</button>
+      </div>
+      <p id="tf-feedback"></p>
+      <div style="display:flex;gap:.75rem;justify-content:center">
+        <button class="btn" id="tf-prev">Prev</button>
+        <button class="btn blue"  id="tf-next">Next</button>
+        <button class="btn outline" id="tf-ask">Ask ChatGPT</button>
+      </div>
+    </div>
+  </section>
 
-  <button id="selection-ask" class="ask-btn" style="position:absolute;display:none;z-index:999;"></button>
+  <!-- Notes -->
+  <section id="notes" class="view">
+    <article id="notes-container" class="notes-box">Loading …</article>
+  </section>
+</main>
 
-  <script>
-  (async () => {
-    const json = await fetch('data.json').then(r => r.json());
-    // shuffle helper
-    const shuffle = a => {
-      for (let i=a.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [a[i],a[j]]=[a[j],a[i]];
-      }
+<!-- floating ask selection -->
+<button id="sel-ask">Ask ChatGPT</button>
+
+<!-- ============  APP  ============ -->
+<script>
+/* ---------- resources ---------- */
+let DATA;
+(async()=>DATA=await (await fetch('data.json')).json())();
+
+/* ---------- theme toggle ---------- */
+const btnTheme=document.getElementById('theme-btn');
+btnTheme.onclick=()=>document.documentElement.classList.toggle('dark');
+
+/* ---------- nav ---------- */
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelector('nav button.active').classList.remove('active');
+    btn.classList.add('active');
+    document.querySelector('.view.active').classList.remove('active');
+    document.getElementById(btn.dataset.view).classList.add('active');
+  };
+});
+
+/* ---------- helpers ---------- */
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}};
+const link=q=>`https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q=${encodeURIComponent(q)}`;
+
+/* ---------- FLASHCARDS ---------- */
+(async()=>{
+ await new Promise(r=>{const id=setInterval(()=>DATA&&(clearInterval(id),r()),50)});
+ shuffle(DATA.flashcards);
+ let idx=0;const card=document.getElementById('fc-card'),qel=document.getElementById('fc-q'),ael=document.getElementById('fc-a');
+ const show=i=>{const c=DATA.flashcards[i];qel.textContent=c.q;ael.textContent=c.a;card.classList.remove('flipped');};
+ show(0);
+ card.onclick=()=>card.classList.toggle('flipped');
+ document.getElementById('fc-prev').onclick=()=>show(idx=(idx-1+DATA.flashcards.length)%DATA.flashcards.length);
+ document.getElementById('fc-next').onclick=()=>show(idx=(idx+1)%DATA.flashcards.length);
+ document.getElementById('fc-ask').onclick=()=>window.open(link(`${qel.textContent}\n\nAnswer: ${ael.textContent}`),'_blank');
+})();
+
+/* ---------- MCQ ---------- */
+(async()=>{
+ await new Promise(r=>{const id=setInterval(()=>DATA&&(clearInterval(id),r()),50)});
+ shuffle(DATA.multipleChoice);
+ const wrap=document.getElementById('mcq-wrapper'),scoreEl=document.getElementById('mcq-score');
+ let score=0;
+ DATA.multipleChoice.forEach((q,i)=>{
+  shuffle(q.choices);
+  const block=document.createElement('div');block.className='quiz-block';
+  block.innerHTML=`<p>${i+1}. ${q.question}</p>`;
+  const opts=document.createElement('div');opts.style.display='grid';opts.style.gap='.75rem';
+  const optBtns=[];
+  q.choices.forEach(ch=>{
+    const b=document.createElement('button');b.className='option-btn';b.textContent=ch;
+    b.onclick=()=>{
+      optBtns.forEach(x=>x.disabled=true);
+      if(ch===q.answer){b.classList.add('correct');score++;}
+      else{b.classList.add('wrong');optBtns.find(x=>x.textContent===q.answer).classList.add('correct');}
+      scoreEl.textContent=`Score ${score}/${DATA.multipleChoice.length}`;
     };
-    shuffle(json.flashcards);
-    json.multipleChoice.forEach(q=>shuffle(q.choices));
-    shuffle(json.multipleChoice);
-    shuffle(json.writtenAnswer);
-    shuffle(json.trueFalse);
+    optBtns.push(b);opts.appendChild(b);
+  });
+  block.appendChild(opts);
+  const ask=document.createElement('button');ask.textContent='Ask ChatGPT';ask.className='btn outline';
+  ask.onclick=()=>window.open(link(`${q.question}\nOptions: ${q.choices.join(', ')}\nAnswer: ${q.answer}`),'_blank');
+  block.appendChild(ask);
+  wrap.appendChild(block);
+ });
+})();
 
-    // build ChatGPT link
-    const buildLink = prompt =>
-      'https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q=' +
-      encodeURIComponent(prompt);
+/* ---------- WRITTEN ---------- */
+(async()=>{
+ await new Promise(r=>{const id=setInterval(()=>DATA&&(clearInterval(id),r()),50)});
+ shuffle(DATA.writtenAnswer);
+ let i=0;const qel=document.getElementById('wa-q'),ta=document.getElementById('wa-input'),ans=document.getElementById('wa-a');
+ const show=k=>{const it=DATA.writtenAnswer[k];qel.textContent=it.q;ans.textContent='';ta.value='';};
+ show(0);
+ document.getElementById('wa-show').onclick=()=>ans.textContent=DATA.writtenAnswer[i].a;
+ document.getElementById('wa-next').onclick=()=>show(i=(i+1)%DATA.writtenAnswer.length);
+ document.getElementById('wa-prev').onclick=()=>show(i=(i-1+DATA.writtenAnswer.length)%DATA.writtenAnswer.length);
+ document.getElementById('wa-ask').onclick=()=>window.open(link(`${DATA.writtenAnswer[i].q}\nAnswer: ${DATA.writtenAnswer[i].a}`),'_blank');
+})();
 
-    // dark mode
-    const dt = document.getElementById('dark-toggle');
-    if (localStorage.getItem('darkMode')==='enabled'){
-      document.body.classList.add('dark'); dt.textContent='☀️';
-    }
-    dt.onclick = () => {
-      const on = document.body.classList.toggle('dark');
-      dt.textContent = on?'☀️':'🌙';
-      localStorage.setItem('darkMode', on?'enabled':'disabled');
-    };
+/* ---------- TRUE/FALSE ---------- */
+(async()=>{
+ await new Promise(r=>{const id=setInterval(()=>DATA&&(clearInterval(id),r()),50)});
+ shuffle(DATA.trueFalse);
+ let i=0;const qel=document.getElementById('tf-q'),fb=document.getElementById('tf-feedback'),
+       btns=[...document.querySelectorAll('#tf button[data-val]')];
+ const show=k=>{const q=DATA.trueFalse[k];qel.textContent=q.q;fb.textContent='';btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong')});};
+ const handle=e=>{
+  const correct=DATA.trueFalse[i].a,val=e.target.dataset.val==='true';
+  if(val===correct){e.target.classList.add('correct');fb.textContent='✓ Correct';}
+  else{e.target.classList.add('wrong');fb.textContent=`✗ Wrong — ${correct?'True':'False'}`;}
+  btns.forEach(b=>b.disabled=true);
+ };
+ btns.forEach(b=>b.onclick=handle);
+ document.getElementById('tf-next').onclick=()=>show(i=(i+1)%DATA.trueFalse.length);
+ document.getElementById('tf-prev').onclick=()=>show(i=(i-1+DATA.trueFalse.length)%DATA.trueFalse.length);
+ document.getElementById('tf-ask').onclick=()=>window.open(link(`${DATA.trueFalse[i].q}\nAnswer: ${DATA.trueFalse[i].a?'True':'False'}`),'_blank');
+ show(0);
+})();
 
-    // nav
-    document.querySelectorAll('nav button').forEach(btn=>{
-      btn.onclick=()=>{
-        document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.mode-section').forEach(s=>s.classList.remove('active'));
-        document.getElementById(btn.dataset.mode).classList.add('active');
-        document.body.classList.toggle('notes-mode', btn.dataset.mode==='notes');
-      };
-    });
-
-    // FLASHCARDS
-    let fc=0;
-    const fcQ=document.getElementById('fc-q'),
-          fcA=document.getElementById('fc-a'),
-          card=document.getElementById('card'),
-          askFc=document.getElementById('ask-fc');
-    const showFC=i=>{
-      const c=json.flashcards[i];
-      fcQ.textContent=c.q;
-      fcA.textContent=c.a;
-      card.classList.remove('flipped');
-      askFc.onclick=()=>{
-        const prompt=`Explain this flashcard:\nQuestion: ${c.q}\nAnswer: ${c.a}`;
-        window.open(buildLink(prompt),'_blank');
-      };
-    };
-    document.getElementById('next-fc').onclick=()=>showFC(fc=(fc+1)%json.flashcards.length);
-    document.getElementById('prev-fc').onclick=()=>showFC(fc=(fc-1+json.flashcards.length)%json.flashcards.length);
-    card.onclick=()=>card.classList.toggle('flipped');
-    showFC(fc);
-
-    // MCQ
-    const mcqCt=document.getElementById('mcq-container'),
-          scoreEl=document.getElementById('quiz-score');
-    const buildMC=()=>{
-      let score=0;
-      mcqCt.innerHTML='';
-      json.multipleChoice.forEach((q,i)=>{
-        const box=document.createElement('div');
-        box.className='quiz-item';
-        box.innerHTML=`<p>${i+1}. ${q.question}</p>`;
-        q.choices.forEach(ch=>{
-          const btn=document.createElement('button');
-          btn.textContent=ch;
-          btn.onclick=()=>{
-            if(ch===q.answer){
-              btn.classList.add('correct'); score++;
-            } else {
-              btn.classList.add('wrong');
-              box.querySelectorAll('button').forEach(b=>{
-                if(b.textContent===q.answer) b.classList.add('correct');
-              });
-            }
-            box.querySelectorAll('button').forEach(b=>{
-              if(!b.classList.contains('ask-btn')) b.disabled=true;
-            });
-            scoreEl.textContent=`Score: ${score} / ${json.multipleChoice.length}`;
-          };
-          box.appendChild(btn);
-        });
-        const askBtn=document.createElement('button');
-        askBtn.textContent='Ask ChatGPT';
-        askBtn.className='ask-btn';
-        askBtn.onclick=()=>{
-          const prompt=`Explain this multiple-choice question:\nQuestion: ${q.question}\nChoices: ${q.choices.join(', ')}\nAnswer: ${q.answer}`;
-          window.open(buildLink(prompt),'_blank');
-        };
-        box.appendChild(askBtn);
-        mcqCt.appendChild(box);
-      });
-      scoreEl.textContent=`Score: 0 / ${json.multipleChoice.length}`;
-    };
-    buildMC();
-
-    // WRITTEN
-    let wa=0;
-    const waQ=document.getElementById('wa-q'),
-          waIn=document.getElementById('wa-input'),
-          waFb=document.getElementById('wa-feedback'),
-          waChk=document.getElementById('wa-check'),
-          waAsk=document.getElementById('wa-ask'),
-          waNx=document.getElementById('wa-next');
-    const showWA=i=>{
-      const q=json.writtenAnswer[i];
-      wa=i; waQ.textContent=q.q;
-      waIn.value=''; waFb.textContent=''; waNx.style.display='none';
-      waAsk.onclick=()=>{
-        window.open(buildLink(`Explain this question:\nQuestion: ${q.q}\nAnswer: ${q.a}`),'_blank');
-      };
-    };
-    waChk.onclick=()=>{
-      waFb.textContent=`Answer: ${json.writtenAnswer[wa].a}`;
-      waNx.style.display='inline-block';
-    };
-    waNx.onclick=()=>showWA((wa+1)%json.writtenAnswer.length);
-    showWA(0);
-
-    // TRUE/FALSE
-    let tf=0;
-    const tfQ=document.getElementById('tf-q'),
-          tfFb=document.getElementById('tf-feedback'),
-          tfBtns=document.querySelectorAll('#truefalse button[data-val]'),
-          tfAsk=document.getElementById('tf-ask'),
-          tfNx=document.getElementById('tf-next');
-    const showTF=i=>{
-      const q=json.trueFalse[i];
-      tf=i; tfQ.textContent=q.q; tfFb.textContent='';
-      tfBtns.forEach(b=>{ b.disabled=false; b.classList.remove('correct','wrong'); });
-      tfAsk.onclick=()=>{
-        window.open(buildLink(`Explain this true/false question:\nQuestion: ${q.q}\nAnswer: ${q.a?'True':'False'}`),'_blank');
-      };
-      tfNx.style.display='none';
-    };
-    tfBtns.forEach(b=>{
-      b.onclick=()=>{
-        const val=b.dataset.val==='true',
-              ok=json.trueFalse[tf].a;
-        if(val===ok){
-          b.classList.add('correct');
-          tfFb.textContent='✅ Correct!';
-          tfFb.className='feedback correct';
-        } else {
-          b.classList.add('wrong');
-          tfFb.textContent=`❌ Wrong. Answer: ${ok?'True':'False'}`;
-          tfFb.className='feedback wrong';
-        }
-        tfBtns.forEach(x=>x.disabled=true);
-        tfNx.style.display='inline-block';
-      };
-    });
-    tfNx.onclick=()=>showTF((tf+1)%json.trueFalse.length);
-    showTF(0);
-
-    // NOTES
-    fetch('notes.md')
-      .then(r=>r.text())
-      .then(md=>document.getElementById('notes-container').innerHTML=marked.parse(md));
-
-    /* ====== ask ChatGPT for selected text in notes ====== */
-    const selBtn=document.getElementById('selection-ask');
-    const notesEl=document.getElementById('notes-container');
-    document.addEventListener('mousedown',()=>selBtn.style.display='none');
-    notesEl.addEventListener('mouseup',e=>{
-      const sel=window.getSelection();
-      const text=sel.toString().trim();
-      if(!text) return;
-      const rect=sel.getRangeAt(0).getBoundingClientRect();
-      selBtn.style.top=`${rect.bottom+window.scrollY+5}px`;
-      selBtn.style.left=`${rect.left+window.scrollX}px`;
-      selBtn.style.display='block';
-      selBtn.textContent='Ask ChatGPT';
-      selBtn.onclick=()=>{
-        window.open(buildLink(`Explain the following note:\n${text}`),'_blank');
-        selBtn.style.display='none';
-      };
-    });
-  })();
-  </script>
+/* ---------- NOTES ---------- */
+(async()=>{
+ const box=document.getElementById('notes-container');
+ const md=await (await fetch('notes.md')).text();
+ box.innerHTML=marked.parse(md);
+ const selBtn=document.getElementById('sel-ask');
+ document.addEventListener('selectionchange',()=>{
+  const sel=getSelection();
+  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){selBtn.style.display='none';return;}
+  const r=sel.getRangeAt(0).getBoundingClientRect();
+  selBtn.style.display='block';selBtn.style.top=`${r.bottom+window.scrollY+8}px`;selBtn.style.left=`${r.left+window.scrollX}px`;
+ });
+ selBtn.onclick=()=>{
+  const t=getSelection().toString().trim();
+  if(t)window.open(link(`Explain:\n${t}`),'_blank');
+ };
+})();
+</script>
 </body>
 </html>
