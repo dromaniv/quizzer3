@@ -17,7 +17,7 @@
   --border:#d1d5db;
   --green:#16a34a;      --red:#dc2626;
   --radius:.75rem;      --shadow:0 4px 14px rgb(0 0 0/.06);
-  --transition-speed: 0.3s; /* Added transition speed variable */
+  --transition-speed: 0.3s;
 }
 /* dark */
 html.dark{
@@ -106,139 +106,26 @@ textarea{
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
 
 /* collapsible animation */
-.collapsible {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out, padding var(--transition-speed) ease-out;
-  opacity: 0;
-  border-radius: 0 0 var(--radius) var(--radius);
-  background: var(--card-h);
-  padding: 0 1rem;
-  border: 1px solid var(--border);
-  border-top: none;
-  font-weight: 600;
-}
-.collapsible.expanded {
-  max-height: 1000px; /* Large enough to fit any content */
-  opacity: 1;
-  padding: 1rem;
-}
-.accordion {
-  margin-bottom: 1rem;
-}
-.toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  text-align: left;
-  font-weight: 600;
-  transition: background-color 0.2s;
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.8rem 1.2rem;
-}
-.toggle-btn.active {
-  border-radius: var(--radius) var(--radius) 0 0;
-  border-bottom: none;
-}
-.toggle-btn::after {
-  content: "▼";
-  transition: transform var(--transition-speed) ease;
-  margin-left: auto;
-  font-size: 0.75rem;
-}
-.toggle-btn.active::after {
-  transform: rotate(180deg);
-}
+.collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
+.collapsible.expanded{max-height:1000px;opacity:1;padding:1rem}
+.accordion{margin-bottom:1rem}
+.toggle-btn{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;font-weight:600;transition:background-color .2s;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1.2rem}
+.toggle-btn.active{border-radius:var(--radius) var(--radius) 0 0;border-bottom:none}
+.toggle-btn::after{content:"▼";transition:transform var(--transition-speed) ease;margin-left:auto;font-size:.75rem}
+.toggle-btn.active::after{transform:rotate(180deg)}
 
 /* floating selection btn */
 #selAsk{position:fixed;z-index:9999;display:none;padding:.55rem 1.1rem;background:var(--brand);color:#fff;border:0;border-radius:var(--radius);font-weight:600;box-shadow:var(--shadow)}
 
 /* Minecraft parkour video button and player */
-#parkourBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  transition: all 0.3s ease;
-}
-#parkourBtn:hover {
-  transform: scale(1.1);
-  background: var(--brand-h);
-}
-#videoContainer {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 280px; /* Desktop width */
-  height: 500px;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  z-index: 9997;
-  overflow: hidden;
-  transform-origin: bottom right;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  cursor: move; /* Indicate the element is draggable */
-}
-#videoContainer.active {
-  transform: scale(1);
-  opacity: 1;
-}
-#videoContainer iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  aspect-ratio: 9/16;
-  object-fit: cover;
-  pointer-events: none; /* Prevents iframe from capturing mouse events when dragging */
-}
-#closeVideo {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  box-shadow: var(--shadow);
-  transition: background 0.2s;
-}
-#closeVideo:hover {
-  background: var(--brand-h);
-}
-/* Make video smaller on mobile */
-@media (max-width: 768px) {
-  #videoContainer {
-    width: 150px;
-    height: 267px;
-  }
-}
+#parkourBtn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:var(--brand);color:#fff;border:none;box-shadow:var(--shadow);cursor:pointer;z-index:9998;display:flex;align-items:center;justify-content:center;font-size:24px;transition:.3s}
+#parkourBtn:hover{transform:scale(1.1);background:var(--brand-h)}
+#videoContainer{position:fixed;bottom:20px;right:20px;width:280px;height:500px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);z-index:9997;overflow:hidden;transform-origin:bottom right;transform:scale(0);opacity:0;transition:transform .3s,opacity .3s;cursor:move}
+#videoContainer.active{transform:scale(1);opacity:1}
+#videoContainer iframe{width:100%;height:100%;border:none;aspect-ratio:9/16;object-fit:cover;pointer-events:none}
+#closeVideo{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;border:none;cursor:pointer;z-index:9999;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow);transition:background .2s}
+#closeVideo:hover{background:var(--brand-h)}
+@media (max-width:768px){#videoContainer{width:150px;height:267px}}
 </style>
 </head>
 
@@ -322,27 +209,45 @@ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()
 const ask=p=>window.open('https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(p),'_blank');
 const dataPromise=fetch('data.json').then(r=>r.json());
 
-/* theme persistence */
+/* ---------- theme persistence ---------- */
 const chk=$('#themeChk');
 const applyTheme=mode=>{document.documentElement.classList.toggle('dark',mode==='dark');chk.checked=mode==='dark';localStorage.theme=mode};
 applyTheme(localStorage.theme||'light');
 chk.onchange=()=>applyTheme(chk.checked?'dark':'light');
 
-/* nav switching + clear selection */
+/* ---------- nav switching + clear selection ---------- */
 $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove('active');btn.classList.add('active');$('.view.active').classList.remove('active');$('#'+btn.dataset.view).classList.add('active');getSelection().removeAllRanges();$('#selAsk').style.display='none';});
 
-/* FLASHCARDS */
+/* ——— SWIPE SUPPORT ——— */
+function addSwipe(el,onLeft,onRight){
+  let sx=0,sy=0;const thresh=50,restraint=100;
+  el.addEventListener('touchstart',e=>{
+    const t=e.changedTouches[0];sx=t.pageX;sy=t.pageY;
+  },{passive:true});
+  el.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0];
+    const dx=t.pageX-sx,dy=t.pageY-sy;
+    if(Math.abs(dx)>=thresh&&Math.abs(dy)<=restraint){
+      dx<0?onLeft&&onLeft():onRight&&onRight();
+    }
+  },{passive:true});
+}
+
+/* ---------- FLASHCARDS ---------- */
 (async()=>{
  const arr=(await dataPromise).flashcards;shuffle(arr);let i=0;
  const card=$('#fcCard'),q=$('#fcQ'),a=$('#fcA');
  const render=()=>{const c=arr[i];q.textContent=c.q;a.textContent=c.a;card.classList.remove('flipped')};render();
  card.onclick=()=>card.classList.toggle('flipped');
- $('#fcPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
- $('#fcNext').onclick=()=>{i=(i+1)%arr.length;render()};
+ const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
+ const next=()=>{i=(i+1)%arr.length;render()};
+ $('#fcPrev').onclick=prev;
+ $('#fcNext').onclick=next;
+ addSwipe($('#flash'),next,prev);           /* ← swipe left / right */
  $('#fcAsk').onclick=()=>ask(`Explain the following concept from biologically-inspired algorithms in simple terms:\n"${arr[i].q}"`);
 })();
 
-/* MCQ */
+/* ---------- MCQ ---------- */
 (async()=>{
  const arr=(await dataPromise).multipleChoice;shuffle(arr);
  const wrap=$('#mcqWrap'),score=$('#mcqScore');let sc=0;
@@ -367,296 +272,132 @@ $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove
  });
 })();
 
-/* WRITTEN */
+/* ---------- WRITTEN ---------- */
 (async()=>{
  const arr=(await dataPromise).writtenAnswer;shuffle(arr);let i=0;
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
 
  const render=()=>{
    q.textContent=arr[i].q;
-   aBox.textContent = '';
+   aBox.textContent='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
    tBtn.textContent='Correct answer';
  };
-
  render();
 
  tBtn.onclick=()=>{
-   const isExpanded = aBox.classList.contains('expanded');
-
-   if(!isExpanded) {
-     // Set content before expanding
-     aBox.textContent = arr[i].a;
-   }
-
-   // Toggle expanded class for animation
+   const expanded=aBox.classList.contains('expanded');
+   if(!expanded) aBox.textContent=arr[i].a;
    aBox.classList.toggle('expanded');
-
-   // Toggle active class on button for style changes
    tBtn.classList.toggle('active');
  };
 
- $('#waPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
- $('#waNext').onclick=()=>{i=(i+1)%arr.length;render()};
+ const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
+ const next=()=>{i=(i+1)%arr.length;render()};
+ $('#waPrev').onclick=prev;
+ $('#waNext').onclick=next;
+ addSwipe($('#written'),next,prev);         /* ← swipe left / right */
  $('#waAsk').onclick=()=>ask(`I'm studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
 })();
 
-/* TRUE/FALSE */
+/* ---------- TRUE/FALSE ---------- */
 (async()=>{
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
  const q=$('#tfQ'),btns=$$('#tf button.option');
  const render=()=>{
    q.textContent=arr[i].q;
-   btns.forEach(b=>{
-     b.disabled=false;
-     b.classList.remove('correct','wrong','disabled');
-   });
+   btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')});
  };
  btns.forEach(b=>b.onclick=()=>{
   const ans=b.dataset.val==='true',ok=arr[i].a;
   btns.forEach(x=>{x.disabled=true;x.classList.add('disabled')});
   b.classList.add(ans===ok?'correct':'wrong');
-  // Removed text feedback
  });
- $('#tfPrev').onclick=()=>{i=(i-1+arr.length)%arr.length;render()};
- $('#tfNext').onclick=()=>{i=(i+1)%arr.length;render()};
+ const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
+ const next=()=>{i=(i+1)%arr.length;render()};
+ $('#tfPrev').onclick=prev;
+ $('#tfNext').onclick=next;
+ addSwipe($('#tf'),next,prev);             /* ← swipe left / right */
  $('#tfAsk').onclick=()=>ask(`Is the following statement about biologically-inspired algorithms true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
  render();
 })();
 
-/* NOTES + floating ask */
+/* ---------- NOTES + floating ask ---------- */
 (async()=>{
  const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
  const float=$('#selAsk');
-
- // Function to update the position of the floating button
- const updateFloatPosition = () => {
+ const updateFloatPosition=()=>{
   const sel=getSelection();
-  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){
-    float.style.display='none';
-    return;
-  }
-
+  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
   const r=sel.getRangeAt(0).getBoundingClientRect();
-
-  // Check if selection is visible in the viewport
-  if(r.width === 0 && r.height === 0) {
-    float.style.display='none';
-    return;
-  }
-
-  // Position relative to the viewport (fixed position)
-  float.style.position = 'fixed';
+  if(!r.width&&!r.height){float.style.display='none';return;}
+  float.style.position='fixed';
   float.style.top=`${r.bottom+8}px`;
   float.style.left=`${r.left}px`;
   float.style.display='block';
-
-  // Ensure the button stays within the viewport
-  const floatRect = float.getBoundingClientRect();
-  const viewportWidth = document.documentElement.clientWidth;
-
-  if (floatRect.right > viewportWidth) {
-    float.style.left = `${viewportWidth - floatRect.width - 10}px`;
-  }
+  const fr=float.getBoundingClientRect(),vw=document.documentElement.clientWidth;
+  if(fr.right>vw)float.style.left=`${vw-fr.width-10}px`;
  };
-
- // Handle both mouse and touch events for selection
- document.addEventListener('selectionchange', updateFloatPosition);
-
- // Special handling for mobile touch end events
- document.addEventListener('touchend', () => {
-   // Small delay to let the selection register properly on mobile
-   setTimeout(updateFloatPosition, 100);
- });
-
- // Also update position on scroll to handle any edge cases
- document.addEventListener('scroll', () => {
-   if (getSelection() && !getSelection().isCollapsed) {
-     updateFloatPosition();
-   }
- });
-
- // Handle window resize events to ensure proper positioning
- window.addEventListener('resize', () => {
-   if (getSelection() && !getSelection().isCollapsed) {
-     updateFloatPosition();
-   }
- });
-
+ document.addEventListener('selectionchange',updateFloatPosition);
+ document.addEventListener('touchend',()=>setTimeout(updateFloatPosition,100));
+ document.addEventListener('scroll',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
+ window.addEventListener('resize',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
  float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on biologically-inspired algorithms:\n"${txt}"`)};
 })();
 
-/* PARKOUR VIDEO */
-const parkourBtn = document.getElementById('parkourBtn');
-const videoContainer = document.getElementById('videoContainer');
-const closeVideo = document.getElementById('closeVideo');
-const parkourVideo = document.getElementById('parkourVideo');
-
-// Variables for dragging functionality
-let isDragging = false;
-let initialX, initialY;
-let currentX = 0, currentY = 0; // Will be set on open
-
-// Add touch and mouse event listeners for dragging
-videoContainer.addEventListener('mousedown', startDrag);
-videoContainer.addEventListener('touchstart', startDrag, { passive: false });
-document.addEventListener('mousemove', drag);
-document.addEventListener('touchmove', drag, { passive: false });
-document.addEventListener('mouseup', stopDrag);
-document.addEventListener('touchend', stopDrag);
-
-// Function to start dragging
-function startDrag(e) {
-  // Prevent default behavior only for touch events
-  if (e.type === 'touchstart') {
-    e.preventDefault();
-  }
-
-  // Only handle drag on the container itself, not on the close button
-  if (e.target === closeVideo) return;
-
-  isDragging = true;
-
-  const containerRect = videoContainer.getBoundingClientRect();
-
-  // Get initial position
-  if (e.type === 'touchstart') {
-    initialX = e.touches[0].clientX - containerRect.left;
-    initialY = e.touches[0].clientY - containerRect.top;
-  } else {
-    initialX = e.clientX - containerRect.left;
-    initialY = e.clientY - containerRect.top;
-  }
-
-  // Add a class to indicate active dragging (optional)
+/* ---------- PARKOUR VIDEO ---------- */
+const parkourBtn=document.getElementById('parkourBtn');
+const videoContainer=document.getElementById('videoContainer');
+const closeVideo=document.getElementById('closeVideo');
+const parkourVideo=document.getElementById('parkourVideo');
+let isDragging=false,initialX,initialY,currentX=0,currentY=0;
+videoContainer.addEventListener('mousedown',startDrag);
+videoContainer.addEventListener('touchstart',startDrag,{passive:false});
+document.addEventListener('mousemove',drag);
+document.addEventListener('touchmove',drag,{passive:false});
+document.addEventListener('mouseup',stopDrag);
+document.addEventListener('touchend',stopDrag);
+function startDrag(e){
+  if(e.type==='touchstart')e.preventDefault();
+  if(e.target===closeVideo)return;
+  isDragging=true;
+  const r=videoContainer.getBoundingClientRect();
+  if(e.type==='touchstart'){initialX=e.touches[0].clientX-r.left;initialY=e.touches[0].clientY-r.top;}
+  else{initialX=e.clientX-r.left;initialY=e.clientY-r.top;}
   videoContainer.classList.add('dragging');
 }
-
-// Function to handle dragging
-function drag(e) {
-  if (!isDragging) return;
-
-  // Prevent default to avoid scroll on mobile
+function drag(e){
+  if(!isDragging)return;
   e.preventDefault();
-
-  // Calculate new position
-  if (e.type === 'touchmove') {
-    currentX = e.touches[0].clientX - initialX;
-    currentY = e.touches[0].clientY - initialY;
-  } else {
-    currentX = e.clientX - initialX;
-    currentY = e.clientY - initialY;
-  }
-
-  // Apply constraints to keep within viewport
-  const containerRect = videoContainer.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  // Constrain X position
-  if (currentX < 0) currentX = 0;
-  if (currentX + containerRect.width > viewportWidth) {
-    currentX = viewportWidth - containerRect.width;
-  }
-
-  // Constrain Y position
-  if (currentY < 0) currentY = 0;
-  if (currentY + containerRect.height > viewportHeight) {
-    currentY = viewportHeight - containerRect.height;
-  }
-
-  // Apply new position
-  videoContainer.style.right = 'auto';
-  videoContainer.style.bottom = 'auto';
-  videoContainer.style.left = currentX + 'px';
-  videoContainer.style.top = currentY + 'px';
+  if(e.type==='touchmove'){currentX=e.touches[0].clientX-initialX;currentY=e.touches[0].clientY-initialY;}
+  else{currentX=e.clientX-initialX;currentY=e.clientY-initialY;}
+  const r=videoContainer.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;
+  if(currentX<0)currentX=0;
+  if(currentX+r.width>vw)currentX=vw-r.width;
+  if(currentY<0)currentY=0;
+  if(currentY+r.height>vh)currentY=vh-r.height;
+  videoContainer.style.right='auto';videoContainer.style.bottom='auto';
+  videoContainer.style.left=currentX+'px';videoContainer.style.top=currentY+'px';
 }
-
-// Function to stop dragging
-function stopDrag() {
-  if (!isDragging) return;
-  isDragging = false;
-  videoContainer.classList.remove('dragging');
-}
-
-// Video URLs - using embed links that work with autoplay and loop with minimal UI
-const parkourVideos = [
+function stopDrag(){if(!isDragging)return;isDragging=false;videoContainer.classList.remove('dragging');}
+const parkourVideos=[
   'https://www.youtube.com/embed/7yl7Wc1dtWc?autoplay=1&mute=1&loop=1&playlist=7yl7Wc1dtWc&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1',
   'https://www.youtube.com/embed/tCBOhczn6Ok?autoplay=1&mute=1&loop=1&playlist=tCBOhczn6Ok&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1'
 ];
-
-// Show random video when button is clicked
-parkourBtn.addEventListener('click', () => {
-  // Get random video URL
-  const randomIndex = Math.floor(Math.random() * parkourVideos.length);
-  const videoUrl = parkourVideos[randomIndex];
-
-  // Set the iframe source
-  parkourVideo.src = videoUrl;
-
-  // Hide button and show container with animation
-  parkourBtn.style.opacity = '0';
-  setTimeout(() => {
-    parkourBtn.style.display = 'none';
-
-    // Reset position to default bottom-right before showing
-    videoContainer.style.right = '20px';
-    videoContainer.style.bottom = '20px';
-    videoContainer.style.left = 'auto';
-    videoContainer.style.top = 'auto';
-
-    videoContainer.style.display = 'block';
-
-    // Start animation after a small delay
-    setTimeout(() => {
-      videoContainer.classList.add('active');
-    }, 10);
-  }, 300);
+parkourBtn.addEventListener('click',()=>{
+  const url=parkourVideos[Math.floor(Math.random()*parkourVideos.length)];
+  parkourVideo.src=url;
+  parkourBtn.style.opacity='0';
+  setTimeout(()=>{parkourBtn.style.display='none';videoContainer.style.right='20px';videoContainer.style.bottom='20px';videoContainer.style.left='auto';videoContainer.style.top='auto';videoContainer.style.display='block';setTimeout(()=>videoContainer.classList.add('active'),10);},300);
 });
-
-// Hide video when close button is clicked
-closeVideo.addEventListener('click', () => {
-  // Animate container back to button
+function hideVideo(){
   videoContainer.classList.remove('active');
-
-  // After animation completes, hide container and show button
-  setTimeout(() => {
-    videoContainer.style.display = 'none';
-    parkourVideo.src = ''; // Clear iframe source to stop video
-    parkourBtn.style.display = 'flex';
-
-    // Fade in button
-    setTimeout(() => {
-      parkourBtn.style.opacity = '1';
-    }, 10);
-  }, 300);
-});
-
-// Add specific touch event for mobile devices
-closeVideo.addEventListener('touchstart', (e) => {
-  e.stopPropagation(); // Prevent the container's touchstart from capturing this event
-});
-
-closeVideo.addEventListener('touchend', (e) => {
-  e.preventDefault(); // Prevent default behavior
-  e.stopPropagation(); // Prevent the event from bubbling up
-
-  // Animate container back to button
-  videoContainer.classList.remove('active');
-
-  // After animation completes, hide container and show button
-  setTimeout(() => {
-    videoContainer.style.display = 'none';
-    parkourVideo.src = ''; // Clear iframe source to stop video
-    parkourBtn.style.display = 'flex';
-
-    // Fade in button
-    setTimeout(() => {
-      parkourBtn.style.opacity = '1';
-    }, 10);
-  }, 300);
-});
+  setTimeout(()=>{videoContainer.style.display='none';parkourVideo.src='';parkourBtn.style.display='flex';setTimeout(()=>parkourBtn.style.opacity='1',10);},300);
+}
+closeVideo.addEventListener('click',hideVideo);
+closeVideo.addEventListener('touchstart',e=>e.stopPropagation());
+closeVideo.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();hideVideo();});
 </script>
 </body>
 </html>
