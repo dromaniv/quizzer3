@@ -1,227 +1,160 @@
-# Biologically Inspired Algorithms
+# Last year's
 
-## 1  Evolutionary Algorithms (EA): the big picture  
-- **Definition.** Population-based, stochastic search that iteratively **selects**, **recombines**, and **mutates** candidate solutions, guided by a fitness/objective function.  
-- **Typical workflow.**  
-  ```  
-  initialise P(0)  
-  evaluate P(0)  
-  while !stop:  
-      P' ← select(P)                # fitness-biased sampling  
-      P'' ← crossover(P')           # recombination  
-      P(t+1) ← mutate(P'')          # variation  
-      evaluate P(t+1)  
-      t ← t+1  
-  return best ever﻿  
-  ```  
-- **Off-line vs. on-line use.** Off-line cares only about the best-found solution; on-line cares about solution quality at *every* generation.  
+**1. In some population, each individual can possess one of three traits (gene values): A, B, or C.  
+In this population, the proportion is A (30 %), B (60 %), and C (10 %).  
+Assume no selective pressure and no mutations – i.e. pure genetic drift.  
+What is the probability that after a sufficiently large number of generations, when one trait takes over the entire population, this dominating trait will be C?**
+
+Because only random genetic drift is acting, the chance that a neutral trait finally fixes equals its current frequency. Trait C starts at 10 %, so its fixation probability is **0.10 (10 %)**.
 
 ---
 
-## 2  Solution representation & genotype → phenotype mapping  
-| Encoding | Typical use | Notes |
-|----------|-------------|-------|
-| Binary bit-strings | classic GA | compact; easy crossover/mutation |
-| Real-valued vectors | ES/DE | natural for continuous design variables |
-| Variable-length *messy* strings | messy GA | allows underspecified or redundant genes |
-| Trees/graphs | Genetic Programming, neural topologies | enables program and structure evolution |
+**2. Describe the risk of using an overly simple pseudorandom number generator in an optimisation algorithm (compared to a sufficiently complex pseudorandom number generator).**
 
-Key concept: **genotype ≠ phenotype** (decoding may involve redundancy, pleiotropy, or polygenicity).  
+A very simple PRNG can have a short period, noticeable correlations and poor coverage of the search space. These artefacts may force the algorithm to revisit the same points, follow hidden cycles or synchronise with genetic operators, lowering diversity and causing premature or misleading convergence. A long-period, statistically well-tested PRNG avoids these pitfalls and gives more reliable optimisation behaviour.
 
 ---
 
-## 3  Variation & selection mechanisms  
-### 3.1 Selection  
-- Fitness-proportionate, rank, tournament, truncation.  
-- Strength of **selection pressure** trades exploration vs. exploitation.  
+**3. Describe σ-truncation scaling used in selection (just the formula and the meaning of variables).**
 
-### 3.2 Crossover  
-One-point, two-point, uniform, order-based, *shuffle* (preserves gene semantics), plus advanced operators that respect inversions or linkage.  
+The rescaled fitness is
 
-### 3.3 Mutation  
-Bit-flip, Gaussian, Cauchy, rotation/scale specialised mutations for geometric encodings, *partial complement* to re-introduce diversity.  
+f′ = max { 0 ,  f − ( µ − c·σ ) }
 
-### 3.4 Architectures & parameters  
-- **Generational** vs. **steady-state** replacement; elitism to retain the best.  
-- Core parameters: population size N, crossover rate p_c, mutation rate p_m, termination criterion.  
+* **f** – original fitness of the individual  
+* **µ** – mean fitness in the population  
+* **σ** – standard deviation of fitness values  
+* **c** – user-chosen constant (typically 2–3)
+
+All fitness values below the threshold \(µ − cσ\) are set to 0, which keeps selection pressure stable even when the population becomes too uniform or too diverse.
 
 ---
 
-## 4  Theoretical pillars  
-| Concept | Essence | Implication |
-|---------|---------|-------------|
-| **Schema theorem** | Short, low-order, above-average schemata receive exponential trials. | Justifies crossover. |
-| **Building-block hypothesis** | Good partial solutions combine to form better ones. | Drives linkage learning. |
-| **No-Free-Lunch (NFL)** | Averaged over all problems, no optimiser is superior. | Importance of problem-specific bias. |
-| **Deceptive problems** | Local building blocks mislead search; minimal deceptive problem of order 2 illustrates. | Need diversity & linkage adaptation. |
-| **Epistasis** | Gene interactions; high epistasis → rugged landscape. | Motivates inversion, messy GA, linkage detection (e.g.\ DLED). |
-| **Neutrality & genetic drift** | Flat fitness regions allow drift; may aid exploration. | Neutral networks in GP/ES. |
+**4. Describe the procedure to adjust the initial temperature in simulated annealing (a few precise sentences/formulas).**
+
+1. Generate several random uphill moves and measure their average cost increase Δf.  
+2. Choose a desired initial acceptance probability \(P₀\) (commonly 0.8–0.99).  
+3. Compute the starting temperature with  
+
+T₀ = − Δf / ln P₀
+
+This gives a temperature high enough that almost all worsening moves are accepted at the beginning, ensuring thorough exploration before cooling starts.
 
 ---
 
-## 5  Local search & classical meta-heuristics (bio-inspired antecedents)  
-### 5.1 Neighbourhood-based search  
-- **Neighbourhood** N(x): solutions within distance ε of x. Must be connected, limited, meaningful.  
-- **Greedy vs. Steepest ascent**: choose first-improving or best-improving neighbour.  
+**5. In competitive coevolution, there were 3 individuals (A, B, C), and each played competitively against each other individual.  
+To evaluate them, CFS (competitive fitness sharing) was used.  
+A won against B and C; B didn’t win against anyone; C won against B.  
+The fitness based on the CFS technique is: A ________  B ________  C ________.**
 
-### 5.2 Tabu Search  
-Adds *memory*: a **tabu list** forbids recently visited moves; **aspiration** can override bans; **tenure** tunes diversification.  
+| Opponent beaten | Beaten by | Credit to each winner |
+|-----------------|-----------|-----------------------|
+| B               | A, C      | ½                    |
+| C               | A         | 1                    |
 
-### 5.3 Simulated Annealing  
-Physical analogy: Metropolis acceptance with temperature-controlled probability exp(–ΔE / kT). Slow cooling → global-optimum guarantee in limit.  
+* **Fitness(A) = 1 + ½ = 1.5**  
+* **Fitness(B) = 0**  
+* **Fitness(C) = ½ = 0.5**
 
-These single-solution heuristics later reappear inside hybrid EAs (e.g.\ memetic algorithms).
-
----
-
-## 6  Key takeaways for Part 1  
-1. **Population, variation, selection** form the universal EA loop.  
-2. Representation matters: it shapes epistasis and operator design.  
-3. Theory (schema, NFL, deception) explains *why* and *when* EAs work.  
-4. Classic local-search heuristics supply ideas for intensification/diversification that EAs inherit.  
-
-
-## 7  Modern evolutionary-algorithm families  
-
-| Family | Core mechanism | Strengths & notes |
-|--------|----------------|-------------------|
-| **CMA-ES** | Samples a multivariate Gaussian; updates mean & full covariance, shrinking step size when progress slows. | Near-derivative search in continuous, rugged landscapes. |
-| **Differential Evolution (DE)** | *Differential mutation*: ω = β + F · δ built from random population vectors; then binomial/exp crossover. | Parameter-light, fast global convergence. |
-| **Gene-pool Optimal Mixing EA (GOMEA)** | Learns linkage model (mutual-information clusters) → applies donor-based *optimal mixing* that only accepts fitness-neutral/improving swaps. | Exploits epistasis systematically; often beats canonical GA. |
-| **Linkage-learning GA (messy GA, DLED, etc.)** | Detects co-adapted gene groups to protect through operators. | Reduces building-block disruption. |
-| **Multi-parent & simplex crossover** | Recombination draws genes from ≥3 parents or convex hull (simplex). | Injects rich variation without high mutation rates. |
-| **Genetic Programming (tree/linear)** | Evolves program trees with primitive/terminal sets. | Symbolic regression, controller synthesis. |
-
----
-
-## 8  Why diversity matters (again)  
-Standard tournament or roulette selection collapses populations on deceptive or multi-modal landscapes. Advanced schemes explicitly *shape* the fitness landscape to **flatten peaks**, **isolate niches**, or **archive coverage**.
-
----
-
-## 9  Diversity-in-fitness methods  
-
-| Technique | Idea (fitness space) | Key trait |
-|-----------|---------------------|-----------|
-| **FUSS** | Sample a random fitness value in [f_min,f_max]; pick individual closest to it → implicit pressure. | Uniform fitness histogram. |
-| **FUDS** | Delete individuals so the *survivors'* fitnesses stay uniformly distributed. | Works when selection is external. |
-| **Convection Selection** | Chain of sub-populations; offspring of weak groups can "float up" the hierarchy. | Combines exploration & gradual elitism. |
-| **HFC** | Hierarchical buffers with admission/export thresholds prevent "champions" dominating lower tiers. | Sustainable long runs. |
-
-> **Empirical tip.** On rugged design benchmarks, FUSS & ConvSel > FUDS > plain tournament.
-
----
-
-## 10  Niches, novelty & quality–diversity  
-
-### 10.1 Speciation & Niching  
-Fitness is rescaled by similarity denominator:  
-new_fitness = orig_fitness / Σ similarity
-(or multiplied by 1 + distance). This keeps sub-populations around multiple optima and aids multi-objective fronts.
-
-### 10.2 Novelty Search  
-Drops objective altogether; rewards behavioural distance (global or k-nearest). Useful for deceptive tasks and test-set generation.
-
-### 10.3 NSLC  
-Novelty Search with Local Competition adds a *second* criterion: novelty **and** local fitness ranking.
-
-### 10.4 MAP-Elites (QD)  
-*Archive grid across behavioural features* → keep best elite per cell; mutate elites from random cells. Generates a repertoire of high-performing yet diverse solutions.
-
----
-
-## 11  Population & evaluation tricks  
-
-- **Dynamic pop-size, aging, regularised evolution** reduce premature convergence under noisy fitness.
-- **Cultural algorithms** add a secondary *belief space* that guides variation – "evolution of evolution".
-- **Cloning under noise**: replicate promising individuals proportionally, average fitness of clones.
-
----
-
-## 12  Cooperative & competitive co-evolution  
-
-| Mode | Architecture | Challenge |
-|------|--------------|-----------|
-| **Cooperative** | Decompose solution into components, each in its own population; assemble team for evaluation. | Credit assignment; maintaining intra-species diversity. |
-| **Competitive** | Predator–prey, host–parasite arms race reshapes landscape dynamically (Lotka–Volterra analogue). | Red Queen effect, cycling. |
-
-**Adaptive species count**: spawn a new species on stagnation; cull ones with low marginal contribution.
-
-```
-# pseudo-loop for cooperative EA
-initialise k species  
-while not stop:  
-  for each species s: evolve s for g gens  
-  assemble representatives → evaluate team fitness  
-  update credits & decide on adding/removing species  
-```
-
----
-
-## 13  Take-home insights for practitioners  
-
-1. **Modern EAs specialise**: CMA-ES for continuous, DE for derivative-free global, GOMEA for linkage-heavy, GP for program space.  
-2. **Diversity is controllable** – pick a scheme that matches *where* you need spread (fitness vs phenotype).  
-3. **Quality–diversity** reframes search as *illumination*: you get a map, not a single hero.  
-4. **Interaction matters**: co-evolution or culture can reshape the landscape itself, often yielding solutions unreachable by isolated evolution.  
-
----
-
-### 13.1 Maintaining Diversity and Niching  
-
-| Goal | Key ideas | Typical knobs |
-|------|-----------|---------------|
-| **Keep the search global** so evolution does not collapse into a single basin. | *Speciation* (crowding, fitness sharing) partitions the population into quasi-independent niches so that multiple optima can coexist | distance metric, similarity threshold |
-| **Uniformly explore the fitness axis.** | *FUDS* (Fitness-Uniform Deletion Scheme) removes individuals from the most crowded fitness sub-interval, while *FUSS* applies the same principle to selection | sub-interval width ε |
-| **Reward behavioural novelty, not objective value.** | *Novelty Search* (and NSLC: novelty search with local competition) tracks how different an individual's behaviour descriptor is from its nearest neighbours; selection is driven by novelty score, optionally combined with fitness | k-nearest radius, archive size |
-| **Illuminate large feature spaces.** | *MAP-Elites* bins solutions by user-chosen features (e.g. gait speed × energy in legged robots) and tries to find a high-fitness exemplar for every bin, turning optimisation into illumination | bin resolution, mutation rate |
-
----
-
-### 13.2 Coevolutionary Algorithms  
-
-| Flavour | How it works | Typical pitfalls / fixes |
-|---------|--------------|--------------------------|
-| **Co-operative coevolution (CCEA)** | Decompose a solution into _m_ components, evolve each in its own sub-population, and evaluate individuals by assembling them with collaborators sampled from the other species  | credit assignment, maintaining partner diversity |
-| **Competitive coevolution** | Fitness is relative: predators vs. prey, host vs. parasite, or player vs. environment curricula. The goal is an arms race that drives continual innovation. | cyclic dominance, disengagement; often mitigated by Hall-of-Fame archives |
-| **Dynamic number of species** | A stagnating run can _spawn_ a new species; species whose contribution falls below a threshold are deleted  | stagnation detector, contribution metric |
-
----
-
-### 13.3 Nature-Inspired Mechanisms inside Evolutionary Algorithms  
-
-* **Diploidy & dominance** – storing several chromosomes per individual acts as a latent memory that lets the EA respond faster to changing environments
-* **Gene duplication, pleiotropy & redundancy** – introduce extra copies of genes, allow one gene to affect many traits, or let a trait depend on many genes; useful when modelling complex genotype–phenotype maps
-* **Structural operators** – inversion, partial complement, adaptive crossover probabilities, self-adaptive mutation step sizes; all aim to protect useful building blocks or adapt operator strength on-line
-
----
-
-### 13.4 Hybrid / Memetic Approaches  
+CFS rewards victories that few others achieve, so A gains full credit for the unique win over C and splits the credit for beating B with C.
 
 
 ---
 
-### 13.5 Beyond Classical EA: Modern Hybrids & Representations  
+**6. You have a solution X with 10 binary variables \(x₁…x₁₀\) (e.g. X = 0101011010) and fitness f(X)=5.  
+– You flip variable \(x₆\) in X: fitness increases by 5.  
+– You flip variable \(x₇\) in X: fitness decreases by 3.  
+– You flip both variables \(x₆\) and \(x₇\) in X: fitness increases by 2.  
+Are these two variables in epistatic relationship in X? (underline your answer): YES / NO  
+If the same relationship between \(x₆\) and \(x₇\) holds for all possible solutions, is this good for optimisation? YES / NO and why?**
 
-* **CMA-ES & Differential Evolution** – state-of-the-art real-valued optimisers that self-adapt covariance (CMA-ES) or use differential mutation vectors (DE) for robust, rotation-invariant search   
-* **Genetic Programming (tree & linear forms)** – evolves executable program trees; well-suited for symbolic regression, controller synthesis and automatic algorithm design
-* **Regularised evolution for Neural Architecture Search (NAS)** – applies age-based removal (aging) and simple mutations to discover CNN topologies; combines diploidy-style diversity with deep-learning objectives
-
----
-
-### 13.6 Open Research Directions  
-
-* **Quality-diversity in high-dimensional descriptor spaces** (scalable MAP-Elites)  
-* **Coevolutionary curriculum learning** for reinforcement-learning agents  
-* **Parameterless gene-pool optimal mixing** to eliminate manual tuning  
-* **Integration with deep generative models** for surrogate-assisted evolution  
-* **Responsible & interpretable bio-inspired AI** (preventing pathological behaviours in competitive settings)
+The single effects are +5 and –3, so an additive prediction for flipping both is +2, which matches the observed change. Therefore **NO**, the variables are not epistatically linked here.  
+If this additive relationship holds everywhere, it is **good** for optimisation, because each variable can be optimised independently, simplifying the landscape.
 
 ---
 
-### Quick Recap  
+**7. In competitive coevolution, we want the number of necessary species to be established automatically.  
+A new species is introduced when …**
 
-1. **Diversity mechanisms** keep evolution exploratory.  
-2. **Coevolution** turns optimisation into a multi-agent ecosystem.  
-3. **Biological metaphors** such as diploidy or gene duplication enrich representation and resilience.  
-4. **Hybridisation** (local search, surrogate models, deep nets) brings the best of multiple worlds.
+…evolution stagnates, typically detected when the best fitness has not improved for a predefined number of generations. Introducing a fresh, randomly initialised species injects new genetic material and can restart progress; redundant or unproductive species may later be removed to keep the system efficient.
+
+---
+# What he told us
+
+**1. Is Tabu Search with candidate selection broken?**  
+No. The candidate-list idea just tells Tabu Search to inspect only a smart subset of the current neighbourhood, so we save time but still follow the same “best non-tabu (or aspirated) move” logic. If the subset is built sensibly (e.g. elite list, aspiration-plus), the search keeps its determinism and performance; it is therefore not “broken”.
+
+---
+
+**2. How can we measure selective pressure as a single number?**  
+A popular metric is **take-over time** – the expected number of generations for one best individual to fill the whole population when only selection operates. Shorter take-over time → stronger pressure. Another common measure is **selection intensity**, the standardized difference between the population’s mean fitness before and after selection.
+
+---
+
+**3. Why is randomness used in optimisation?**  
+Random decisions let an algorithm explore many regions of the search space, escape deterministic cycles and break ties between equally good moves. Stochasticity also makes it easier to jump out of local optima (e.g. SA’s uphill moves) and helps when the landscape or the initial ordering of solutions is unknown.
+
+---
+
+**4. Implementation of random**  
+Use a high-quality pseudo-random number generator (long period, good equidistribution) or, when strict unpredictability is essential, hardware noise. Avoid simple LCGs except for teaching. Always document the seed to make experiments reproducible; change seeds across runs to estimate variability.
+
+---
+
+**5. Which fitness-scaling methods did we discuss?**  
+* **Linear scaling** – \( f' = a f + b \) to keep best:mean ratio constant.  
+* **Power-law scaling** – \( f' = f^k \) (rarely used, problem-dependent).  
+* **σ-truncation scaling** – subtract \( (µ - cσ) \) so pressure adapts to spread.  
+* **Sigmoid/logistic scaling** – converts fitness to probabilities with a smooth S-curve centred on the population median.  
+These aim to hold selection pressure at a useful level throughout evolution.
+
+---
+
+**6. What are punctuated equilibria?**  
+Long stretches where the population’s best fitness hardly changes are interrupted by short, sharp improvements. The pattern mirrors the palaeontological theory of punctuated equilibrium and often appears in EAs when the search waits for a rare combination (or parameter change) that unlocks a big jump in quality.
+
+---
+
+**7. What is a founder effect?**  
+When a new sub-population is started by a few individuals, only their alleles are present, so genetic diversity shrinks and their frequencies can drift to fixation even if they were rare in the original population. This random bottleneck is called the founder effect.
+
+---
+
+**8. Will genetic drift alone (no mutation/crossover) lead to loss of diversity?**  
+Yes. Without variation operators every allele performs a random walk in frequency; sooner or later one of them reaches 100 %, leaving the population genetically uniform.
+
+---
+
+**9. What is the only operator of the GOMEA algorithm?**  
+GOMEA relies on **Gene-pool Optimal Mixing (GOM)**: for each linkage group, it tries donor gene fragments from the population and keeps the first replacement that improves (or at least does not harm) fitness. No traditional crossover or mutation is used.
+
+---
+
+**10. What is lexicase selection?**  
+Parents are chosen by filtering the population through training cases in a random order. On the first case, keep only those with the best error, then test the survivors on the next case, and so on until one individual remains (or ties are broken randomly). This favours specialists that excel on different subsets of tasks.
+
+---
+
+**11. Plot (Fitness vs Probability of selection)**  
+For roulette selection the plot is a straight line through the origin: probability rises linearly with fitness. After σ-truncation the curve is zero below the threshold and linear above it, while logistic scaling yields an S-shaped curve steepest around the median and flattening towards 0 and 1 at the extremes.
+
+---
+
+**12. MAP-Elites algorithm**  
+* Discretise one or more behaviour descriptors into a grid of cells.  
+* Evaluate random individuals and place the best (elite) seen so far in each cell.  
+* Repeatedly pick an elite, mutate it, and insert the offspring if it either discovers a new empty cell or outperforms the current elite of that cell.  
+The archive gradually “illuminates” the map, giving a collection of high-quality and diverse solutions.
+
+---
+
+**13. Novelty Search**  
+Instead of rewarding objective fitness, each individual gets a score equal to how behaviourally different it is from its nearest neighbours (archive + current population). The search thus pushes outward into unexplored behaviours, often finding creative or stepping-stone solutions that pure objective optimisation would miss.
+
+---
+
+**14. Coevolution**  
+Multiple populations (or one population with interacting roles) evolve together, and each individual’s fitness depends on others.  
+* **Competitive** coevolution (predator-prey, game strategies) can create an arms race but risks cycles or mediocre stable states.  
+* **Cooperative** coevolution splits a large problem into species that must collaborate for overall fitness.  
+Key issues include maintaining diversity, balanced progress and meaningful evaluation across populations.
