@@ -267,7 +267,7 @@ function addSwipe(el,onLeft,onRight){
  $('#fcPrev').onclick=prev;
  $('#fcNext').onclick=next;
  addSwipe($('#flash'),next,prev);           /* ← swipe left / right */
- $('#fcAsk').onclick=()=>ask(`Explain the following concept from biologically-inspired algorithms in simple terms:\n"${arr[i].q}"`);
+ $('#fcAsk').onclick=()=>ask(`Explain the following concept from multivariete statistics in simple terms:\n"${arr[i].q}"`);
 })();
 
 /* ---------- MCQ ---------- */
@@ -290,7 +290,7 @@ function addSwipe(el,onLeft,onRight){
     opts.push(btn);optWrap.appendChild(btn);
   });
   const askBtn=document.createElement('button');askBtn.className='btn ghost';askBtn.textContent='Ask ChatGPT';
-  askBtn.onclick=()=>ask(`Multiple-choice question on biologically-inspired algorithms:\n${q.question}\nOptions: ${q.choices.join(', ')}\nExplain why the correct answer ("${q.answer}") is right and others are wrong.`);
+  askBtn.onclick=()=>ask(`Multiple-choice question on multivariete statistics:\n${q.question}\nOptions: ${q.choices.join(', ')}\nExplain why the correct answer ("${q.answer}") is right and others are wrong.`);
   blk.append(optWrap,askBtn);wrap.appendChild(blk);
  });
 })();
@@ -323,7 +323,7 @@ function addSwipe(el,onLeft,onRight){
  $('#waPrev').onclick=prev;
  $('#waNext').onclick=next;
  addSwipe($('#written'),next,prev);         /* ← swipe left / right */
- $('#waAsk').onclick=()=>ask(`I'm studying biologically-inspired algorithms. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
+ $('#waAsk').onclick=()=>ask(`I'm studying multivariete statistics. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
 })();
 
 /* ---------- TRUE/FALSE ---------- */
@@ -345,7 +345,7 @@ function addSwipe(el,onLeft,onRight){
  $('#tfPrev').onclick=prev;
  $('#tfNext').onclick=next;
  addSwipe($('#tf'),next,prev);             /* ← swipe left / right */
- $('#tfAsk').onclick=()=>ask(`Is the following statement about biologically-inspired algorithms true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
+ $('#tfAsk').onclick=()=>ask(`Is the following statement about multivariete statistics true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
  render();
 })();
 
@@ -369,7 +369,7 @@ function addSwipe(el,onLeft,onRight){
  document.addEventListener('touchend',()=>setTimeout(updateFloatPosition,100));
  document.addEventListener('scroll',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
  window.addEventListener('resize',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
- float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on biologically-inspired algorithms:\n"${txt}"`)};
+ float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on multivariete statistics:\n"${txt}"`)};
 })();
 
 /* ---------- PARKOUR VIDEO ---------- */
