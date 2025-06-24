@@ -252,7 +252,15 @@ function addSwipe(el,onLeft,onRight){
 (async()=>{
  const arr=(await dataPromise).flashcards;shuffle(arr);let i=0;
  const card=$('#fcCard'),q=$('#fcQ'),a=$('#fcA');
- const render=()=>{const c=arr[i];q.textContent=c.q;a.textContent=c.a;card.classList.remove('flipped')};render();
+ const render=()=>{
+   const c=arr[i];
+   q.innerHTML=marked.parse(c.q);
+   a.innerHTML=marked.parse(c.a);
+   card.classList.remove('flipped');
+   // Trigger MathJax to process the new content
+   if(window.MathJax) MathJax.typesetPromise();
+ };
+ render();
  card.onclick=()=>card.classList.toggle('flipped');
  const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
  const next=()=>{i=(i+1)%arr.length;render()};
@@ -293,19 +301,21 @@ function addSwipe(el,onLeft,onRight){
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
 
  const render=()=>{
-   q.textContent=arr[i].q;
-   aBox.textContent='';
+   q.innerHTML=marked.parse(arr[i].q);
+   aBox.innerHTML='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
    tBtn.textContent='Correct answer';
+   if(window.MathJax) MathJax.typesetPromise();
  };
  render();
 
  tBtn.onclick=()=>{
    const expanded=aBox.classList.contains('expanded');
-   if(!expanded) aBox.textContent=arr[i].a;
+   if(!expanded) aBox.innerHTML=marked.parse(arr[i].a);
    aBox.classList.toggle('expanded');
    tBtn.classList.toggle('active');
+   if(!expanded && window.MathJax) MathJax.typesetPromise();
  };
 
  const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
@@ -321,8 +331,9 @@ function addSwipe(el,onLeft,onRight){
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
  const q=$('#tfQ'),btns=$$('#tf button.option');
  const render=()=>{
-   q.textContent=arr[i].q;
+   q.innerHTML=marked.parse(arr[i].q);
    btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')});
+   if(window.MathJax) MathJax.typesetPromise();
  };
  btns.forEach(b=>b.onclick=()=>{
   const ans=b.dataset.val==='true',ok=arr[i].a;
