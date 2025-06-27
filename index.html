@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Process Mining Study Suite</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Replace marked with markdown-it and add syntax highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
 <!-- Add MathJax for LaTeX rendering -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -120,6 +123,116 @@ textarea{
 /* notes */
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
 
+/* Enhanced markdown styling */
+.notes h1, .notes h2, .notes h3, .notes h4, .notes h5, .notes h6 {
+  margin: 1.5em 0 0.5em 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.notes h1 { font-size: 2em; color: var(--brand); border-bottom: 3px solid var(--brand); padding-bottom: 0.3em; }
+.notes h2 { font-size: 1.5em; color: var(--brand); border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+.notes h3 { font-size: 1.25em; color: var(--text); }
+.notes h4 { font-size: 1.1em; color: var(--text-sub); }
+
+.notes p { margin: 0.8em 0; }
+.notes ul, .notes ol { margin: 0.8em 0; padding-left: 1.5em; }
+.notes li { margin: 0.3em 0; }
+.notes li > ul, .notes li > ol { margin: 0.3em 0; }
+
+.notes strong { font-weight: 700; color: var(--brand); }
+.notes em { font-style: italic; color: var(--text-sub); }
+
+.notes blockquote {
+  margin: 1em 0;
+  padding: 0.8em 1.2em;
+  border-left: 4px solid var(--brand);
+  background: var(--bg-h);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+}
+
+.notes code {
+  background: var(--bg-h);
+  color: var(--brand);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.notes pre {
+  background: #0d1117;
+  color: #f0f6fc;
+  padding: 1.2em;
+  border-radius: var(--radius);
+  margin: 1em 0;
+  overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+
+.notes pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.notes table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.notes th, .notes td {
+  padding: 0.8em 1em;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.notes th {
+  background: var(--brand);
+  color: white;
+  font-weight: 600;
+}
+
+.notes tr:hover {
+  background: var(--bg-h);
+}
+
+.notes hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand), transparent);
+  margin: 2em 0;
+  border-radius: 1px;
+}
+
+.notes a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.notes a:hover {
+  color: var(--brand-h);
+  text-decoration: underline;
+}
+
+/* Dark theme adjustments for code blocks */
+html.dark .notes pre {
+  background: #161b22;
+  border: 1px solid var(--border);
+}
+
+html.dark .notes table {
+  border: 1px solid var(--border);
+}
+
 /* collapsible animation */
 .collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
 .collapsible.expanded{max-height:1000px;opacity:1;padding:1rem}
@@ -224,6 +337,21 @@ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()
 const ask=p=>window.open('https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(p),'_blank');
 const dataPromise=fetch('data.json').then(r=>r.json());
 
+// Initialize markdown-it with syntax highlighting
+const md = window.markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value;
+      } catch (__) {}
+    }
+    return '';
+  }
+});
+
 /* ---------- theme persistence ---------- */
 const chk=$('#themeChk');
 const applyTheme=mode=>{document.documentElement.classList.toggle('dark',mode==='dark');chk.checked=mode==='dark';localStorage.theme=mode};
@@ -254,8 +382,8 @@ function addSwipe(el,onLeft,onRight){
  const card=$('#fcCard'),q=$('#fcQ'),a=$('#fcA');
  const render=()=>{
    const c=arr[i];
-   q.innerHTML=marked.parse(c.q);
-   a.innerHTML=marked.parse(c.a);
+   q.innerHTML=md.render(c.q);
+   a.innerHTML=md.render(c.a);
    card.classList.remove('flipped');
    // Trigger MathJax to process the new content
    if(window.MathJax) MathJax.typesetPromise();
@@ -301,7 +429,7 @@ function addSwipe(el,onLeft,onRight){
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
 
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   q.innerHTML=md.render(arr[i].q);
    aBox.innerHTML='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
@@ -312,7 +440,7 @@ function addSwipe(el,onLeft,onRight){
 
  tBtn.onclick=()=>{
    const expanded=aBox.classList.contains('expanded');
-   if(!expanded) aBox.innerHTML=marked.parse(arr[i].a);
+   if(!expanded) aBox.innerHTML=md.render(arr[i].a);
    aBox.classList.toggle('expanded');
    tBtn.classList.toggle('active');
    if(!expanded && window.MathJax) MathJax.typesetPromise();
@@ -331,7 +459,7 @@ function addSwipe(el,onLeft,onRight){
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
  const q=$('#tfQ'),btns=$$('#tf button.option');
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   q.innerHTML=md.render(arr[i].q);
    btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')});
    if(window.MathJax) MathJax.typesetPromise();
  };
@@ -351,7 +479,14 @@ function addSwipe(el,onLeft,onRight){
 
 /* ---------- NOTES + floating ask ---------- */
 (async()=>{
- const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
+ const box=$('#notesBox');
+ const notesContent = await (await fetch('notes.md')).text();
+ box.innerHTML = md.render(notesContent);
+
+ // Trigger syntax highlighting and MathJax
+ hljs.highlightAll();
+ if(window.MathJax) MathJax.typesetPromise();
+
  const float=$('#selAsk');
  const updateFloatPosition=()=>{
   const sel=getSelection();
