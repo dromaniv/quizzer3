@@ -175,7 +175,6 @@ textarea{
   font-weight:600;
   font-size:.95rem;
   box-shadow:var(--shadow);
-  display:flex;
   align-items:center;
   justify-content:center;
   pointer-events:auto;
@@ -278,7 +277,10 @@ const md = window.markdownit({
 });
 function renderMD(el, src){
   el.innerHTML = md.render(src);
-  if (window.MathJax) MathJax.typesetPromise();
+  if (window.MathJax){
+    if (typeof MathJax.typesetPromise === 'function') MathJax.typesetPromise();
+    else if (typeof MathJax.typeset === 'function') MathJax.typeset();
+  }
   if (window.hljs) hljs.highlightAll();
 }
 
@@ -429,7 +431,7 @@ function addSwipe(el,onLeft,onRight){
     const extra = isMobile ? 36 : 20; /* give more breathing room on mobile */
     float.style.top = `${r.bottom + extra}px`;
     float.style.left = `${r.left}px`;
-    float.style.display = 'block';
+    float.style.display = 'flex';
     const fr = float.getBoundingClientRect();
     const vw = document.documentElement.clientWidth;
     if (fr.right > vw) float.style.left = `${vw - fr.width - 10}px`;
