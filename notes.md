@@ -51,6 +51,26 @@ For each, describe syntax (nodes/gateways) and execution semantics:
    - Dependency graph: activities with input/output bindings and obligation tokens.  
    - Semantics = set of valid binding sequences; expressive but verification NP-complete.
 
+### Formal Definitions (Petri nets)
+
+- **k‑bounded** – A Petri net is *k‑bounded* if, in every reachable marking, **each** place contains at most *k* tokens.
+- **safe** – A special case of k‑boundedness with *k = 1*; no place ever contains more than one token (≡ 1‑bounded).
+- **bounded** – A Petri net is *bounded* if there exists a finite *k* such that the net is *k‑bounded*.
+- **free‑choice** – A Petri net is *free‑choice* if any two transitions that share an input place have **exactly the same set** of input places.
+- **deadlock‑free** – From every reachable marking, at least one transition is enabled; the net can always proceed.
+- **live / liveness** – A transition *t* is *live* if, from every reachable marking, it is possible to reach **some** marking in which *t* is enabled.  
+  A Petri net is *live* when **all** its transitions are live.
+- **proper completion** – In a Workflow net, every token produced during execution is ultimately consumed, leaving exactly one token in the final place and none elsewhere.
+- **option‑to‑complete** – From the initial marking, it is always possible to reach the final marking (i.e., the model can finish).
+- **sound** – A Workflow net is *sound* if it is bounded, has option‑to‑complete, and guarantees proper completion; additionally, there are no dead transitions (every transition can occur in some execution).
+
+> **Tip for exams:** To *derive* these properties for a given example model, construct its reachability graph (or coverability tree) and inspect:
+> 1. Maximum tokens per place → k‑bounded / safe / bounded  
+> 2. Enabled transitions at each marking → deadlock‑freedom  
+> 3. Ability to re‑enable each transition → liveness  
+> 4. Reachability of the unique final marking and residual tokens → proper completion & option‑to‑complete  
+> 5. Combine the three Workflow‑net criteria to conclude *soundness*.
+
 ## Semantic & Structural Properties
 - **k-bounded / safe / bounded** (Petri nets)  
 - **Free-choice** nets  
@@ -62,8 +82,23 @@ For each, describe syntax (nodes/gateways) and execution semantics:
   - Process trees: structural soundness.  
   - WF-nets/C‐nets: semantic soundness checks.
 
-## Running Example Models
-- Draw small examples in each notation and simulate firing or token flow.
+### Split/Join Support & Soundness Guarantees
+
+| Representation | AND Split / Join | XOR Split / Join | OR Split / Join | Sound *by Structure* | Sound *needs Semantic Check* |
+| -------------- | --------------- | ---------------- | --------------- | -------------------- | ---------------------------- |
+| **Transition system** | — (implicit interleavings) | — | — | — | ✔︎ (well‑defined reachable states) |
+| **Petri net** | ✔︎ (parallel branches) | ✔︎ (conflict) | ✖︎ (native) | — | ✔︎ (via reachability analysis) |
+| **Workflow net (WF‑net)** | ✔︎ | ✔︎ | ✖︎ | — | ✔︎ (soundness ≡ bounded ∧ option‑to‑complete ∧ proper completion) |
+| **BPMN** | ✔︎ (Parallel gateway) | ✔︎ (Exclusive gateway) | ✔︎ (Inclusive gateway) | — | ✔︎ (must check token flow) |
+| **YAWL** | ✔︎ | ✔︎ | ✔︎ (advanced OR‑join semantics) | — | ✔︎ (runtime OR‑join check) |
+| **Process tree** | ✔︎ (AND node) | ✔︎ (XOR node) | ✖︎ | ✔︎ (block‑structured) | — |
+| **Causal net (C‑net)** | ✔︎ (bindings) | ✔︎ (bindings) | ✔︎ (bindings) | — | ✔︎ (NP‑complete soundness test) |
+
+> **Reading the table:**  
+> • A **✔︎** means the construct is directly available; **✖︎** means it must be encoded indirectly or is not expressible.  
+> • *Sound by structure* means every syntactically valid model is guaranteed to be sound (e.g., process trees).  
+> • *Sound needs semantic check* means additional analysis (reachability graph, static verification, runtime checking, etc.) is required.
+
 
 ## Workflow Systems
 - Software to execute models:  
@@ -402,3 +437,36 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 - **Disadvantages:**  
   - Computationally expensive (search through state space).  
   - May not scale to very large logs/models without optimizations.
+
+### Alignment Procedure
+1. **Construct an alignment matrix γ** for every trace σ (length *n*) and model *M*.
+2. **Define the move‑cost function δ(aᵢ, bᵢ)**  
+   - Synchronous move *(aᵢ = bᵢ ≠ »)* → 0  
+   - Model‑only **silent** move *(aᵢ = » ∧ bᵢ = τ)* → 0  
+   - Model‑only **visible** move *(aᵢ = » ∧ bᵢ ≠ τ)* → 1  
+   - Log‑only move *(aᵢ ≠ » ∧ bᵢ = »)* → 1
+3. **Search for optimal alignments** (minimal total cost) using A*, Dijkstra, or ILP.  
+   Several optimal alignments may exist for the same trace.
+
+### Fitness Formulas
+- **Trace‑level fitness**
+  fitness = 1 − cost of optimal alignment / cost of worst alignment,  
+  where *γ*<sub>opt</sub> is an optimal alignment and *γ*<sub>worst</sub> is the anti‑optimal alignment of only asynchronous moves.
+- **Log‑level fitness** – weight the trace‑level fitness by trace frequencies and average over the entire log.
+
+### Precision via Alignments
+After replacing each trace by the bottom row of its optimal alignment (log L′):
+\[
+  \text{precision}(L,M)=\frac{1}{|E|}\sum_{e\in E}\frac{|en_L(e)|}{|en_M(e)|},
+\]
+where *en_L(e)* is the set of activities actually observed after the same history and *en_M(e)* the set enabled in the model.  
+Precision ∈ [0, 1]; low precision indicates under‑fitting.
+
+### Alignments vs. Token‑Based Replay
+
+| Aspect | **Alignments** | **Token‑based replay** |
+| --- | --- | --- |
+| Diagnostic detail | Exact end‑to‑end path, identifies every insertion/omission | Local token counts; later deviations may be hidden |
+| Handling duplicates & τ | Natural; τ‑moves cost 0 | Complicates token bookkeeping |
+| Quality measures | Fitness, precision, generalization from same alignments | Mainly fitness |
+| Complexity | Potentially exponential in model states | Linear; scales better but less precise |
