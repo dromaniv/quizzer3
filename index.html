@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Process Mining Study Suite</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- ── Markdown‑it + highlight.js ───────────────────────── -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github.min.css">
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/lib/common.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
 <!-- Add MathJax for LaTeX rendering -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -46,6 +49,13 @@ body{
   font:400 1rem/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   background:var(--bg);color:var(--text);display:flex;flex-direction:column;
   -webkit-font-smoothing:antialiased;
+}
+pre code{
+  display:block;
+  overflow-x:auto;
+  padding:1rem;
+  border-radius:var(--radius);
+  background:var(--card-h);
 }
 
 /* ---------- header & theme switch ---------- */
@@ -219,6 +229,19 @@ textarea{
 
 <!-- ----------------------- APP ----------------------- -->
 <script>
+/* ---------- markdown‑it + highlight helper ---------- */
+const md = window.markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true
+});
+function renderMD(el, src){
+  el.innerHTML = md.render(src);
+  if (window.MathJax) MathJax.typesetPromise();
+  if (window.hljs) hljs.highlightAll();
+}
+
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}};
 const ask=p=>window.open('https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(p),'_blank');
@@ -254,11 +277,9 @@ function addSwipe(el,onLeft,onRight){
  const card=$('#fcCard'),q=$('#fcQ'),a=$('#fcA');
  const render=()=>{
    const c=arr[i];
-   q.innerHTML=marked.parse(c.q);
-   a.innerHTML=marked.parse(c.a);
+   renderMD(q, c.q);
+   renderMD(a, c.a);
    card.classList.remove('flipped');
-   // Trigger MathJax to process the new content
-   if(window.MathJax) MathJax.typesetPromise();
  };
  render();
  card.onclick=()=>card.classList.toggle('flipped');
@@ -301,21 +322,19 @@ function addSwipe(el,onLeft,onRight){
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
 
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   renderMD(q, arr[i].q);
    aBox.innerHTML='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
    tBtn.textContent='Correct answer';
-   if(window.MathJax) MathJax.typesetPromise();
  };
  render();
 
  tBtn.onclick=()=>{
    const expanded=aBox.classList.contains('expanded');
-   if(!expanded) aBox.innerHTML=marked.parse(arr[i].a);
+   if(!expanded) renderMD(aBox, arr[i].a);
    aBox.classList.toggle('expanded');
    tBtn.classList.toggle('active');
-   if(!expanded && window.MathJax) MathJax.typesetPromise();
  };
 
  const prev=()=>{i=(i-1+arr.length)%arr.length;render()};
@@ -331,9 +350,8 @@ function addSwipe(el,onLeft,onRight){
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
  const q=$('#tfQ'),btns=$$('#tf button.option');
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   renderMD(q, arr[i].q);
    btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')});
-   if(window.MathJax) MathJax.typesetPromise();
  };
  btns.forEach(b=>b.onclick=()=>{
   const ans=b.dataset.val==='true',ok=arr[i].a;
@@ -351,7 +369,7 @@ function addSwipe(el,onLeft,onRight){
 
 /* ---------- NOTES + floating ask ---------- */
 (async()=>{
- const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
+ const box=$('#notesBox');renderMD(box, await (await fetch('notes.md')).text());
  const float=$('#selAsk');
  const updateFloatPosition=()=>{
   const sel=getSelection();
