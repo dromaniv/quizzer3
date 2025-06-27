@@ -392,25 +392,50 @@ function addSwipe(el,onLeft,onRight){
 
 /* ---------- NOTES + floating ask ---------- */
 (async()=>{
- const box=$('#notesBox');renderMD(box, await (await fetch('notes.md')).text());
- const float=$('#selAsk');
- const updateFloatPosition=()=>{
-  const sel=getSelection();
-  if(!sel||sel.isCollapsed||!box.contains(sel.anchorNode)){float.style.display='none';return;}
-  const r=sel.getRangeAt(0).getBoundingClientRect();
-  if(!r.width&&!r.height){float.style.display='none';return;}
-  float.style.position='fixed';
-  float.style.top=`${r.bottom+8}px`;
-  float.style.left=`${r.left}px`;
-  float.style.display='block';
-  const fr=float.getBoundingClientRect(),vw=document.documentElement.clientWidth;
-  if(fr.right>vw)float.style.left=`${vw-fr.width-10}px`;
- };
- document.addEventListener('selectionchange',updateFloatPosition);
- document.addEventListener('touchend',()=>setTimeout(updateFloatPosition,100));
- document.addEventListener('scroll',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
- window.addEventListener('resize',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
- float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on process mining:\n"${txt}"`)};
+  const box = $('#notesBox');
+  renderMD(box, await (await fetch('notes.md')).text());
+  const float = $('#selAsk');
+  let currentSelText = '';
+
+  const updateFloatPosition = () => {
+    const sel = getSelection();
+    if (!sel || sel.isCollapsed || !$('#notesBox').contains(sel.anchorNode)) {
+      float.style.display = 'none';
+      currentSelText = '';
+      return;
+    }
+    currentSelText = sel.toString().trim();
+    const r = sel.getRangeAt(0).getBoundingClientRect();
+    if (!r.width && !r.height) {
+      float.style.display = 'none';
+      return;
+    }
+    float.style.position = 'fixed';
+    float.style.top = `${r.bottom + 8}px`;
+    float.style.left = `${r.left}px`;
+    float.style.display = 'block';
+    const fr = float.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    if (fr.right > vw) float.style.left = `${vw - fr.width - 10}px`;
+  };
+
+  /* keep the button visible while tapping */
+  const askSelection = () => {
+    if (currentSelText)
+      ask(`Explain this excerpt from my notes on process mining:\n"${currentSelText}"`);
+  };
+
+  float.addEventListener('mousedown', e => { e.preventDefault(); askSelection(); });
+  float.addEventListener('touchstart', e => { e.preventDefault(); askSelection(); });
+
+  document.addEventListener('selectionchange', updateFloatPosition);
+  document.addEventListener('touchend', () => setTimeout(updateFloatPosition, 100));
+  document.addEventListener('scroll', () => {
+    if (getSelection() && !getSelection().isCollapsed) updateFloatPosition();
+  });
+  window.addEventListener('resize', () => {
+    if (getSelection() && !getSelection().isCollapsed) updateFloatPosition();
+  });
 })();
 
 /* ---------- PARKOUR VIDEO ---------- */
