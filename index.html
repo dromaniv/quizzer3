@@ -412,6 +412,7 @@ function addSwipe(el,onLeft,onRight){
   const box = $('#notesBox');
   renderMD(box, await (await fetch('notes.md')).text());
   const float = $('#selAsk');
+  const isMobile = window.matchMedia('(pointer: coarse)').matches;
   let currentSelText = '';
 
   const updateFloatPosition = () => {
@@ -424,8 +425,8 @@ function addSwipe(el,onLeft,onRight){
     currentSelText = sel.toString().trim();
     const r = sel.getRangeAt(0).getBoundingClientRect();
     float.style.position = 'fixed';
-    /* place the button a bit further below the selection so iOS/Android selection overlay doesn’t sit on top */
-    float.style.top = `${r.bottom + 20}px`;
+    const extra = isMobile ? 36 : 20; /* give more breathing room on mobile */
+    float.style.top = `${r.bottom + extra}px`;
     float.style.left = `${r.left}px`;
     float.style.display = 'block';
     const fr = float.getBoundingClientRect();
@@ -439,9 +440,13 @@ function addSwipe(el,onLeft,onRight){
       ask(`Explain this excerpt from my notes on process mining:\n"${currentSelText}"`);
   };
 
-  float.addEventListener('mousedown', e => { e.preventDefault(); askSelection(); });
-  float.addEventListener('touchstart', e => { e.preventDefault(); askSelection(); });
+  /* interaction */
   float.addEventListener('click', e => { e.preventDefault(); askSelection(); });
+  if (isMobile) {
+    float.addEventListener('touchend', e => { e.preventDefault(); askSelection(); });
+  } else {
+    float.addEventListener('mousedown', e => { e.preventDefault(); askSelection(); });
+  }
 
   document.addEventListener('selectionchange', updateFloatPosition);
   document.addEventListener('touchend', () => setTimeout(updateFloatPosition, 100));
