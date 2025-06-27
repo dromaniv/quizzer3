@@ -135,6 +135,24 @@ textarea{
 .notes h3{font-size:1.3rem;font-weight:600;margin:1em 0 .4em}
 .notes h4{font-size:1.1rem;font-weight:600;margin:1em 0 .3em}
 
+/* list indentation & divider styling in notes */
+.notes ul,
+.notes ol{
+  margin-left:1.5rem;
+  padding-left:.5rem;
+}
+.notes ul ul,
+.notes ol ol{
+  margin-left:1.2rem;
+}
+.notes ul li{list-style:disc}
+.notes ul ul li{list-style:circle}
+.notes hr{
+  border:0;
+  border-top:1px solid var(--border);
+  margin:1.5rem 0;
+}
+
 /* collapsible animation */
 .collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
 .collapsible.expanded{max-height:1000px;opacity:1;padding:1rem}
