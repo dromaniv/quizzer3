@@ -412,6 +412,7 @@ function addSwipe(el,onLeft,onRight){
   const box = $('#notesBox');
   renderMD(box, await (await fetch('notes.md')).text());
   const float = $('#selAsk');
+  float.style.display = 'none';   // force‑hide on initial load
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   let currentSelText = '';
 
