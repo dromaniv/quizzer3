@@ -1,485 +1,405 @@
-# Multivariate Statistics Notes
+# Lecture 1: Introduction to Process Models
+
+## Normative vs Descriptive Models
+- **Normative model**  
+  - A handcrafted, idealized representation of “how things should work.”  
+  - Applications: process design, specification, certification (e.g., ISO 9001), contract between stakeholders.
+- **Descriptive model**  
+  - A data-driven representation of “what actually happens.”  
+  - Applications: operational audits, conformance checking, root-cause analysis.
+
+## Six Sigma Management Methodology
+- **Goal:** Reduce process variation so that outcomes fall within ±6 standard deviations (σ) of the mean.  
+- **Key concepts:**  
+  1. **σ (standard deviation)** – measure of variation.  
+  2. **1.5σ shift**  
+     - Empirical mean drift over time in long-running processes.  
+     - Causes asymmetric defect rates but still maintains very low defect probability (≈3.4 PPM).  
+  3. **DMAIC cycle:**  
+     - Define → Measure → Analyze → Improve → Control
+
+## Lean Management Methodology
+- **Origin:** Toyota Production System.  
+- **Principles:**  
+  1. **Eliminate waste:** reduce inventory, unnecessary transport, overprocessing.  
+  2. **Minimize waiting:** synchronize activities to avoid idle time.  
+  3. **Prevent defects:** build quality in; avoid rework and correction steps.
 
 ---
 
-## 1  Why multivariate statistics?
+# Lectures 2–3: Process Model Representations & Workflow Systems
 
-* Real-world studies usually record **several correlated measurements per unit** (e.g. soil nutrients, exam sub-scores, cranial dimensions).  
-* Goals:  
-  1. **Describe dependence** (covariance, correlation, scatter-plot ellipsoids).  
-  2. **Reduce dimension** without throwing information away (PCA, factor analysis).  
-  3. **Test hypotheses** on several means/relationships **while controlling the family-wise error rate**.  
-  
-Typical designs and their classical tools:
+## Control-Flow Representations
+For each, describe syntax (nodes/gateways) and execution semantics:
+1. **Transition systems** (state‐transition graphs)  
+2. **Petri nets**  
+   - Places (conditions), transitions (activities), arcs, tokens.  
+   - Firing rule: enabled if all input places have tokens; consumes/produces tokens.  
+3. **Workflow nets (WF-nets)**  
+   - Petri net variant with single start/end places.  
+   - **Soundness** criteria: safeness, proper completion, option to complete, no dead parts.  
+4. **BPMN**  
+   - Events, tasks, AND/XOR/OR gateways.  
+   - Execution semantics follow token flow governed by gateways.  
+5. **YAWL**  
+   - Conditions (places), tasks, composite tasks, multi‐instance tasks, cancellation regions.  
+   - Gateways attached to tasks (AND/XOR/OR splits & joins).  
+6. **Process trees**  
+   - Leaf nodes = activities; internal nodes = operators: sequence (→), XOR (⨉), AND (∧), redo loop (↺).  
+   - Block-structured; sound by construction.  
+7. **Causal nets (C-nets)**  
+   - Dependency graph: activities with input/output bindings and obligation tokens.  
+   - Semantics = set of valid binding sequences; expressive but verification NP-complete.
 
-| Design | Multivariate tool |
-|-------------------------------------|-------------------------------------------------|
-| One sample, many variables          | PCA, factor analysis, Mardia normality tests    |
-| Two samples                         | Hotelling T², Linear Discriminant Analysis      |
-| $k\ge 3$ samples                    | MANOVA, multiple discriminant functions         |
-| Two *sets* of variables (same units)| Canonical correlation, multivariate multiple regression |
+## Semantic & Structural Properties
+- **k-bounded / safe / bounded** (Petri nets)  
+- **Free-choice** nets  
+- **Deadlock-free / live**  
+- **Proper completion / option to complete / sound** (WF-nets)  
+- Which representations support AND, XOR, OR splits/joins?  
+  - ALL except OR joins in basic Petri nets (must encode via XOR+AND).  
+- Which guaranteed soundness structurally vs semantically?  
+  - Process trees: structural soundness.  
+  - WF-nets/C‐nets: semantic soundness checks.
 
----
+## Running Example Models
+- Draw small examples in each notation and simulate firing or token flow.
 
-## 2  Matrix toolbox (speak it fluently!)
-
-### 2.1  Building blocks
-* Vectors/matrices/scalars: $A\in\mathbb{R}^{p\times q}$, $x\in\mathbb{R}^p$.  
-* Special matrices: identity $I_p$, zero $0_{p\times q}$, ones $1_p1_p^{\top}$, diagonal,  
-  *orthogonal* ($UU^{\top}=U^{\top}U=I$), *idempotent* ($P^{2}=P$).
-
-### 2.2  Operations & identities
-* $\det(AB)=\det A\;\det B$, $\operatorname{tr}(AB)=\operatorname{tr}(BA)$.
-* Rank: $\operatorname{rank}(AA^{\top})=\operatorname{rank}A$.
-
-### 2.3  Projectors
-Orthogonal projector onto the column space of $A$:
-
-$$
-P_A \;=\; A\,(A^{\top}A)^{-1}\,A^{\top}.
-$$
-
-Used everywhere: sample mean, residual maker $Q = I - P$, etc.
-
-### 2.4  Eigen- & singular-value machinery
-* **Spectral decomposition** (symmetric $A$): $A = UDU^{\top}$ with eigenvalues on $D$.
-* **Positive definite** $\Leftrightarrow$ eigenvalues $>0$ $\Leftrightarrow$ leading principal minors $>0$ (Sylvester). 
-* **Singular Value Decomposition (SVD)** for any $A$: $A = U\,\Sigma\,V^{\top}$.  
-  Geometric sequence of actions: **rotation → scaling → rotation**. 
-
-> Take-away: every multivariate statistic is a trace, determinant, or eigenvalue of a projector or scatter matrix.
+## Workflow Systems
+- Software to execute models:  
+  - jBPM, YAWL (open-source), ProM, Celonis, Disco, ProcessM, PM4Py.  
+- Key features: model editor, execution engine, monitoring, integration with enterprise systems.
 
 ---
 
-## 3  Random vectors and their moments
+# Lecture 3: Performance Metrics & KPIs
 
-Let $X = (X_1,\dots,X_p)^{\top}$.
+## Key Performance Indicators (KPIs)
+- **Definition:** Quantitative/qualitative measures of process performance.  
+- **Types:**  
+  1. **Quantitative:** objective, numeric (e.g., throughput, defect rate).  
+  2. **Qualitative:** categorical (e.g., satisfaction levels).  
+- **Levels:**  
+  - **Activity‐level:** input/output data, resource utilization.  
+  - **Process‐level:** lead time, cycle time, cost, quality metrics.
 
-* Mean $\mu = E(X)$.  
-* Covariance matrix  
-  $$
-    \Sigma \;=\; E\!\bigl[(X-\mu)(X-\mu)^{\top}\bigr].
-  $$
+## Overall Equipment Effectiveness (OEE)
+- **Formula:**  
+  \[
+    \text{OEE} = \text{Availability} \times \text{Performance} \times \text{Quality}
+  \]
+- **Calculations:**  
+  - Availability = operating time / scheduled time  
+  - Performance = actual output / theoretical max output  
+  - Quality = good units / total units
 
-* **Correlation matrix**  
-  $$
-  R \;=\; D_{\Sigma}^{-1}\,\Sigma\,D_{\Sigma}^{-1},\quad
-  D_{\Sigma}=\operatorname{diag}(\sigma_1,\dots,\sigma_p).
-  $$
+## Exemplary KPIs
+- **Manufacturing:** throughput, cycle time, reject rate, utilization.  
+- **Process execution cost:** labor cost per case, material cost, rework cost.
 
-### Linear transforms
-If $Y = AX + b$ (constant $A$, $b$):
-$$
-E(Y)=A\mu+b, \qquad
-\operatorname{Cov}(Y)=A\Sigma A^{\top}.
-$$
-
----
-
-## 4  The multivariate normal distribution $N_p(\mu,\Sigma)$
-
-* Definition: **all** linear combinations $a^{\top}X$ are univariate normal.  
-* Density  
-
-  $$
-  f(x) \;=\; (2\pi)^{-p/2}\,|\Sigma|^{-1/2}
-             \exp\!\Bigl[-\tfrac12\,(x-\mu)^{\top}\Sigma^{-1}(x-\mu)\Bigr].
-  $$
-
-* Key facts  
-  * Linear transform: $AX+b \sim N_p(A\mu+b,\;A\Sigma A^{\top})$.  
-  * Standardise: $Z=\Sigma^{-1/2}(X-\mu)\sim N_p(0,I)$.  
-  * Independence $\Leftrightarrow$ $\Sigma$ is diagonal.  
-  * Density contours are ellipsoids with axes $\pm c\sqrt{\lambda_i}\,v_i$ (eigen-pairs of $\Sigma$). 
-  
----
-
-## 5  Sampling from $N_p$: statistics & distributions
-
-Let $X_1,\dots,X_n \stackrel{\text{iid}}{\sim} N_p(\mu,\Sigma)$ and stack rows into $X$ ($n\times p$).
-
-| Statistic | Formula | Sampling distribution |
-|-----------|---------|-----------------------|
-| Sample mean | $\displaystyle \bar X = \frac{1}{n}\sum_{i=1}^n X_i \;=\; \frac{1}{n}X^{\top}1_n$ | $N_p\!\bigl(\mu,\frac{1}{n}\Sigma\bigr)$ |
-| Sample covariance | $\displaystyle S = \frac{1}{n-1}\,X^{\top}Q_{1_n}X,\quad Q_{1_n}=I-\frac{1}{n}1_n1_n^{\top}$ | Wishart $W_p(\Sigma,n-1)$ |
-| Independence fact | $\bar X$ and $S$ are independent | (true only under normality) |
-
-MLEs: $\hat\mu=\bar X,\;\hat\Sigma_{\text{ML}}=\frac{1}{n}X^{\top}Q_{1_n}X=\frac{n-1}{n}S$. 
+## Time Metrics
+- **Lead time:** total elapsed time from start to finish of a case.  
+- **Service time:** active processing time for an activity.  
+- **Waiting time:** idle time before processing starts.  
+- **Synchronization time:** waiting for parallel branches to rejoin.  
+- **Example calculation:** given timestamps in a trace, compute each time component.
 
 ---
 
-## 6  Assessing multivariate normality
+# Lecture 4: Statistical Hypothesis Testing & Data Mining Basics
 
-### 6.1  Graphical method  
-* **Q–Q plot** of squared Mahalanobis distances $d_i^{\,2}$ versus $\chi^2_p$ quantiles. Straight line ⇒ nearly normal. 
+## Purpose of Statistical Hypothesis Verification
+- To assess whether sample data support a given assumption about population parameters.
 
-### 6.2  Mardia’s skewness & kurtosis
+## Hypothesis Test for Mean
+1. **Define H₀ (e.g., μ = μ₀) and H₁.**  
+2. **Compute t‐statistic:**  
+   \[
+     t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}
+   \]
+3. **Compare to critical t (via quantile).**  
+4. **Decide to reject or not reject H₀.**
 
-* Skewness  
+## Error Types & Multiple Testing
+- **Type I error (α):** rejecting true H₀.  
+- **Type II error (β):** failing to reject false H₀.  
+- **Multiple tests:** inflates overall α (family-wise error) unless corrected (e.g., Bonferroni).
 
-  $$
-  b_{1,p} \;=\; \frac{1}{n^2}\sum_{i,j}
-                \Bigl[(x_i-\bar x)^{\top}S^{-1}(x_j-\bar x)\Bigr]^3,
-  \qquad
-  z_1 \;=\; \frac{n}{6}b_{1,p}\sim\chi^2_{p(p+1)(p+2)/6}.
-  $$
+## Bias & Variance in Algorithms
+- **Bias:** systematic error due to assumptions; low bias → more flexible model.  
+- **Variance:** sensitivity to data fluctuations; high variance → overfitting.  
+- **Trade-off:** increasing model complexity lowers bias but raises variance.
 
-* Kurtosis  
+## Explaining Decisions & Classifier Evaluation
+- **Decision explanation:** use decision trees or rule lists to interpret branching in process.  
+- **Evaluation measures:** accuracy, precision, recall, F₁/F_β score, Matthews correlation coefficient (MCC), ROC/AUC.
 
-  $$
-  b_{2,p} \;=\; \frac{1}{n}\sum_i d_i^{\,4},
-  \qquad
-  z_2 \;=\; \frac{b_{2,p}-p(p+2)}{\sqrt{8p(p+2)/n}}\sim N(0,1).
-  $$ 
+## Bias of Representation
+- Causes: chosen modeling formalism restrictions (e.g., α-algorithm’s no silent/duplicate transitions).
 
-### 6.3  Univariate normality tests  
-Shapiro-Wilk, Lilliefors, etc. on each variable are *necessary but not sufficient*; joint normality is stricter.  
+## Apriori Algorithm for Association Rule Discovery
+1. **Find frequent itemsets:** support ≥ supₘᵢₙ using iterative k→k+1 generation.  
+2. **Generate rules:** for each frequent set, split into X⇒Y with confidence ≥ confₘᵢₙ.  
+3. **Quality metrics:** support, confidence, lift.
 
-> **Exam tip:** “the same decision will be made as in univariate tests” is **false**.
+### Example (abstract)
+- supₘᵢₙ=0.3, dataset of 14 transactions:  
+  - L₁‐item frequent: {coffee, tea, muffin, bagel}.  
+  - L₂‐item frequent: {tea∧muffin, muffin∧bagel, …}.  
+  - Derive rules with confₘᵢₙ=0.75.
 
----
+## Apriori for Sequence Discovery
+- Treat each time‐ordered basket as sequence of itemsets.  
+- Extend Apriori to sequences: subsequence support ≥ supₘᵢₙ.
 
-## 7  Mahalanobis distance & outliers
-
-$$
-d(X,\mu) \;=\; \sqrt{(X-\mu)^{\top}\Sigma^{-1}(X-\mu)}.
-$$
-
-Replacing $(\mu,\Sigma)$ with $(\bar X,S)$ gives
-
-$$
-\frac{p(n-1)}{n-p}\,d^2 \;\sim\; F_{p,\;n-p}.
-$$
-
-Large $d^2$ flags multivariate outliers.
-
----
-
-## 8  Principal Component Analysis (PCA)
-
-### 8.1  Purpose  
-* Produce **uncorrelated linear combos** capturing maximum variance.  
-* Useful for **dimension reduction, visualisation, multicollinearity relief**. 
-
-### 8.2  Algebra  
-Solve the eigenproblem of $S$ (or $R$):
-
-$$
-S\,a_j \;=\; \lambda_j\,a_j,
-\quad
-\lambda_1\ge\lambda_2\ge\cdots\ge\lambda_p.
-$$
-
-PC scores: $Z_j = a_j^{\top}Y$ where $Y$ is centred data,  
-$\operatorname{Var}(Z_j)=\lambda_j$.
-
-Matrix form: $Z = A^{\top}Y,\;A=[a_1,\dots,a_p],\;A^{\top}SA=\operatorname{diag}(\lambda_1,\dots,\lambda_p)$. 
-
-### 8.3  Choosing the number of PCs  
-* **Variance rule:** keep first $k$ PCs giving ≥ 80 % of total variance.  
-* **Kaiser rule:** retain PCs with $\lambda_i > \bar\lambda$.  
-* **Scree plot:** look for the “elbow”.  
-
-### 8.4  Geometry  
-PCA rotates the sample ellipsoid so its axes align with coordinate axes; PCs are those axes.
-
-### 8.5  Links  
-* First PC often approximates the **major regression line** when variables are highly correlated.  
-* PC1-PC2 plots reveal clusters and multivariate outliers.
+## Episode Mining
+- **Episode:** DAG of events within sliding time window.  
+- **Mining:** slide window over event stream, count episode occurrences; support ≥ supₘᵢₙ.  
+- **Difference from process model:** local patterns only; no global start/end, loops, choices, or full concurrency.
 
 ---
 
-## 9  Hotelling $T^{2}$
+# Lecture 5: Event Logs & Data Preparation
 
-### 9.1  One-sample mean
+## Event Log Structure Requirements
+- **Case ID** – unique identifier for each process instance (trace).  
+- **Activity Name** – label of the executed step.  
+- **Timestamp** – precise time of occurrence.  
+- **Optional Attributes** – resource, cost, lifecycle transition.  
+- **Well‐formedness:** each row = one event; sorted by timestamp per case.
 
-* Hypotheses  
-  $H_0:\ \mu = \mu_0$   vs   $H_1:\ \mu \neq \mu_0$
+## ETL Process
+1. **Extract** – read raw data from source systems (ERP, CRM).  
+2. **Transform** – filter, clean, normalize timestamps, derive case IDs.  
+3. **Load** – write into event log repository (flat file, XES format).
 
-* Statistic  
-  $$
-    T^2
-      = n\,(\bar X - \mu_0)^{\top} S^{-1} (\bar X - \mu_0),
-  $$  
-  transform with  
-  $$ 
-    F = \frac{n-p}{p(n-1)}\,T^2 \sim F_{p,\;n-p}\quad(H_0).
-  $$
+## Data Warehouse vs. Relational Database
+- **Relational DB:** optimized for transactional OLTP; normalized; many small reads/writes.  
+- **Data Warehouse:** optimized for OLAP; denormalized star/snowflake schema; historical, aggregated data.
 
-### 9.2  Two independent samples
+## Scoping
+- Define process boundaries: start/end events, included variants, relevant data sources.
 
-* Pooled covariance  
-  $$ 
-    S_p = \frac{(n_1-1)S_X + (n_2-1)S_Y}{n_1+n_2-2}.
-  $$
+## Atomic Activities & Parallelism
+- **Atomic activity:** indivisible unit of work in the log.  
+- **Parallel atomic activities:** two events with same timestamp or overlapping intervals; represented as separate events with identical timestamps or explicit start/end lifecycle attributes.
 
-* Statistic  
-  $$
-    T^2
-      = \frac{n_1 n_2}{n_1+n_2}
-        (\bar X - \bar Y)^{\top}
-        S_p^{-1}
-        (\bar X - \bar Y).
-  $$
+## XES Standard
+- **Basic Structure:**  
+  - **Log** element containing global extensions and traces.  
+  - **Trace** element containing events.  
+  - **Event** element with attributes (string, date, id, int, float, boolean).  
+- **Extensions:** plug‐in modules adding semantics (e.g., Organizational, Time, Lifecycle, Cost).
 
-* Convert to $F_{p,\;n_1+n_2-p-1}$ the same way.
-
-### 9.3  Paired version
-
-Take differences $D_i = X_i - Y_i$ and apply the one-sample $T^2$.
-
----
-
-## 10  MANOVA ( $g\ge 2$ groups )
-
-### 10.1  Sum-of-squares matrices
-
-Let $Y_{ij}$ be the $p$-vector for subject $i$ in group $j$.
-
-* **Error (within)**  
-  $$
-    E = \sum_{j=1}^{g}\sum_{i=1}^{n_j}
-        (Y_{ij}-\bar Y_{j\cdot})(Y_{ij}-\bar Y_{j\cdot})^{\top}.
-  $$
-
-* **Hypothesis (between)**  
-  $$
-    H = \sum_{j=1}^{g}
-        n_j(\bar Y_{j\cdot}-\bar Y_{\cdot\cdot})
-        (\bar Y_{j\cdot}-\bar Y_{\cdot\cdot})^{\top}.
-  $$
-
-### 10.2  Four omnibus statistics (functions of eigenvalues $\lambda_i$ of $E^{-1}H$)
-
-| Name | Formula | Range | Best for |
-|------|---------|-------|----------|
-| Wilks $\Lambda$ | $\displaystyle \Lambda=\frac{|E|}{|E+H|}$ | $0\!-\!1$ (smaller → evidence) | general use |
-| Pillai $V$ | $V=\text{tr}\,[H(H+E)^{-1}]$ | $0\!-\!s$ ($s=\min(p,g-1)$) | robust |
-| Hotelling–Lawley $T$ | $T=\text{tr}(E^{-1}H)$ | $0\!-\!\infty$ | power vs big effects |
-| Roy’s root $\Theta$ | $\Theta=\lambda_{\max}(E^{-1}H)$ | $0\!-\!\infty$ | one dominant effect |
-
-Each has an $F$ (or $\chi^2$) approximation; the constants are on your formula sheet.
+## Creating an Event Log from a Relational DB
+1. Query table(s) to extract case ID, activity, timestamp, and optional fields.  
+2. Order by case ID and timestamp.  
+3. Export to CSV.  
+4. Convert CSV to XES (e.g., using ProM import or PM4Py).
 
 ---
 
-## 11  Box’s $M$ (test equality of covariance matrices)
+# Lecture 6: Process Model Evaluation & Discovery (α-Algorithm)
 
-* Hypotheses   $H_0:\ \Sigma_1=\Sigma_2=\dots=\Sigma_g$
+## Four Measures of Model Evaluation
+1. **Fitness:** how much of the log is explained by the model.  
+2. **Precision:** extent to which model allows only observed behavior.  
+3. **Generalization:** model’s ability to allow unseen but likely behavior.  
+4. **Simplicity:** parsimony of model structure (Ockham’s razor).
 
-* Statistic  
-  $$
-    M = \Bigl[ \sum_{j=1}^g (n_j-1)\ln|S_j|
-          - (N-g)\,\ln|S_p| \Bigr].
-  $$
+## Ockham’s Razor
+- Prefer the simplest model that adequately fits the data to avoid overfitting.
 
-* After correction factor $C$, use  
-  $$
-    \chi^2 = C\,M \approx \chi^2_{\;\nu},\quad
-    \nu=\tfrac12 p(p+1)(g-1).
-  $$  
-  *Very* sensitive to non-normality; treat as a diagnostic.
+## α-Algorithm Steps
+1. Compute directly‐follows relation from log.  
+2. Identify sets of input/output for each task.  
+3. Build Petri net places for each pair of input/output sets.  
+4. Connect tasks and places to form WF-net.
 
----
+## Properties & Limitations of α-Algorithm
+- **Guarantees:** sound WF-net if no loops of length 1/2 and log complete.  
+- **Limitations:**  
+  - Fails on short loops (length 1 or 2).  
+  - Sensitive to noise and infrequent behavior.  
+  - Cannot detect invisible tasks or duplicate activities.
 
-## 12  Multivariate multiple regression
+## Handling Loops & Noise
+- **Short loops:** detect and merge via specialized heuristics.  
+- **Noise filtering:** remove infrequent relations below support threshold.
 
-### 12.1  Model
-$$
-  Y = X B + U,\qquad
-  U \sim N_{n,p}(0,\;I\otimes\Sigma).
-$$
-
-### 12.2  Estimates
-$$
-  \hat B = (X^{\top}X)^{-1}X^{\top}Y,\qquad
-  \hat\Sigma = \frac{1}{n-q}(Y-X\hat B)^{\top}(Y-X\hat B).
-$$
-
-### 12.3  Testing $H_0: L B = 0$
-
-Compute $E$ from residuals; compute $H$ from the reduced model fit; plug into Wilks/Pillai/etc.
+## Bisimilarity Concepts
+- **Bisimilar:** two models exhibit exactly the same possible firing sequences.  
+- **Branching bisimilar:** preserve branching structure (choices) up to silent transitions.
 
 ---
 
-## 13  Discriminant analysis
+# Lecture 7: Advanced Discovery & Bias of Representation
 
-### 13.1  Linear DA (LDA)
+## Sources of Representation Bias
+- Formalism restrictions (e.g., no OR-joins in basic Petri nets).  
+- Algorithmic design choices (e.g., block‐structured assumption in process trees).  
+- Pre‐ and post‐processing filters.
 
-Assume class densities $N_p(\mu_k,\Sigma)$, common $\Sigma$.
+## Completeness of Event Log
+- **Complete w.r.t. directly‐follows:** all possible directly‐follows pairs appear.  
+- **Affecting factors:** process variability, data volume, filtering, parallelism.  
+- **Challenges:** highly parallel systems, rare behavior; impractical to observe all variants.  
+- **Importance:** incomplete logs lead to incomplete or incorrect models.
 
-Discriminant score  
-$$
-  \delta_k(x)=x^{\top}\Sigma^{-1}\mu_k
-              -\tfrac12\mu_k^{\top}\Sigma^{-1}\mu_k
-              +\ln\pi_k.
-$$
+## State-Based Regions Algorithm
+1. Build transition system from log.  
+2. Identify regions (sets of states with consistent transitions).  
+3. Convert regions into places to form a Petri net.
 
-Classify to the largest $\delta_k$.
+## Language-Based Regions Algorithm
+1. Derive language (set of traces) from log.  
+2. Compute separation pairs for events not co-occurring in traces.  
+3. Construct places for each separating pair, connect to transitions.
 
-### 13.2  Quadratic DA (QDA)
-
-Drop the equal-$\Sigma$ assumption; discriminant becomes quadratic.
-
-### 13.3  Error rate estimates
-
-* Apparent (resubstitution)  
-* Leave-one-out / $k$-fold CV  
-* Confusion matrix, ROC for binary
-
-### 13.4  Number of functions
-
-Up to $\min(p,\,g-1)$ canonical discriminant functions for plotting.
+## Evolutionary Computing for Discovery
+- **Approach:** encode candidate models as genotypes; evaluate fitness against log; apply genetic operators.  
+- **Representation Features:** variable‐length genomes, operators for crossover/mutation on graph structures, genotypephenotype mapping to valid WF-nets.
 
 ---
 
-## 14  Canonical correlation (30-second view)
+# Lecture 8: Heuristic & Inductive Miners
 
-Find $a^{\top}X$ and $b^{\top}Y$ that maximise $\operatorname{corr}(a^{\top}X,\;b^{\top}Y)$.  
-Solve eigenproblem of $\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$.
+## Heuristic Miner
+- **Heuristic variant:**  
+  - Compute dependency/frequency metrics.  
+  - Select arcs above thresholds to build causal graph.  
+- **Optimization variant:**  
+  - Define objective combining fitness, simplicity, precision.  
+  - Use optimizer (e.g., ILP) to select consistent subset of arcs.
 
----
-
-## 15  Tolerance regions & $T^2$ control chart
-
-* Ellipsoidal tolerance for proportion $P$:
-  $$ 
-    (x-\bar X)^{\top} S^{-1} (x-\bar X) \le
-    \frac{p(n-1)}{n-p}\,F_{p,\;n-p;\;P}.
-  $$
-
-* Hotelling $T^2$ chart compares each new sample’s distance to the in-control limit.
-
----
-
-## 16  Cheat-sheet of crucial formulas
-
-| Situation | Test | Statistic | Ref. dist. |
-|-----------|------|-----------|------------|
-| One-sample mean | Hotelling $T^2$ | $n(\bar X-\mu_0)^{\top}S^{-1}(\bar X-\mu_0)$ | $F_{p,\;n-p}$ |
-| Two-sample means | Hotelling $T^2$ | $\dfrac{n_1 n_2}{n_1+n_2}(\bar X-\bar Y)^{\top}S_p^{-1}(\bar X-\bar Y)$ | $F_{p,\;n_1+n_2-p-1}$ |
-| MANOVA | Wilks | $\Lambda=|E|/|E+H|$ | $\approx F$ |
-| MANOVA | Pillai | $V=\text{tr}[H(H+E)^{-1}]$ | $\approx F$ |
-| Covariance equality | Box’s $M$ | see §11 | $\chi^2$ |
-| Classification | LDA rule | $\delta_k(x)$ | — |
+## Inductive Miner
+1. Discover process tree by recursively splitting log based on cut detection (sequence, XOR, parallel, loop).  
+2. Guarantees block-structured, sound models.  
+3. **Advantages:** handles noise, guarantees soundness.  
+4. **Disadvantages:** may over-split; results depend on cut detection thresholds; less flexible for unstructured processes.
 
 ---
 
-# Questions from last year
+# Lecture 9: Linear Programming Models
 
-### **1. Let $A$ be a symmetric matrix.  Which property *does not* hold?**
+## LP Model Components
+- **Decision variables** x₁, x₂, …  
+- **Objective function** (linear): e.g., maximize cᵀx.  
+- **Constraints:** A x ≤ b, x ≥ 0.
 
-| Option | Statement | Verdict | Reason |
-|--------|-----------|---------|--------|
-| (a) | If all leading minors of $A$ are positive then $A$ is positive-definite | ✘ | Sylvester’s criterion – this is true. |
-| (b) | If all eigenvalues of $A$ are positive then $A$ is positive-definite | ✘ | Positive-definite *means* all eigenvalues $>0$. |
-| **(c)** | If $A$ has *all entries* positive, then all eigenvalues of $A$ are positive | ✔ | Entry-wise positivity does **not** imply positive eigenvalues (e.g. matrix of all 1’s). |
+## Optimal Solution
+- Located at a vertex of the feasible polyhedron.
 
----
+## Linearization Techniques
+- **Ratio objective:** maximize x/y → introduce t, constraints x – t y ≥ 0, y t = 1 (approximate via piecewise linear).  
+- **Minimax objective:** minimize maxᵢ{aᵢᵀx + bᵢ} → introduce t, constraints aᵢᵀx + bᵢ ≤ t ∀i.  
+- **Logical relationships:**  
+  - If y = 0 ⇒ x ≤ M·y (big-M method).  
+- **Absolute value:** |x| ≤ t → −t ≤ x ≤ t.  
+- **Alternative constraints:** represent “either-or” via binary variables and big-M.
 
-### **2. SVD corresponds to which sequence of transformations?**
-
-| Option | Sequence | Verdict | Reason |
-|--------|----------|---------|--------|
-| (a) | scaling horizontally → rotation → scaling vertically | ✘ | SVD has one scaling phase, not two. |
-| (b) | scaling vertically → rotation → scaling horizontally | ✘ | Same issue. |
-| **(c)** | rotation → scaling → rotation | ✔ | $A = U\,\Sigma\,V^{\top}$ ($V^{\top}$ rotates, $\Sigma$ scales, $U$ rotates). |
-
----
-
-### **3. For the linear transform $y = A\,x + b$ (nonsingular $A$)**
-
-| Option | Claim about $\operatorname{Cov}(A^{-1}y)$ | Verdict | Reason |
-|--------|-------------------------------------------|---------|--------|
-| (a) | $A\,\Sigma\,A^{\top}$ | ✘ | Forgot the two $A^{-1}$ factors. |
-| (b) | $I_p$ | ✘ | Only if $A$ orthogonal **and** $\Sigma = I_p$. |
-| **(c)** | $\Sigma$ | ✔ | $A^{-1}y = x + A^{-1}b$ so the covariance is $\Sigma$. |
-
----
-
-### **4. Which $\Sigma$ matches the horizontally elongated contours?**
-
-| Option | $\Sigma$ | Verdict | Reason |
-|--------|----------|---------|--------|
-| (a) | $\begin{pmatrix}4&0\\0&1\end{pmatrix}$ | ✘ | Large variance on $x$-axis would stretch *vertically*. |
-| **(b)** | $\begin{pmatrix}1&0\\0&4\end{pmatrix}$ | ✔ | Larger variance in $y$ gives horizontal stretch; zero covariance keeps axes aligned. |
-| (c) | $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ | ✘ | Positive covariance would tilt the ellipse. |
+## Example Model (ZIMPL)
+```zimpl
+param n := 3;
+set I := {1..n};
+param c[I];
+param A[I,I];
+param b[I];
+var x[I] >= 0;
+maximize obj: sum <i> c[i] * x[i];
+subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
+```
+(Adjust to specific natural‐language problem.)
 
 ---
 
-### **5. With $x_i \sim N_p(\mu,\Sigma)$ and $X = (x_1,\dots,x_n)^{\top}$, which statement is *false*?**
+# Lecture 10: Constraint Synthesis & Grammatical Evolution
 
-| Option | Statement | Verdict | Reason |
-|--------|-----------|---------|--------|
-| (a) | $\displaystyle \bar x = \frac1n X^{\top}1_n \sim N_p\!\bigl(\mu,\tfrac1n\Sigma\bigr)$ | ✔ | True. |
-| (b) | $(n-1)S = X^{\top}Q_{1_n}X \sim W_p(\Sigma,n-1)$ | ✔ | True. |
-| **(c)** | $\bar x$ and $(n-1)S$ are *dependent* | ✘ | They are independent under multivariate normality. |
+## Constraint Synthesis Problem
+- **One-class variant:** infer constraints that capture all positive examples without negative samples.  
+- **Two-class variant:** infer constraints that separate positive from negative examples.  
+- **Properties:** underspecified problem; combinatorial search space; multiple valid solutions.
 
----
+## Curse of Dimensionality
+- As the number of features increases:  
+  - Data sparsity grows exponentially.  
+  - Distance metrics become less meaningful.  
+  - Model training and search become computationally infeasible.
 
+## Grammatical Evolution
+- **Mechanism:** evolve integer genome (codon list) interpreted via a predefined grammar to produce candidate solutions (e.g., mathematical expressions, rule sets).  
+- **Genotype representation:** sequence of integers; each codon selects a production rule:  
+    <Expr> ::= <Expr> "+" <Term> | <Term>  
+    <Term> ::= <Term> "*" <Factor> | <Factor>  
+    <Factor> ::= "(" <Expr> ")" | <Number>  
+  - Each codon value modulo the number of alternatives at a grammar node selects the rule.  
+- **Evolutionary process:**  
+  1. **Initialization:** random genomes.  
+  2. **Mapping:** codons → syntax tree via grammar.  
+  3. **Evaluation:** fitness of mapped solution on data.  
+  4. **Selection:** choose high-fitness genomes.  
+  5. **Crossover/Mutation:** produce new genomes.  
+  6. **Iteration** until convergence.
 
-### **6. When testing multivariate normality**
+# Lecture 11: Conformance Checking & Auditing
 
-| Option | Statement | Verdict |
-|--------|-----------|---------|
-| **(a)** | Use Q-Q plot of Mahalanobis distances (beta envelope) | ✔ |
-| **(b)** | Use a test based on skewness × kurtosis | ✔ |
-| (c) | The same decision is reached by testing each variable univariately | ✘ |
+## Objectives of Conformance Checking
+- Measure alignment between process model and execution log.  
+- Detect deviations for compliance and improvement.
 
----
+## Interpreting Deviations
+- **Missing tokens:** model expects activity not executed (omissions).  
+- **Extra tokens:** executed activity not allowed by model (insertions).  
+- **Timing deviations:** execution order or timing conflicts.
 
-### **7. Which sentence is true?**
+## Audits
+- **Financial audit:** verify transactions adhere to financial regulations.  
+- **Operational audit:** assess process efficiency and adherence to operational standards.
 
-| Option | Statement | Verdict | Reason |
-|--------|-----------|---------|--------|
-| (a) | Wilks’ $\Lambda$ and Lawley–Hotelling test several sample means | ✘ | Wording imprecise; they test population mean vectors. |
-| (b) | Pillai’s and $T^2$ test $>\!2$ population means | ✘ | Hotelling $T^2$ works only for two means. |
-| **(c)** | Box’s test compares several covariance matrices | ✔ | Exactly its purpose. |
+## Conformance Metrics
+1. **Fitness:** degree to which log traces fit the model.  
+   \[ \text{fitness} = 1 - \frac{\text{cost}_{\text{non-sync}}}{\text{cost}_{\text{all moves}}} \]  
+2. **Precision:** extent model prohibits unobserved behavior.  
+3. **Generalization:** ability to allow unseen but plausible behavior.  
+4. **Simplicity:** parsimony of model structure (apply Ockham’s razor).
 
----
+## Token-Based Replay Algorithm
+1. Initialize tokens at start place.  
+2. For each event in trace:  
+   - Fire corresponding transition if enabled.  
+   - Record missing tokens (if transition not enabled).  
+3. At end, count remaining tokens.  
+4. Compute fitness:  
+   \[ \text{fitness} = 1 - \frac{\text{missing tokens} + \text{remaining tokens}}{\text{produced tokens}} \]
 
-### **8. In the multivariate multiple regression model**
+## Footprint Matrix
+- Captures directly-follows relations for each pair (a,b):  
+  - “→” if a directly followed by b.  
+  - “←” if b directly followed by a.  
+  - “||” if concurrent.  
+  - “#” if unrelated.  
+- **Differential footprint:** compare model vs log matrices to highlight discrepancies.
 
-| Option | Description | Verdict |
-|--------|-------------|---------|
-| (a) | Many $Y$ on a single predictor | ✘ |
-| (b) | Single $Y$ on many predictors | ✘ |
-| **(c)** | Many $Y$ on many predictors | ✔ |
+## LTL Specification & Verification
+- **LTL rule preparation:** translate natural language constraint into LTL formula, e.g.:  
+  G ( order_placed → F order_paid )  
+- **Verification:** check each trace against the formula using model checking or log replay.
 
----
+# Lecture 12: Alignments & Advanced Conformance
 
-### **9. PCA decreases dimensionality by**
+## Optimal Alignments
+- Align each trace to the model with minimal cost:  
+  - **Synchronous move:** event matches transition (cost 0).  
+  - **Model move:** transition without event (insert, cost >0).  
+  - **Log move:** event without transition (delete, cost >0).  
+- **Fitness via alignments:**  
+  \[ \text{fitness} = 1 - \frac{\sum \text{cost of non-sync moves}}{\sum \text{cost of all moves}} \]
 
-| Option | Mechanism | Verdict |
-|--------|-----------|---------|
-| (a) | Removing non-significant variables | ✘ |
-| **(b)** | Taking linear combinations of variables | ✔ |
-| (c) | Removing strongly correlated variables | ✘ |
-
----
-
-### **10. Discriminant analysis finds a vector corresponding to the largest eigenvalue of**
-
-| Option | Matrix | Verdict |
-|--------|--------|---------|
-| (a) | Sample correlation matrix $R$ | ✘ |
-| (b) | Sample covariance matrix $S$ | ✘ |
-| **(c)** | $E^{-1}H$ from MANOVA | ✔ |
-
-The generalized eigenproblem for LDA is $E^{-1}H\,a = \lambda\,a$.
-
----
-
-## Quick answer key
-
-| Q | Correct option(s) |
-|---|-------------------|
-| 1 | **(c)** |
-| 2 | **(c)** |
-| 3 | **(c)** |
-| 4 | **(b)** |
-| 5 | **(c)** *(false)* |
-| 6 | **(a)**, **(b)** |
-| 7 | **(c)** |
-| 8 | **(c)** |
-| 9 | **(b)** |
-|10 | **(c)** |
+## Properties of the Alignment Method
+- **Advantages:**  
+  - Handles invisible transitions.  
+  - Computes precise minimal deviations.  
+  - Supports customizable cost functions.  
+- **Disadvantages:**  
+  - Computationally expensive (search through state space).  
+  - May not scale to very large logs/models without optimizations.
