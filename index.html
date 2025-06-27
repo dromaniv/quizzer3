@@ -165,9 +165,9 @@ textarea{
 /* floating selection btn */
 #selAsk{
   position:fixed;
-  z-index:9999;
+  z-index:2147483647;    /* ensure it’s on top */
   display:none;
-  padding:.55rem 1.1rem;        /* original visual size */
+  padding:.55rem 1.1rem; /* visual size back to normal */
   background:var(--brand);
   color:#fff;
   border:0;
@@ -178,12 +178,8 @@ textarea{
   display:flex;
   align-items:center;
   justify-content:center;
-  touch-action:none;            /* avoid accidental scrolls */
-}
-#selAsk::before{                /* invisible halo for bigger tap target */
-  content:'';
-  position:absolute;
-  inset:-12px;                  /* +24 px hit area in both directions */
+  pointer-events:auto;
+  cursor:pointer;
 }
 
 /* Minecraft parkour video button and player */
@@ -444,6 +440,7 @@ function addSwipe(el,onLeft,onRight){
 
   float.addEventListener('mousedown', e => { e.preventDefault(); askSelection(); });
   float.addEventListener('touchstart', e => { e.preventDefault(); askSelection(); });
+  float.addEventListener('click', e => { e.preventDefault(); askSelection(); });
 
   document.addEventListener('selectionchange', updateFloatPosition);
   document.addEventListener('touchend', () => setTimeout(updateFloatPosition, 100));
