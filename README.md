@@ -1,4 +1,4 @@
-# B.I.A.M Study Suite
+# Study Suite
 
 A modern, interactive study application for Biologically-Inspired Algorithms and Methods (B.I.A.M). This web-based tool helps students learn and test their knowledge through multiple study modes.
 
