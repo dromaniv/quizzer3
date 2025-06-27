@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Process Mining Study Suite</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/xml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/zimpl.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css">
 <!-- Add MathJax for LaTeX rendering -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -120,6 +126,101 @@ textarea{
 /* notes */
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
 
+/* Enhanced markdown styling */
+.notes h1 {
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--brand);
+  color: var(--brand);
+}
+
+.notes h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.notes h3, .notes h4 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.notes ul, .notes ol {
+  padding-left: 1.75rem;
+  margin: 0.75rem 0;
+}
+
+.notes li {
+  margin-bottom: 0.5rem;
+}
+
+.notes p {
+  margin-bottom: 1rem;
+}
+
+.notes code {
+  background: var(--bg-h);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.notes pre {
+  background: var(--bg-h);
+  padding: 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+}
+
+.notes pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.notes blockquote {
+  border-left: 4px solid var(--brand);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  color: var(--text-sub);
+}
+
+.notes table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.notes table th, .notes table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.notes table th {
+  background-color: var(--bg-h);
+}
+
+.notes hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.notes strong {
+  color: var(--brand);
+  font-weight: 600;
+}
+
 /* collapsible animation */
 .collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
 .collapsible.expanded{max-height:1000px;opacity:1;padding:1rem}
@@ -224,6 +325,30 @@ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()
 const ask=p=>window.open('https://chatgpt.com/?model=gpt-4o&temporary-chat=true&q='+encodeURIComponent(p),'_blank');
 const dataPromise=fetch('data.json').then(r=>r.json());
 
+/* Initialize markdown-it with plugins and options */
+const md = window.markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value;
+      } catch (__) {}
+    }
+    return ''; // use external default escaping
+  }
+});
+// Enable subscript, superscript, tables and other features
+md.use(window.markdownit().enable([
+  'table',
+  'strikethrough',
+  'linkify'
+]));
+
+// Replace all marked.parse with md.render
+const renderMD = (text) => md.render(text || '');
+
 /* ---------- theme persistence ---------- */
 const chk=$('#themeChk');
 const applyTheme=mode=>{document.documentElement.classList.toggle('dark',mode==='dark');chk.checked=mode==='dark';localStorage.theme=mode};
@@ -254,8 +379,8 @@ function addSwipe(el,onLeft,onRight){
  const card=$('#fcCard'),q=$('#fcQ'),a=$('#fcA');
  const render=()=>{
    const c=arr[i];
-   q.innerHTML=marked.parse(c.q);
-   a.innerHTML=marked.parse(c.a);
+   q.innerHTML=renderMD(c.q);
+   a.innerHTML=renderMD(c.a);
    card.classList.remove('flipped');
    // Trigger MathJax to process the new content
    if(window.MathJax) MathJax.typesetPromise();
@@ -301,7 +426,7 @@ function addSwipe(el,onLeft,onRight){
  const q=$('#waQ'),aBox=$('#waA'),tBtn=$('#waToggle');
 
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   q.innerHTML=renderMD(arr[i].q);
    aBox.innerHTML='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
@@ -312,7 +437,7 @@ function addSwipe(el,onLeft,onRight){
 
  tBtn.onclick=()=>{
    const expanded=aBox.classList.contains('expanded');
-   if(!expanded) aBox.innerHTML=marked.parse(arr[i].a);
+   if(!expanded) aBox.innerHTML=renderMD(arr[i].a);
    aBox.classList.toggle('expanded');
    tBtn.classList.toggle('active');
    if(!expanded && window.MathJax) MathJax.typesetPromise();
@@ -331,7 +456,7 @@ function addSwipe(el,onLeft,onRight){
  const arr=(await dataPromise).trueFalse;shuffle(arr);let i=0;
  const q=$('#tfQ'),btns=$$('#tf button.option');
  const render=()=>{
-   q.innerHTML=marked.parse(arr[i].q);
+   q.innerHTML=renderMD(arr[i].q);
    btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong','disabled')});
    if(window.MathJax) MathJax.typesetPromise();
  };
@@ -351,7 +476,11 @@ function addSwipe(el,onLeft,onRight){
 
 /* ---------- NOTES + floating ask ---------- */
 (async()=>{
- const box=$('#notesBox');box.innerHTML=marked.parse(await (await fetch('notes.md')).text());
+ const box=$('#notesBox');
+ // Load and render notes with the enhanced markdown parser
+ const notesText = await (await fetch('notes.md')).text();
+ box.innerHTML = renderMD(notesText);
+
  const float=$('#selAsk');
  const updateFloatPosition=()=>{
   const sel=getSelection();
@@ -370,6 +499,9 @@ function addSwipe(el,onLeft,onRight){
  document.addEventListener('scroll',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
  window.addEventListener('resize',()=>{if(getSelection()&&!getSelection().isCollapsed)updateFloatPosition()});
  float.onclick=()=>{const txt=getSelection().toString().trim();if(txt)ask(`Explain this excerpt from my notes on process mining:\n"${txt}"`)};
+
+ // Trigger MathJax to process the new content once notes are loaded
+ if(window.MathJax) MathJax.typesetPromise();
 })();
 
 /* ---------- PARKOUR VIDEO ---------- */
