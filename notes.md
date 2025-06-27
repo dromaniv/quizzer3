@@ -84,10 +84,7 @@ For each, describe syntax (nodes/gateways) and execution semantics:
   - **Process‐level:** lead time, cycle time, cost, quality metrics.
 
 ## Overall Equipment Effectiveness (OEE)
-- **Formula:**  
-  \[
-    \text{OEE} = \text{Availability} \times \text{Performance} \times \text{Quality}
-  \]
+- **Formula**: OEE = Availability × Performance × Quality
 - **Calculations:**  
   - Availability = operating time / scheduled time  
   - Performance = actual output / theoretical max output  
@@ -114,9 +111,7 @@ For each, describe syntax (nodes/gateways) and execution semantics:
 ## Hypothesis Test for Mean
 1. **Define H₀ (e.g., μ = μ₀) and H₁.**  
 2. **Compute t‐statistic:**  
-   \[
-     t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}
-   \]
+   t = (x̄ − μ0) / (s / sqrt(n))
 3. **Compare to critical t (via quantile).**  
 4. **Decide to reject or not reject H₀.**
 
@@ -358,7 +353,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 
 ## Conformance Metrics
 1. **Fitness:** degree to which log traces fit the model.  
-   \[ \text{fitness} = 1 - \frac{\text{cost}_{\text{non-sync}}}{\text{cost}_{\text{all moves}}} \]  
+    fitness = 1 − cost_non_sync ÷ cost_all_moves
 2. **Precision:** extent model prohibits unobserved behavior.  
 3. **Generalization:** ability to allow unseen but plausible behavior.  
 4. **Simplicity:** parsimony of model structure (apply Ockham’s razor).
@@ -370,7 +365,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
    - Record missing tokens (if transition not enabled).  
 3. At end, count remaining tokens.  
 4. Compute fitness:  
-   \[ \text{fitness} = 1 - \frac{\text{missing tokens} + \text{remaining tokens}}{\text{produced tokens}} \]
+   fitness = 1 − (missing_tokens + remaining_tokens) ÷ produced_tokens
 
 ## Footprint Matrix
 - Captures directly-follows relations for each pair (a,b):  
@@ -393,7 +388,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
   - **Model move:** transition without event (insert, cost >0).  
   - **Log move:** event without transition (delete, cost >0).  
 - **Fitness via alignments:**  
-  \[ \text{fitness} = 1 - \frac{\sum \text{cost of non-sync moves}}{\sum \text{cost of all moves}} \]
+  fitness = 1 − sum(cost_non_sync_moves) ÷ sum(cost_all_moves)
 
 ## Properties of the Alignment Method
 - **Advantages:**  
