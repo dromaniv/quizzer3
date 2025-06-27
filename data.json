@@ -1,85 +1,105 @@
 {
   "flashcards": [
-    {"q":"What is the Mahalanobis distance?","a":"The squared distance $(x-\\mu)^{\\top}\\Sigma^{-1}(x-\\mu)$ that rescales and decorrelates space using the covariance matrix."},
-    {"q":"What condition on eigenvalues ensures a symmetric matrix is positive definite?","a":"All eigenvalues are strictly greater than zero."},
-    {"q":"Write the pdf of the $N_p(\\mu,\\Sigma)$ distribution.","a":"$(2\\pi)^{-p/2}|\\Sigma|^{-1/2}\\,\\exp\\bigl[-\\tfrac12(x-\\mu)^{\\top}\\Sigma^{-1}(x-\\mu)\\bigr]$."},
-    {"q":"What is Hotelling’s $T^2$ test used for?","a":"Testing hypotheses about one or two multivariate mean vectors."},
-    {"q":"Which two sums-of-squares matrices form the basis of MANOVA?","a":"The hypothesis matrix $H$ and the error matrix $E$."},
-    {"q":"Define Wilks’ Lambda.","a":"$\\Lambda = |E|\\big/|E+H|$, measuring the proportion of unexplained variance."},
-    {"q":"How is the unbiased sample covariance matrix calculated?","a":"$S = \\dfrac{1}{n-1}(X-\\bar X\\mathbf1^{\\top})(X-\\bar X\\mathbf1^{\\top})^{\\top}$."},
-    {"q":"When are $\\bar X$ and $S$ independent?","a":"When the data come from a multivariate normal distribution."},
-    {"q":"What does Mardia’s skewness statistic test?","a":"Departure from multivariate normality in terms of skewness."},
-    {"q":"What is a principal component?","a":"A linear combination of variables maximising variance subject to orthogonality constraints."},
-    {"q":"State the Kaiser criterion for choosing PCs.","a":"Retain components whose eigenvalues exceed the average eigenvalue."},
-    {"q":"What null hypothesis is tested by Box’s $M$?","a":"Equality of the covariance matrices across several groups."},
-    {"q":"Which key assumption differentiates LDA from QDA?","a":"LDA assumes a common covariance matrix for all classes; QDA does not."},
-    {"q":"What is the Wishart distribution?","a":"The distribution of $ (n-1)S$ when sampling from $N_p(\\mu,\\Sigma)$."},
-    {"q":"What matrix projects any vector onto the column space of $A$?","a":"$P_A = A(A^{\\top}A)^{-1}A^{\\top}$, the orthogonal projector."},
-    {"q":"Why are eigenvalues important in PCA?","a":"They quantify the variance captured by each principal component."},
-    {"q":"Define Pillai’s trace.","a":"$V = \\operatorname{tr}\\bigl[H(H+E)^{-1}\\bigr]$, an alternative MANOVA statistic."},
-    {"q":"What is canonical correlation analysis used for?","a":"Finding maximally correlated linear combinations of two variable sets."},
-    {"q":"In multivariate multiple regression, how many dependent variables can be modelled?","a":"Two or more simultaneously."},
-    {"q":"What is the purpose of a Q–Q plot of Mahalanobis distances?","a":"Graphically assessing multivariate normality."},
-    {"q":"Give another name for the residual-maker matrix in regression.","a":"$Q = I - P$, where $P$ is the projector onto the design matrix."},
-    {"q":"What distribution does $\\frac{p(n-1)}{n-p}d^2$ follow under $H_0$?","a":"$F_{p,\\,n-p}$."},
-    {"q":"Which PCA rule keeps components explaining at least 80 % variance?","a":"The cumulative variance rule (variance-explained threshold)."},
-    {"q":"What does the scree plot ‘elbow’ indicate?","a":"A natural cut-off point beyond which adding PCs yields diminishing returns."},
-    {"q":"How many linear discriminant functions can be extracted for $g$ groups?","a":"$\\min(p,\\,g-1)$."},
-    {"q":"What is Roy’s largest root?","a":"The maximal eigenvalue of $E^{-1}H$ in MANOVA."},
-    {"q":"What is the determinant of a correlation matrix always equal to or greater than?","a":"Zero (it is non-negative)."},
-    {"q":"What is Mardia’s kurtosis expected value under normality?","a":"$p(p+2)$."},
-    {"q":"What is the dimension of $E$ and $H$ if there are $p$ variables?","a":"Both are $p\\times p$."},
-    {"q":"How is the pooled covariance matrix defined in two-sample $T^2$?","a":"$S_p = \\dfrac{(n_1-1)S_1+(n_2-1)S_2}{n_1+n_2-2}$."}
+    {"q":"What is a normative process model and what are its main applications?","a":"A handcrafted representation of how a process should ideally work, used for process design, compliance certification, and stakeholder agreement."},
+    {"q":"What is a descriptive process model and where is it applied?","a":"A model derived from event-log data showing how the process actually executed, used for conformance checking, performance analysis, and root-cause investigation."},
+    {"q":"Describe the Six Sigma management methodology.","a":"A data-driven approach to reduce process variation, structured around the DMAIC cycle (Define, Measure, Analyze, Improve, Control) to achieve near-perfect quality."},
+    {"q":"What is the 1.5σ shift in Six Sigma and why does it matter?","a":"An empirical mean drift observed in long-running processes; it increases the effective defect rate slightly but still keeps defects under 3.4 per million."},
+    {"q":"Outline the core principles of Lean management.","a":"Eliminate waste, minimize waiting, build quality in, optimize flow, and pursue continuous improvement across the value stream."},
+    {"q":"What constitutes a transition system representation of a process?","a":"A set of states and labeled transitions encoding all reachable process states and the events that move the system between them."},
+    {"q":"How does a Petri net execute, and what are its main components?","a":"Places (conditions), transitions (activities), and tokens. A transition fires when all input places have tokens, consuming them and producing tokens in output places."},
+    {"q":"What distinguishes a WF-net from a general Petri net?","a":"A WF-net has a single source place and a single sink place; every node lies on some path from source to sink, ensuring proper workflow structure."},
+    {"q":"What are the main gateway types in BPMN, and what do they do?","a":"AND (parallel split/join), XOR (exclusive choice/merge), and OR (inclusive choice/merge), controlling token flow through the process model."},
+    {"q":"Why are process trees sound by construction?","a":"They are block-structured: each internal operator (sequence, XOR, AND, loop) guarantees proper completion and no deadlocks by design."},
+    {"q":"What features does YAWL add to basic workflow nets?","a":"Composite tasks, multiple instance tasks, cancellation regions, and extended OR-join semantics for complex control flow."},
+    {"q":"Describe a causal net (C-net) and its main semantics.","a":"A graph of activities with input/output bindings; semantics define valid binding sequences but checking soundness is NP-complete."},
+    {"q":"What is a workflow system?","a":"Software that executes process models, manages work items, integrates with enterprise data sources, and provides monitoring and reporting (e.g., YAWL, jBPM, ProM)."},
+    {"q":"Define a KPI and list the main types used in process analysis.","a":"A quantitative or qualitative metric to assess process performance. Types include time metrics (lead time), cost metrics (labor cost), quality metrics (defect rate), and resource metrics (utilization)."},
+    {"q":"What is Overall Equipment Effectiveness (OEE) and how is it calculated?","a":"OEE = Availability × Performance × Quality, where Availability = operating time/scheduled time, Performance = actual/theoretical output rate, Quality = good units/total units."},
+    {"q":"Differentiate lead time, service time, waiting time, and synchronization time.","a":"Lead time: total elapsed time per case; Service time: active processing duration; Waiting time: idle time before activity starts; Synchronization time: wait for parallel branches to rejoin."},
+    {"q":"What are the required fields in an event log for process mining?","a":"Case ID, Activity Name, Timestamp; optional: resource, lifecycle transition, cost. Each event must belong to exactly one case and be time-ordered."},
+    {"q":"Summarize the ETL process for preparing event logs.","a":"Extract raw data from source systems, Transform by cleaning, filtering, and deriving case IDs and timestamps, Load into a process-mining repository (e.g., XES file)."},
+    {"q":"How does a data warehouse differ from a transactional database in the process-mining context?","a":"Data warehouses use denormalized schemas optimized for historical analysis and large-scale queries, whereas transactional DBs are normalized for frequent small reads/writes."},
+    {"q":"List and briefly describe the four measures of process-model evaluation.","a":"Fitness: fraction of log behavior captured; Precision: model’s restriction to observed behavior; Generalization: allowance for unseen but likely behavior; Simplicity: parsimony of model structure."},
+    {"q":"What are the main steps of the α-algorithm for process discovery?","a":"Compute directly-follows relations, identify input/output clusters per activity, create places for each cluster, connect transitions and places to form a WF-net."},
+    {"q":"What are the key limitations and biases of the α-algorithm?","a":"Cannot handle short loops (length 1 or 2), invisible transitions, duplicate labels; sensitive to noise and incomplete logs."},
+    {"q":"Describe the Heuristic Miner’s basic approach to discovery.","a":"Compute frequency-based dependency measures between activities, apply thresholds to filter edges, and build a causal graph from surviving dependencies."},
+    {"q":"What guarantees does the Inductive Miner provide, and what are its drawbacks?","a":"Guarantees a sound, block-structured model and handles noise; may overfit, over-split rare variants, and struggle with highly unstructured logs."},
+    {"q":"Outline the state-based regions algorithm.","a":"Construct a transition system from the log, identify consistent state regions, map them to places, and assemble a Petri net capturing observed behavior."},
+    {"q":"Briefly explain the language-based regions algorithm.","a":"Derive the trace language from the log, find pairs of activities that never co-occur, create places enforcing these separations, and build the net."},
+    {"q":"How is evolutionary computing applied to process-model discovery?","a":"Encode candidate models as genomes, evaluate fitness against the log (e.g., fitness/precision), and apply genetic operators to evolve better models."},
+    {"q":"What is token-based replay in conformance checking?","a":"Simulate token flow on a WF-net for each trace, record missing and leftover tokens, and compute fitness based on produced vs. consumed tokens."},
+    {"q":"Define alignments in conformance checking and why they are useful.","a":"Optimal correspondence between model moves and log events minimizing cost of insertions/deletions; handle invisible transitions and provide precise deviation metrics."}
   ],
-
   "multipleChoice": [
-    {"question":"Which statistic is *not* used as a MANOVA omnibus test?","choices":["Wilks’ $\\Lambda$","Pillai’s trace","Hotelling–Lawley trace","Mahalanobis distance"],"answer":"Mahalanobis distance"},
-    {"question":"The eigenvectors of which matrix give principal components?","choices":["$S$","$S^{-1}$","$E^{-1}H$","$X^{\\top}X$"],"answer":"$S$"},
-    {"question":"If $\\Lambda$ in MANOVA is very small, what is the likely decision?","choices":["Fail to reject $H_0$","Reject $H_0$","Increase sample size","Use a different test"],"answer":"Reject $H_0$"},
-    {"question":"Hotelling’s $T^2$ converts to an $F$ distribution with numerator df equal to:","choices":["$n$","$p$","$n-p$","$p(n-1)$"],"answer":"$p$"},
-    {"question":"Which plot best assesses multivariate normality?","choices":["Pairs scatterplot","Histogram of one variable","Mahalanobis Q–Q plot","Scree plot"],"answer":"Mahalanobis Q–Q plot"},
-    {"question":"When computing PCA on variables of different scales, you should use:","choices":["The raw covariance matrix","The correlation matrix","The pooled covariance","The residual matrix"],"answer":"The correlation matrix"},
-    {"question":"Box’s $M$ statistic asymptotically follows which distribution (after correction)?","choices":["$F$","Chi-square","Normal","t"],"answer":"Chi-square"},
-    {"question":"LDA classifies an observation by choosing the class with:","choices":["Largest Mahalanobis distance","Smallest discriminant score","Largest discriminant score","Smallest group mean"],"answer":"Largest discriminant score"},
-    {"question":"Pillai’s trace is equal to:","choices":["Product of $\\lambda_i$","Sum of $\\lambda_i$","Max of $\\lambda_i$","Determinant of $H$"],"answer":"Sum of $\\lambda_i$"},
-    {"question":"The Wishart distribution is a multivariate analogue of which univariate distribution?","choices":["t","Normal","Chi-square","F"],"answer":"Chi-square"},
-    {"question":"Which matrix is idempotent?","choices":["$S$","$P_A$","$E^{-1}H$","$\\Sigma$"],"answer":"$P_A$"},
-    {"question":"In PCA, which component explains the *least* variance?","choices":["First","Second","Last","They all equal"],"answer":"Last"}
+    {
+      "question":"Which operator in a process tree corresponds to an exclusive choice?","choices":["Sequence","AND","XOR","Loop"],"answer":"XOR"
+    },
+    {
+      "question":"Soundness of a WF-net requires all except:","choices":["No deadlocks","Proper completion","Option to complete","Maximal token count"],"answer":"Maximal token count"
+    },
+    {
+      "question":"In BPMN, an inclusive gateway is denoted by:","choices":["Circle with a plus","Diamond with a circle","Diamond with an X","Pentagon"],"answer":"Diamond with a circle"
+    },
+    {
+      "question":"Which algorithm is robust to noise and guarantees sound, block-structured models?","choices":["α-algorithm","Heuristic Miner","Inductive Miner","State-based regions"],"answer":"Inductive Miner"
+    },
+    {
+      "question":"OEE’s Quality component is defined as:","choices":["Operating time/scheduled time","Actual/theoretical output rate","Good units/total units","Downtime/uptime"],"answer":"Good units/total units"
+    },
+    {
+      "question":"Precision in model evaluation measures:","choices":["Captured log behavior","Model’s restrictiveness","Model simplicity","Allowed unobserved behavior"],"answer":"Model’s restrictiveness"
+    },
+    {
+      "question":"The α-algorithm fails on logs with:","choices":["No loops","Only sequence","Short loops","Clear start/end"],"answer":"Short loops"
+    },
+    {
+      "question":"Heuristic Miner primarily uses:","choices":["Genetic operators","Frequency thresholds","Grammar evolution","State regions"],"answer":"Frequency thresholds"
+    },
+    {
+      "question":"Which event-log attribute is mandatory?","choices":["Resource","Lifecycle","Case ID","Cost"],"answer":"Case ID"
+    },
+    {
+      "question":"Token-based replay records:","choices":["CPU usage","Missing tokens","Event durations","Model complexity"],"answer":"Missing tokens"
+    },
+    {
+      "question":"Alignments differ from token replay because they:","choices":["Ignore invisible transitions","Use block-structured nets","Minimize cost of deviations","Require no log processing"],"answer":"Minimize cost of deviations"
+    },
+    {
+      "question":"A workflow system feature includes:","choices":["Grammar editing","Event alignment","Integrated execution engine","Eigenvalue analysis"],"answer":"Integrated execution engine"
+    }
   ],
-
   "writtenAnswer": [
-    {"q":"Derive the transformation from Hotelling’s $T^2$ to an $F$ distribution in the one-sample case.","a":"Use $F=\\dfrac{n-p}{p(n-1)}T^2$, which under $H_0$ follows $F_{p,\\,n-p}$ by properties of the Wishart distribution."},
-    {"q":"Explain why $\\bar X$ and $S$ are independent only when sampling from a multivariate normal distribution.","a":"Because the joint likelihood factorises into independent functions of $\\bar X$ and centred data only under normality; otherwise dependence remains."},
-    {"q":"State and interpret Wilks’ $\\Lambda$ in MANOVA.","a":"$\\Lambda=|E|/|E+H|$; values near 1 indicate group means are similar, whereas values near 0 indicate at least one mean differs."},
-    {"q":"Describe two graphical methods to check multivariate normality.","a":"(1) Q–Q plot of squared Mahalanobis distances vs $\\chi^2_p$ quantiles; (2) chi-square plot of ordered distances with reference line."},
-    {"q":"Outline the steps to compute the first two principal components from a data matrix.","a":"Center data → compute covariance (or correlation) → eigen-decompose → sort eigenvalues → take eigenvectors for largest two → project data to obtain scores."},
-    {"q":"Give two reasons for standardising variables before PCA.","a":"(1) Remove scale differences so each variable contributes equally; (2) prevent variables with large variance from dominating components."},
-    {"q":"What is the null hypothesis in Box’s $M$ and why does its violation matter for LDA?","a":"$H_0: \\Sigma_1=\\dots=\\Sigma_g$; if violated, common-covariance assumption fails, so LDA is sub-optimal and QDA preferred."},
-    {"q":"Define the error and hypothesis matrices in a one-way MANOVA.","a":"$E$ sums within-group SSCPs; $H$ sums squared deviations of group means from the grand mean multiplied by group sizes."},
-    {"q":"Explain how canonical variates are obtained in canonical correlation analysis.","a":"Solve the eigenproblem of $\\Sigma_{XX}^{-1}\\Sigma_{XY}\\Sigma_{YY}^{-1}\\Sigma_{YX}$ to find weight vectors maximising cross-correlation."},
-    {"q":"Why might Pillai’s trace be preferred to Wilks’ $\\Lambda$?","a":"It is more robust to violations of assumptions, especially unequal covariance matrices and small sample sizes."}
+    {"q":"Outline the DMAIC cycle in Six Sigma.","a":"Define the problem, Measure baseline performance, Analyze root causes, Improve the process, Control to sustain gains."},
+    {"q":"Given scheduled time = 8h, uptime = 7h, actual output = 640 good units, theoretical max = 800 units, calculate OEE.","a":"Availability = 7/8 = 0.875; Performance = 640/ (800×7/8)=640/700≈0.914; Quality = 640/640 =1; OEE≈0.875×0.914×1≈0.800."},
+    {"q":"Describe the main steps of the α-algorithm on a simple two-activity log.","a":"Compute directly-follows matrix, identify input/output sets, create places for each relation, connect transitions and places to form a WF-net."},
+    {"q":"Explain the difference between fitness and precision.","a":"Fitness measures how much log behavior the model can replay; precision measures how much extra behavior the model allows that was never observed."},
+    {"q":"List the ETL steps to prepare an XES event log from ERP tables.","a":"Extract: query case ID, activity, timestamp; Transform: filter, clean timestamps, assign lifecycle; Load: export to CSV and convert to XES format."},
+    {"q":"Explain how the Inductive Miner recursively discovers a process tree.","a":"Detect a cut (sequence, XOR, parallel, loop) in the log, split the log into sublogs per branch, recurse on each sublog, and assemble the tree."},
+    {"q":"Outline support and confidence in the context of discovering frequent directly-follows patterns.","a":"Support = frequency of a directly-follows relation in the log; Confidence = frequency divided by total occurrences of the predecessor activity."},
+    {"q":"Derive the conditions that ensure a WF-net is sound.","a":"No deadlocks (every reachable marking can complete), proper completion (only one token in sink place on completion), and option to complete (from any marking, the sink can be reached)."},
+    {"q":"Describe how to compute a single‐trace alignment and its fitness cost.","a":"Construct the synchronous product of trace and model, search for minimal‐cost path of synchronous, model, and log moves; cost of non-sync moves divided by total moves yields fitness."},
+    {"q":"Compare state-based and language-based regions discovery methods.","a":"State-based builds from a transition system of states and transitions; language-based uses trace language to identify separating activity pairs and create places enforcing them."}
   ],
-
   "trueFalse": [
-    {"q":"Mahalanobis distance accounts for correlations among variables.",              "a": true},
-    {"q":"If all pairwise correlations are zero, the correlation matrix is the identity.", "a": true},
-    {"q":"A covariance matrix can have negative eigenvalues.",                           "a": false},
-    {"q":"The determinant of $E^{-1}H$ equals Wilks’ $\\Lambda$.",                       "a": false},
-    {"q":"Mardia’s kurtosis equals $p(p+2)$ under multivariate normality.",              "a": true},
-    {"q":"In PCA, eigenvectors corresponding to smaller eigenvalues capture more variance.", "a": false},
-    {"q":"Hotelling’s $T^2$ reduces to the univariate $t$-test when $p=1$.",             "a": true},
-    {"q":"Box’s $M$ is insensitive to departures from multivariate normality.",          "a": false},
-    {"q":"LDA assumes equal covariance matrices for all classes.",                       "a": true},
-    {"q":"Pillai’s trace is bounded above by the number of dependent variables.",        "a": true},
-    {"q":"An idempotent matrix satisfies $P^2=P$.",                                      "a": true},
-    {"q":"The sample covariance matrix $S$ is always positive semi-definite.",           "a": true},
-    {"q":"Wilks’ $\\Lambda$ approaches 1 when group means are very different.",          "a": false},
-    {"q":"Canonical correlations are always less than or equal to 1.",                   "a": true},
-    {"q":"In MANOVA, $E$ captures between-group variability.",                           "a": false},
-    {"q":"Principal components are uncorrelated by construction.",                       "a": true},
-    {"q":"The Wishart distribution generalises the $F$ distribution.",                   "a": false},
-    {"q":"QDA is preferred when Box’s $M$ rejects equality of covariances.",             "a": true},
-    {"q":"PCA can be applied to categorical data without modification.",                 "a": false},
-    {"q":"The residual-maker matrix $Q$ is idempotent.",                                 "a": true}
+    {"q":"A Petri net transition is enabled only when all its input places contain at least one token.","a":true},
+    {"q":"A WF-net must have exactly one source place and one sink place.","a":true},
+    {"q":"BPMN natively supports an inclusive OR-join gateway.","a":false},
+    {"q":"Process trees guarantee sound models by their block-structured nature.","a":true},
+    {"q":"Checking soundness of a general C-net is polynomial in the number of places.","a":false},
+    {"q":"Lean management aims primarily to eliminate all forms of process waste.","a":true},
+    {"q":"OEE is the product of availability, performance, and quality metrics.","a":true},
+    {"q":"Lead time always equals the sum of service times across all activities.","a":false},
+    {"q":"Every event log must include a timestamp for each event.","a":true},
+    {"q":"XES extensions define additional attributes and semantics for events.","a":true},
+    {"q":"The α-algorithm can correctly rediscover loops of length one.","a":false},
+    {"q":"Heuristic Miner filters relations based on frequency thresholds.","a":true},
+    {"q":"Inductive Miner can guarantee deadlock-free models.","a":true},
+    {"q":"Alignments can handle invisible (silent) transitions in the model.","a":true},
+    {"q":"Token-based replay always finds the globally optimal alignment.","a":false},
+    {"q":"Simplicity in model evaluation rewards more complex nets.","a":false},
+    {"q":"Generalization penalizes models that overfit to the event log.","a":true},
+    {"q":"Fitness measures how much observed behavior is covered by the model.","a":true},
+    {"q":"Evolutionary process discovery requires a mapping from genome to process model.","a":true},
+    {"q":"The curse of dimensionality primarily refers to challenges in high-dimensional process data.","a":false}
   ]
 }
