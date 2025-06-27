@@ -336,6 +336,8 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
   5. **Crossover/Mutation:** produce new genomes.  
   6. **Iteration** until convergence.
 
+---
+
 # Lecture 11: Conformance Checking & Auditing
 
 ## Objectives of Conformance Checking
@@ -379,6 +381,8 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 - **LTL rule preparation:** translate natural language constraint into LTL formula, e.g.:  
   G ( order_placed → F order_paid )  
 - **Verification:** check each trace against the formula using model checking or log replay.
+
+---
 
 # Lecture 12: Alignments & Advanced Conformance
 
