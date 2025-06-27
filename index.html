@@ -7,10 +7,9 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <!-- ── Markdown‑it + highlight.js ───────────────────────── -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github.min.css">
-<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/lib/common.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/highlight.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
 <!-- Add MathJax for LaTeX rendering -->
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
   window.MathJax = {
@@ -129,6 +128,12 @@ textarea{
 
 /* notes */
 .notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
+
+/* proper heading sizes inside rendered Markdown */
+.notes h1{font-size:2rem;font-weight:700;margin:.2em 0 .6em}
+.notes h2{font-size:1.6rem;font-weight:600;margin:1em 0 .5em}
+.notes h3{font-size:1.3rem;font-weight:600;margin:1em 0 .4em}
+.notes h4{font-size:1.1rem;font-weight:600;margin:1em 0 .3em}
 
 /* collapsible animation */
 .collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
