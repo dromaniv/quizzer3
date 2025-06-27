@@ -424,7 +424,8 @@ function addSwipe(el,onLeft,onRight){
     currentSelText = sel.toString().trim();
     const r = sel.getRangeAt(0).getBoundingClientRect();
     float.style.position = 'fixed';
-    float.style.top = `${r.bottom + 8}px`;
+    /* place the button a bit further below the selection so iOS/Android selection overlay doesn’t sit on top */
+    float.style.top = `${r.bottom + 20}px`;
     float.style.left = `${r.left}px`;
     float.style.display = 'block';
     const fr = float.getBoundingClientRect();
