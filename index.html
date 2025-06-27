@@ -167,26 +167,23 @@ textarea{
   position:fixed;
   z-index:9999;
   display:none;
-  padding:.75rem 1.4rem;
-  min-width:120px;               /* generous tap area */
-  min-height:44px;
+  padding:.55rem 1.1rem;        /* original visual size */
   background:var(--brand);
   color:#fff;
   border:0;
-  border-radius:calc(var(--radius) * 1.2);
+  border-radius:var(--radius);
   font-weight:600;
-  font-size:1rem;
+  font-size:.95rem;
   box-shadow:var(--shadow);
   display:flex;
   align-items:center;
   justify-content:center;
+  touch-action:none;            /* avoid accidental scrolls */
 }
-@media (pointer:coarse){
-  #selAsk{                 /* even bigger on touch devices */
-    padding:1rem 1.6rem;
-    min-width:140px;
-    font-size:1.05rem;
-  }
+#selAsk::before{                /* invisible halo for bigger tap target */
+  content:'';
+  position:absolute;
+  inset:-12px;                  /* +24 px hit area in both directions */
 }
 
 /* Minecraft parkour video button and player */
