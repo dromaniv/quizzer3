@@ -90,6 +90,69 @@
    - **Execution Semantics:** Defines valid sequences based on bindings.
      - Very expressive, but verifying correctness is NP-complete, so computationally hard.
 
+### Examples for Each Control-Flow Representation
+
+#### **1. Transition System (State-Transition Graph)**
+
+**Example:** Turnstile
+
+- **States:** Locked, Unlocked
+- **Transitions:**
+  - Insert Coin: Locked → Unlocked
+  - Push: Unlocked → Locked
+
+*Key idea:* Focus on all possible states and transitions.
+
+#### **2. Petri Net**
+
+**Example:** Simple document approval
+
+- **Places:** Draft, Review, Approved
+- **Transitions:** Submit for Review, Approve
+- **Tokens:** Start with token in Draft.
+- **Flow:** Submit → moves token to Review → Approve → moves to Approved.
+
+*Key idea:* Token flow shows parallelism and conditions.
+
+#### **3. Workflow Net (WF-net)**
+
+**Example:** Vacation request process
+
+- **Start Place:** Request Submitted
+- **Places:** Manager Review, HR Approval
+- **Transitions:** Manager Approves, HR Approves
+- **End Place:** Vacation Approved
+- Must be possible to always reach End, with only one token at a time.
+
+*Key idea:* Petri Net + rules for sound workflow completion.
+
+#### **4. BPMN**
+
+**Example:** Online payment
+
+- **Start Event:** Payment Initiated
+- **Tasks:** Validate Card, Charge Card
+- **Gateway:** If Validation Fails → Cancel Payment
+- **End Event:** Payment Successful or Failed
+
+*Key idea:* Business-friendly, events + gateways for decisions.
+
+#### **5. YAWL**
+
+**Example:** Conference paper review
+
+- **Conditions:** Paper Submitted, Reviews Done, Decision Made
+- **Tasks:** Assign Reviewers (multi-instance task), Collect Reviews, Make Decision
+- **Cancellation Region:** If paper is withdrawn, cancel reviews.
+
+*Key idea:* Petri Net power with advanced workflow patterns.
+
+#### **6. Process Tree**
+
+**Example:** Online shopping checkout
+
+---
+
 ### Formal Definitions (Petri nets)
 
 - **k‑bounded** – A Petri net is *k‑bounded* if, in every reachable marking, **each** place contains at most *k* tokens.
