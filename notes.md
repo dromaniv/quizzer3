@@ -30,26 +30,65 @@
 # Lectures 2–3: Process Model Representations & Workflow Systems
 
 ## Control-Flow Representations
-For each, describe syntax (nodes/gateways) and execution semantics:
-1. **Transition systems** (state‐transition graphs)  
-2. **Petri nets**  
-   - Places (conditions), transitions (activities), arcs, tokens.  
-   - Firing rule: enabled if all input places have tokens; consumes/produces tokens.  
-3. **Workflow nets (WF-nets)**  
-   - Petri net variant with single start/end places.  
-   - **Soundness** criteria: safeness, proper completion, option to complete, no dead parts.  
-4. **BPMN**  
-   - Events, tasks, AND/XOR/OR gateways.  
-   - Execution semantics follow token flow governed by gateways.  
-5. **YAWL**  
-   - Conditions (places), tasks, composite tasks, multi‐instance tasks, cancellation regions.  
-   - Gateways attached to tasks (AND/XOR/OR splits & joins).  
-6. **Process trees**  
-   - Leaf nodes = activities; internal nodes = operators: sequence (→), XOR (⨉), AND (∧), redo loop (↺).  
-   - Block-structured; sound by construction.  
-7. **Causal nets (C-nets)**  
-   - Dependency graph: activities with input/output bindings and obligation tokens.  
-   - Semantics = set of valid binding sequences; expressive but verification NP-complete.
+1. **Transition Systems (State-Transition Graphs)**
+   - **Syntax:** States (nodes) and transitions (edges).
+   - **Semantics:** The system moves from one state to another by executing transitions.
+   - ➜ Good for representing all possible sequences but gets large quickly.
+
+2. **Petri Nets**
+   - **Syntax:**
+     - Places: Represent conditions or states.
+     - Transitions: Represent activities/events.
+     - Arcs: Connect places and transitions.
+     - Tokens: Mark the current state.
+   - **Execution Semantics:**
+     - A transition is enabled if all input places have tokens.
+     - When it fires, it consumes tokens from input places and produces tokens in output places.
+
+3. **Workflow Nets (WF-nets)**
+   - **Syntax:** A specialized Petri net with:
+     - One unique start place (no input transitions).
+     - One unique end place (no output transitions).
+   - **Execution Semantics:** Same as Petri nets, but with additional soundness criteria:
+     - Safeness: Places hold at most one token.
+     - Proper completion: All tokens reach the end place.
+     - Option to complete: It’s always possible to reach completion.
+     - No dead parts: All parts are reachable.
+
+4. **BPMN (Business Process Model and Notation)**
+   - **Syntax:**
+     - Events: Start, intermediate, end.
+     - Tasks: Activities.
+     - Gateways: AND, XOR, OR splits/joins to control flow.
+   - **Execution Semantics:**
+     - Token flow semantics: tokens move along sequence flows, guided by gateway logic.
+
+5. **YAWL (Yet Another Workflow Language)**
+   - **Syntax:**
+     - Conditions: Like Petri net places.
+     - Tasks: Basic or composite.
+     - Multi-instance tasks: Tasks that repeat multiple times.
+     - Cancellation regions: Subflows that can cancel other tasks.
+     - Gateways: AND/XOR/OR splits and joins, attached to tasks.
+   - **Execution Semantics:** Combines Petri net semantics with advanced constructs for workflow patterns.
+
+6. **Process Trees**
+   - **Syntax:**
+     - Leaf nodes: Activities.
+     - Internal nodes: Operators:
+       - Sequence (→): Activities happen in order.
+       - XOR (⨉): Only one branch taken.
+       - AND (∧): Parallel execution.
+       - Redo loop (↺): Loops.
+   - **Execution Semantics:** Block-structured — always sound by construction (e.g., no deadlocks).
+
+7. **Causal Nets (C-nets)**
+   - **Syntax:**
+     - Dependency graph of activities.
+     - Input/output bindings: Sets of conditions needed to execute an activity.
+     - Obligation tokens: Mark which bindings are required.
+   - **Execution Semantics:** Defines valid sequences based on bindings.
+     - Very expressive, but verifying correctness is NP-complete, so computationally hard.
 
 ### Formal Definitions (Petri nets)
 
