@@ -488,15 +488,16 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 
 ### Fitness Formulas
 - **Trace‑level fitness**
+
   fitness = 1 − cost of optimal alignment / cost of worst alignment,  
   where *γ*<sub>opt</sub> is an optimal alignment and *γ*<sub>worst</sub> is the anti‑optimal alignment of only asynchronous moves.
 - **Log‑level fitness** – weight the trace‑level fitness by trace frequencies and average over the entire log.
 
 ### Precision via Alignments
 After replacing each trace by the bottom row of its optimal alignment (log L′):
-\[
-  \text{precision}(L,M)=\frac{1}{|E|}\sum_{e\in E}\frac{|en_L(e)|}{|en_M(e)|},
-\]
+
+$\text{precision}(L, M) = \frac{1}{|E|} \sum_{e \in E} \frac{|en_L(e)|}{|en_M(e)|}$
+
 where *en_L(e)* is the set of activities actually observed after the same history and *en_M(e)* the set enabled in the model.  
 Precision ∈ [0, 1]; low precision indicates under‑fitting.
 
