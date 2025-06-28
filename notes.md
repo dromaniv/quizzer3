@@ -111,18 +111,23 @@
 > 5. Combine the three Workflow‑net criteria to conclude *soundness*.
 
 ## Semantic & Structural Properties
-- **k-bounded / safe / bounded** (Petri nets)  
-- **Free-choice** nets  
-- **Deadlock-free / live**  
-- **Proper completion / option to complete / sound** (WF-nets)  
+
+**Structural properties:**
+- k-bounded / safe / bounded (Petri nets)
+- Free-choice nets
+
+**Semantic properties:**
+- Deadlock-free / live
+- Proper completion / option to complete / sound (WF-nets)
+
+### Split/Join Support & Soundness Guarantees
+
 - Which representations support AND, XOR, OR splits/joins?  
   - ALL except OR joins in basic Petri nets (must encode via XOR+AND).  
 - Which guaranteed soundness structurally vs semantically?  
   - Process trees: structural soundness.  
   - WF-nets/C‐nets: semantic soundness checks.
-
-### Split/Join Support & Soundness Guarantees
-
+  
 | Representation | AND Split / Join | XOR Split / Join | OR Split / Join | Sound *by Structure* | Sound *needs Semantic Check* |
 | -------------- | --------------- | ---------------- | --------------- | -------------------- | ---------------------------- |
 | **Transition system** | — (implicit interleavings) | — | — | — | ✔︎ (well‑defined reachable states) |
