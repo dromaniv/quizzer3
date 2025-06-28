@@ -428,7 +428,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 
 ## Conformance Metrics
 1. **Fitness:** degree to which log traces fit the model.  
-    fitness = 1 − cost_non_sync ÷ cost_all_moves
+    $\text{fitness} = 1 - \frac{\text{cost_non_sync}}{\text{cost_all_moves}}$
 2. **Precision:** extent model prohibits unobserved behavior.  
 3. **Generalization:** ability to allow unseen but plausible behavior.  
 4. **Simplicity:** parsimony of model structure (apply Ockham’s razor).
@@ -465,7 +465,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
   - **Model move:** transition without event (insert, cost >0).  
   - **Log move:** event without transition (delete, cost >0).  
 - **Fitness via alignments:**  
-  fitness = 1 − sum(cost_non_sync_moves) ÷ sum(cost_all_moves)
+  $\text{fitness} = 1 - \frac{\text{sum(cost_non_sync)}}{\text{sum(cost_all_moves)}}$
 
 ## Properties of the Alignment Method
 - **Advantages:**  
