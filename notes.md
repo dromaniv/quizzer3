@@ -450,7 +450,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
   - “#” if unrelated.  
 - **Differential footprint:** compare model vs log matrices to highlight discrepancies.
 
-## LTL Specification & Verification
+## Linear Temporal Logic Specification & Verification
 - **LTL rule preparation:** translate natural language constraint into LTL formula, e.g.:  
   G ( order_placed → F order_paid )  
 - **Verification:** check each trace against the formula using model checking or log replay.
