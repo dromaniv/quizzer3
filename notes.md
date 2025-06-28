@@ -121,12 +121,6 @@
 - Proper completion / option to complete / sound (WF-nets)
 
 ### Split/Join Support & Soundness Guarantees
-
-- Which representations support AND, XOR, OR splits/joins?  
-  - ALL except OR joins in basic Petri nets (must encode via XOR+AND).  
-- Which guaranteed soundness structurally vs semantically?  
-  - Process trees: structural soundness.  
-  - WF-nets/C‐nets: semantic soundness checks.
   
 | Representation | AND Split / Join | XOR Split / Join | OR Split / Join | Sound *by Structure* | Sound *needs Semantic Check* |
 | -------------- | --------------- | ---------------- | --------------- | -------------------- | ---------------------------- |
