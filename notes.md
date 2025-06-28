@@ -489,8 +489,7 @@ subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
 ### Fitness Formulas
 - **Trace‑level fitness**
 
-  fitness = 1 − cost of optimal alignment / cost of worst alignment,  
-  where *γ*<sub>opt</sub> is an optimal alignment and *γ*<sub>worst</sub> is the anti‑optimal alignment of only asynchronous moves.
+  fitness = 1 − cost of optimal alignment / cost of worst alignment (anti‑optimal alignment of only asynchronous moves)
 - **Log‑level fitness** – weight the trace‑level fitness by trace frequencies and average over the entire log.
 
 ### Precision via Alignments
