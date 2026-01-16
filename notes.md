@@ -1,510 +1,404 @@
-# Lecture 1: Introduction to Process Models
+# 🎓 IQIQML Course Notes
 
-## Normative vs Descriptive Models
-- **Normative model**  
-  - A handcrafted, idealized representation of “how things should work.”  
-  - Applications: process design, specification, certification (e.g., ISO 9001), contract between stakeholders.
-- **Descriptive model**  
-  - A data-driven representation of “what actually happens.”  
-  - Applications: operational audits, conformance checking, root-cause analysis.
+## 📚 Lecture 1: Introduction & Quantum Platforms
+*Goal: Understand the "physical" and "software" landscape of quantum computing before diving into the math.*
 
-## Six Sigma Management Methodology
-- **Goal:** Reduce process variation so that outcomes fall within ±6 standard deviations (σ) of the mean.  
-- **Key concepts:**  
-  1. **σ (standard deviation)** – measure of variation.  
-  2. **1.5σ shift**  
-     - Empirical mean drift over time in long-running processes.  
-     - Causes asymmetric defect rates but still maintains very low defect probability (≈3.4 PPM).  
-  3. **DMAIC cycle:**  
-     - Define → Measure → Analyze → Improve → Control
+### 1. The "Hardware" of Quantum Computers
+Unlike classical computers which use silicon transistors (switches that are either OFF or ON), quantum computers need physical systems that can exist in a "superposition" (both states at once). Different companies build these systems differently.
 
-## Lean Management Methodology
-- **Origin:** Toyota Production System.  
-- **Principles:**  
-  1. **Eliminate waste:** reduce inventory, unnecessary transport, overprocessing.  
-  2. **Minimize waiting:** synchronize activities to avoid idle time.  
-  3. **Prevent defects:** build quality in; avoid rework and correction steps.
+**Key Technologies to Know:**
+* **Superconducting Qubits** (The most common type):
+    * *Who:* **IBM**, Google, Rigetti, IQM.
+    * *How:* They use electronic circuits cooled down to near absolute zero (cryogenic temperatures). They behave like artificial atoms.
+    * *Pros/Cons:* They are fast to control but lose their quantum state (decoherence) quickly.
+* **Ion Traps**:
+    * *Who:* **IonQ**, Quantinuum.
+    * *How:* They use electromagnetic fields to trap individual charged atoms (ions) in a vacuum.
+    * *Pros/Cons:* Very stable and accurate, but slower operation speeds.
+* **Neutral Atoms**:
+    * *Who:* Pasqal, QuEra.
+    * *How:* Atoms trapped by lasers (optical tweezers).
+* **Photonic**:
+    * *Who:* Xanadu.
+    * *How:* Using particles of light (photons).
 
----
+### 2. The "Software" Ecosystem
+You don't plug wires into a quantum computer; you send it code over the internet (cloud).
 
-# Lectures 2–3: Process Model Representations & Workflow Systems
+**A. Amazon Braket**
+Think of this as the "Amazon Marketplace" for quantum computers.
+* It aggregates different hardware providers (IonQ, Rigetti, Oxford Quantum Circuits) into one platform.
+* You use the **Amazon Braket SDK** (Software Development Kit) in Python to write code once and run it on different machines.
 
-## Control-Flow Representations
-1. **Transition Systems (State-Transition Graphs)**
-   - **Syntax:** States (nodes) and transitions (edges).
-   - **Semantics:** The system moves from one state to another by executing transitions.
-   - ➜ Good for representing all possible sequences but gets large quickly.
+**B. IBM Quantum (The focus of this course)**
+IBM builds both the hardware (Eagle/Osprey processors) and the software.
+* **Qiskit**: The specific software library (SDK) used to program IBM's machines. It is written in **Python**.
+* **Access**: You can run code via the *IBM Quantum Platform* (website) or install Qiskit locally on your computer.
 
-2. **Petri Nets**
-   - **Syntax:**
-     - Places: Represent conditions or states.
-     - Transitions: Represent activities/events.
-     - Arcs: Connect places and transitions.
-     - Tokens: Mark the current state.
-   - **Execution Semantics:**
-     - A transition is enabled if all input places have tokens.
-     - When it fires, it consumes tokens from input places and produces tokens in output places.
-
-3. **Workflow Nets (WF-nets)**
-   - **Syntax:** A specialized Petri net with:
-     - One unique start place (no input transitions).
-     - One unique end place (no output transitions).
-   - **Execution Semantics:** Same as Petri nets, but with additional soundness criteria:
-     - Safeness: Places hold at most one token.
-     - Proper completion: All tokens reach the end place.
-     - Option to complete: It’s always possible to reach completion.
-     - No dead parts: All parts are reachable.
-
-4. **BPMN (Business Process Model and Notation)**
-   - **Syntax:**
-     - Events: Start, intermediate, end.
-     - Tasks: Activities.
-     - Gateways: AND, XOR, OR splits/joins to control flow.
-   - **Execution Semantics:**
-     - Token flow semantics: tokens move along sequence flows, guided by gateway logic.
-
-5. **YAWL (Yet Another Workflow Language)**
-   - **Syntax:**
-     - Conditions: Like Petri net places.
-     - Tasks: Basic or composite.
-     - Multi-instance tasks: Tasks that repeat multiple times.
-     - Cancellation regions: Subflows that can cancel other tasks.
-     - Gateways: AND/XOR/OR splits and joins, attached to tasks.
-   - **Execution Semantics:** Combines Petri net semantics with advanced constructs for workflow patterns.
-
-6. **Process Trees**
-   - **Syntax:**
-     - Leaf nodes: Activities.
-     - Internal nodes: Operators:
-       - Sequence (→): Activities happen in order.
-       - XOR (⨉): Only one branch taken.
-       - AND (∧): Parallel execution.
-       - Redo loop (↺): Loops.
-   - **Execution Semantics:** Block-structured — always sound by construction (e.g., no deadlocks).
-
-7. **Causal Nets (C-nets)**
-   - **Syntax:**
-     - Dependency graph of activities.
-     - Input/output bindings: Sets of conditions needed to execute an activity.
-     - Obligation tokens: Mark which bindings are required.
-   - **Execution Semantics:** Defines valid sequences based on bindings.
-     - Very expressive, but verifying correctness is NP-complete, so computationally hard.
-
-### Formal Definitions (Petri nets)
-
-- **k‑bounded** – A Petri net is *k‑bounded* if, in every reachable marking, **each** place contains at most *k* tokens.
-- **safe** – A special case of k‑boundedness with *k = 1*; no place ever contains more than one token (≡ 1‑bounded).
-- **bounded** – A Petri net is *bounded* if there exists a finite *k* such that the net is *k‑bounded*.
-- **free‑choice** – A Petri net is *free‑choice* if any two transitions that share an input place have **exactly the same set** of input places.
-- **deadlock‑free** – From every reachable marking, at least one transition is enabled; the net can always proceed.
-- **live / liveness** – A transition *t* is *live* if, from every reachable marking, it is possible to reach **some** marking in which *t* is enabled.  
-  A Petri net is *live* when **all** its transitions are live.
-- **proper completion** – In a Workflow net, every token produced during execution is ultimately consumed, leaving exactly one token in the final place and none elsewhere.
-- **option‑to‑complete** – From the initial marking, it is always possible to reach the final marking (i.e., the model can finish).
-- **sound** – A Workflow net is *sound* if it is bounded, has option‑to‑complete, and guarantees proper completion; additionally, there are no dead transitions (every transition can occur in some execution).
-
-> **Tip for exams:** To *derive* these properties for a given example model, construct its reachability graph (or coverability tree) and inspect:
-> 1. Maximum tokens per place → k‑bounded / safe / bounded  
-> 2. Enabled transitions at each marking → deadlock‑freedom  
-> 3. Ability to re‑enable each transition → liveness  
-> 4. Reachability of the unique final marking and residual tokens → proper completion & option‑to‑complete  
-> 5. Combine the three Workflow‑net criteria to conclude *soundness*.
-
-## Semantic & Structural Properties
-
-**Structural properties:**
-- k-bounded / safe / bounded (Petri nets)
-- Free-choice nets
-
-**Semantic properties:**
-- Deadlock-free / live
-- Proper completion / option to complete / sound (WF-nets)
-
-### Split/Join Support & Soundness Guarantees
-  
-| Representation | AND Split / Join | XOR Split / Join | OR Split / Join | Sound *by Structure* | Sound *needs Semantic Check* |
-| -------------- | --------------- | ---------------- | --------------- | -------------------- | ---------------------------- |
-| **Transition system** | — (implicit interleavings) | — | — | — | ✔︎ (well‑defined reachable states) |
-| **Petri net** | ✔︎ (parallel branches) | ✔︎ (conflict) | ✖︎ (native) | — | ✔︎ (via reachability analysis) |
-| **Workflow net (WF‑net)** | ✔︎ | ✔︎ | ✖︎ | — | ✔︎ (soundness ≡ bounded ∧ option‑to‑complete ∧ proper completion) |
-| **BPMN** | ✔︎ (Parallel gateway) | ✔︎ (Exclusive gateway) | ✔︎ (Inclusive gateway) | — | ✔︎ (must check token flow) |
-| **YAWL** | ✔︎ | ✔︎ | ✔︎ (advanced OR‑join semantics) | — | ✔︎ (runtime OR‑join check) |
-| **Process tree** | ✔︎ (AND node) | ✔︎ (XOR node) | ✖︎ | ✔︎ (block‑structured) | — |
-| **Causal net (C‑net)** | ✔︎ (bindings) | ✔︎ (bindings) | ✔︎ (bindings) | — | ✔︎ (NP‑complete soundness test) |
-
-> **Reading the table:**  
-> • A **✔︎** means the construct is directly available; **✖︎** means it must be encoded indirectly or is not expressible.  
-> • *Sound by structure* means every syntactically valid model is guaranteed to be sound (e.g., process trees).  
-> • *Sound needs semantic check* means additional analysis (reachability graph, static verification, runtime checking, etc.) is required.
-
-
-## Workflow Systems
-- Software to execute models:  
-  - jBPM, YAWL (open-source), ProM, Celonis, Disco, ProcessM, PM4Py.  
-- Key features: model editor, execution engine, monitoring, integration with enterprise systems.
+### 3. Practical Setup (Exam Note: Know the tools)
+To pass this course, you are expected to use **Qiskit**.
+* **Language**: Python.
+* **Environment**: Visual Studio Code (VSC) or Jupyter Notebooks.
+* **Installation**: You use the Python package manager `pip`.
+    * Command: `pip install qiskit`
+    * visualization tools: `pip install qiskit[visualization]`
 
 ---
 
-# Lecture 3: Performance Metrics & KPIs
+## 🧮 Lecture 2: The Quantum State of a Single Qubit
+*Goal: Understand how we represent a qubit mathematically using vectors. This requires a small crash course in Linear Algebra.*
 
-## Key Performance Indicators (KPIs)
-- **Definition:** Quantitative/qualitative measures of process performance.  
-- **Types:**  
-  1. **Quantitative:** objective, numeric (e.g., throughput, defect rate).  
-  2. **Qualitative:** categorical (e.g., satisfaction levels).  
-- **Levels:**  
-  - **Activity‐level:** input/output data, resource utilization.  
-  - **Process‐level:** lead time, cycle time, cost, quality metrics.
+### 1. The Mathematical Foundation (Postulate I)
+In classical physics, we describe a ball by its position $(x, y, z)$. In quantum mechanics, we describe a system by a **State Vector**.
 
-## Overall Equipment Effectiveness (OEE)
-- **Formula**: OEE = Availability × Performance × Quality
-- **Calculations:**  
-  - Availability = operating time / scheduled time  
-  - Performance = actual output / theoretical max output  
-  - Quality = good units / total units
+**The Vector Space (Hilbert Space):**
+* Imagine a 2D graph. A "vector" is just an arrow starting from the origin $(0,0)$.
+* **Hilbert Space ($H$)**: This is just a fancy name for the "space" where our quantum arrows live. For a single qubit, this space is 2-dimensional (complex space $\mathbb{C}^2$).
+* **Dirac Notation (The "Ket" $|\psi\rangle$)**:
+    * Instead of writing a vector with an arrow on top like $\vec{v}$, quantum physicists write it inside a "ket": $|\psi\rangle$.
+    * $|\psi\rangle$ simply represents the state of the qubit.
 
-## Exemplary KPIs
-- **Manufacturing:** throughput, cycle time, reject rate, utilization.  
-- **Process execution cost:** labor cost per case, material cost, rework cost.
+### 2. What is a Qubit?
+A classical bit is either **0** or **1**.
+A **Qubit** (Quantum Bit) is a vector that can be a combination of 0 and 1.
 
-## Time Metrics
-- **Lead time:** total elapsed time from start to finish of a case.  
-- **Service time:** active processing time for an activity.  
-- **Waiting time:** idle time before processing starts.  
-- **Synchronization time:** waiting for parallel branches to rejoin.  
-- **Example calculation:** given timestamps in a trace, compute each time component.
+**The Computational Basis:**
+We define two standard "directions" (basis vectors):
+* $|0\rangle$: The state representing "0" (usually "spin up" or "ground state").
+    * Matrix form: $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$
+* $|1\rangle$: The state representing "1" (usually "spin down" or "excited state").
+    * Matrix form: $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$
 
----
+**Superposition:**
+A qubit can be in a state $|\psi\rangle$ that is a linear combination of these two:
+$$|\psi\rangle = c_0 |0\rangle + c_1 |1\rangle$$
+* $c_0$ and $c_1$ are **Probability Amplitudes**.
+* **Crucial Note**: These numbers ($c_0, c_1$) are **Complex Numbers** (they can have imaginary parts, e.g., $a + bi$).
 
-# Lecture 4: Statistical Hypothesis Testing & Data Mining Basics
+### 3. Normalization (The "Rule of 1")
+In probability, the chance of *something* happening must be 100% (or 1.0).
+Since quantum mechanics is probabilistic, the state vector must be "normalized" to have a length of 1.
 
-## Purpose of Statistical Hypothesis Verification
-- To assess whether sample data support a given assumption about population parameters.
+**The Formula:**
+$$|c_0|^2 + |c_1|^2 = 1$$
+* $|c_0|^2$ is the probability of measuring **0**.
+* $|c_1|^2$ is the probability of measuring **1**.
 
-## Hypothesis Test for Mean
-1. **Define H₀ (e.g., μ = μ₀) and H₁.**  
-2. **Compute t‐statistic:**  
-   t = (x̄ − μ0) / (s / sqrt(n))
-3. **Compare to critical t (via quantile).**  
-4. **Decide to reject or not reject H₀.**
+**Example:**
+If $|\psi\rangle = \frac{1}{\sqrt{2}}|0\rangle + \frac{1}{\sqrt{2}}|1\rangle$:
+* Probability of 0: $(\frac{1}{\sqrt{2}})^2 = 0.5$ (50%)
+* Probability of 1: $(\frac{1}{\sqrt{2}})^2 = 0.5$ (50%)
+* Total: $0.5 + 0.5 = 1.0$ (Valid state ✅)
 
-## Error Types & Multiple Testing
-- **Type I error (α):** rejecting true H₀.  
-- **Type II error (β):** failing to reject false H₀.  
-- **Multiple tests:** inflates overall α (family-wise error) unless corrected (e.g., Bonferroni).
+If you are given a vector that doesn't sum to 1, you must **normalize** it by dividing by its length (norm).
 
-## Bias & Variance in Algorithms
-- **Bias:** systematic error due to assumptions; low bias → more flexible model.  
-- **Variance:** sensitivity to data fluctuations; high variance → overfitting.  
-- **Trade-off:** increasing model complexity lowers bias but raises variance.
+### 4. The Bloch Sphere (Visualizing the Qubit)
+Since $c_0$ and $c_1$ are complex numbers, it's hard to draw them on a 2D piece of paper. However, we use a trick called the **Bloch Sphere**.
 
-## Explaining Decisions & Classifier Evaluation
-- **Decision explanation:** use decision trees or rule lists to interpret branching in process.  
-- **Evaluation measures:** accuracy, precision, recall, F₁/F_β score, Matthews correlation coefficient (MCC), ROC/AUC.
+* Imagine a ball with radius 1.
+* **North Pole**: Represents state $|0\rangle$.
+* **South Pole**: Represents state $|1\rangle$.
+* **Equator**: Represents superposition states (like 50/50 mixes).
 
-## Bias of Representation
-- Causes: chosen modeling formalism restrictions (e.g., α-algorithm’s no silent/duplicate transitions).
+**The Equation:**
+Any pure qubit state can be written using two angles, $\theta$ (latitude) and $\varphi$ (longitude):
+$$|\psi\rangle = \cos(\frac{\theta}{2})|0\rangle + e^{i\varphi}\sin(\frac{\theta}{2})|1\rangle$$
+* $\theta$ (Theta): Controls how much "0" vs "1" you have.
+    * If $\theta = 0$, you are at the North Pole ($|0\rangle$).
+    * If $\theta = \pi$ (180°), you are at the South Pole ($|1\rangle$).
+    * If $\theta = \pi/2$ (90°), you are on the equator (Superposition).
+* $\varphi$ (Phi): The **Relative Phase**. It rotates the state around the Z-axis (like spinning a globe). It doesn't change the probability of measuring 0 or 1, but it changes how the qubit interferes with others.
 
-## Apriori Algorithm for Association Rule Discovery
-1. **Find frequent itemsets:** support ≥ supₘᵢₙ using iterative k→k+1 generation.  
-2. **Generate rules:** for each frequent set, split into X⇒Y with confidence ≥ confₘᵢₙ.  
-3. **Quality metrics:** support, confidence, lift.
-
-### Example (abstract)
-- supₘᵢₙ=0.3, dataset of 14 transactions:  
-  - L₁‐item frequent: {coffee, tea, muffin, bagel}.  
-  - L₂‐item frequent: {tea∧muffin, muffin∧bagel, …}.  
-  - Derive rules with confₘᵢₙ=0.75.
-
-## Apriori for Sequence Discovery
-- Treat each time‐ordered basket as sequence of itemsets.  
-- Extend Apriori to sequences: subsequence support ≥ supₘᵢₙ.
-
-## Episode Mining
-- **Episode:** DAG of events within sliding time window.  
-- **Mining:** slide window over event stream, count episode occurrences; support ≥ supₘᵢₙ.  
-- **Difference from process model:** local patterns only; no global start/end, loops, choices, or full concurrency.
+### 5. Measurement (Z-Measurement)
+When we measure a qubit, we can't "see" the vector $|\psi\rangle$. We only see a **0** or a **1**.
+* This is the "collapse" of the wavefunction.
+* If we measure in the standard **Z-basis** (checking if it points North or South):
+    * The outcome "0" occurs with probability $p_0 = |\langle 0 | \psi \rangle|^2$.
+    * The outcome "1" occurs with probability $p_1 = |\langle 1 | \psi \rangle|^2$.
+* **Post-Measurement State**: After you see a "0", the qubit *becomes* $|0\rangle$. It forgets it was ever in a superposition.
 
 ---
 
-# Lecture 5: Event Logs & Data Preparation
+### 📝 Exam Cheat Sheet (Summary)
 
-## Event Log Structure Requirements
-- **Case ID** – unique identifier for each process instance (trace).  
-- **Activity Name** – label of the executed step.  
-- **Timestamp** – precise time of occurrence.  
-- **Optional Attributes** – resource, cost, lifecycle transition.  
-- **Well‐formedness:** each row = one event; sorted by timestamp per case.
+| Concept | Definition | Math / Matrix |
+| :--- | :--- | :--- |
+| **Ket** | A column vector representing state | $|\psi\rangle = \begin{pmatrix} c_0 \\ c_1 \end{pmatrix}$ |
+| **Bra** | A row vector (conjugate transpose) | $\langle\psi| = (c_0^*, c_1^*)$ |
+| **Bra-Ket** | Inner product (measures overlap) | $\langle\phi|\psi\rangle$ (Scalar number) |
+| **Normalization** | Requirement for total prob. to be 1 | $\sqrt{\langle\psi|\psi\rangle} = 1$ |
+| **Basis |0>** | "Ground" state (North Pole) | $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ |
+| **Basis |1>** | "Excited" state (South Pole) | $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ |
+| **Bloch Vector** | 3D representation of the state | Vector $\vec{n}$ inside the sphere |
 
-## ETL Process
-1. **Extract** – read raw data from source systems (ERP, CRM).  
-2. **Transform** – filter, clean, normalize timestamps, derive case IDs.  
-3. **Load** – write into event log repository (flat file, XES format).
+**Important Python/Qiskit Note:**
+In Qiskit, the command `plot_bloch_vector` creates the sphere visualization. The standard simulator `qasm_simulator` mimics a real quantum computer by running the circuit many times ("shots") to estimate the probabilities (e.g., if you run 100 shots and get '0' 50 times, probability is 0.5).
 
-## Data Warehouse vs. Relational Database
-- **Relational DB:** optimized for transactional OLTP; normalized; many small reads/writes.  
-- **Data Warehouse:** optimized for OLAP; denormalized star/snowflake schema; historical, aggregated data.
 
-## Scoping
-- Define process boundaries: start/end events, included variants, relevant data sources.
+## 🛠️ Lecture 3: Operators & Matrix Representations
+*Goal: Learn the "verbs" of quantum computing. If a qubit is a vector, an operator is a machine that transforms that vector into a new one.*
 
-## Atomic Activities & Parallelism
-- **Atomic activity:** indivisible unit of work in the log.  
-- **Parallel atomic activities:** two events with same timestamp or overlapping intervals; represented as separate events with identical timestamps or explicit start/end lifecycle attributes.
+### 1. What is a Linear Operator?
+In simple terms, a linear operator is a function $\hat{A}$ that takes a vector and spits out a new vector.
+* **Linearity**: It must follow two rules:
+    1.  [cite_start]**Additivity**: $\hat{A}(|\psi\rangle + |\varphi\rangle) = \hat{A}|\psi\rangle + \hat{A}|\varphi\rangle$[cite: 8115].
+    2.  [cite_start]**Homogeneity**: $\hat{A}(c|\psi\rangle) = c\hat{A}|\psi\rangle$ (where $c$ is a number)[cite: 8117].
 
-## XES Standard
-- **Basic Structure:**  
-  - **Log** element containing global extensions and traces.  
-  - **Trace** element containing events.  
-  - **Event** element with attributes (string, date, id, int, float, boolean).  
-- **Extensions:** plug‐in modules adding semantics (e.g., Organizational, Time, Lifecycle, Cost).
+### 2. The "Outer Product" (Ket-Bra)
+You know the inner product (Bra-Ket $\langle a | b \rangle$) produces a number.
+The **Outer Product** (Ket-Bra $|b\rangle\langle a|$) produces an **operator (matrix)**.
 
-## Creating an Event Log from a Relational DB
-1. Query table(s) to extract case ID, activity, timestamp, and optional fields.  
-2. Order by case ID and timestamp.  
-3. Export to CSV.  
-4. Convert CSV to XES (e.g., using ProM import or PM4Py).
+* **Definition**: An operator $\hat{P}_{ba} = |b\rangle\langle a|$ acts on a vector $|\psi\rangle$ like this:
+    $$(|b\rangle\langle a|) |\psi\rangle = |b\rangle (\langle a | \psi \rangle)$$
+    * [cite_start]*Translation:* It calculates the overlap (dot product) between $a$ and $\psi$, and scales the vector $|b\rangle$ by that amount[cite: 8131].
 
----
+* **Projection Operators ($\hat{P}$)**:
+    If you make an operator out of the *same* basis vector, like $\hat{P}_0 = |0\rangle\langle 0|$, it acts as a filter.
+    * [cite_start]$\hat{P}_0$ keeps the part of the vector pointing along $|0\rangle$ and deletes the rest[cite: 8257].
+    * **Identity Operator ($\hat{\mathbb{I}}$)**: The "do nothing" operator. It is the sum of all projectors: $\hat{\mathbb{I}} = |0\rangle\langle 0| + [cite_start]|1\rangle\langle 1|$[cite: 8446].
 
-# Lecture 6: Process Model Evaluation & Discovery (α-Algorithm)
+### 3. Matrix Representation
+Since vectors are columns of numbers, operators are **matrices** (grids of numbers).
+* If you have a basis $\{|0\rangle, |1\rangle\}$, the element in row $i$ and column $j$ of operator $\hat{A}$ is:
+    $$A_{ij} = \langle i | \hat{A} | j \rangle$$
+* *Student Tip:* To find the matrix of a gate, look at what it does to the basis vectors $|0\rangle$ and $|1\rangle$. The result of acting on $|0\rangle$ becomes the **first column**. [cite_start]The result of acting on $|1\rangle$ becomes the **second column**[cite: 8470].
 
-## Four Measures of Model Evaluation
-1. **Fitness:** how much of the log is explained by the model.  
-2. **Precision:** extent to which model allows only observed behavior.  
-3. **Generalization:** model’s ability to allow unseen but likely behavior.  
-4. **Simplicity:** parsimony of model structure (Ockham’s razor).
+### 4. Important Quantum Gates (Cheat Sheet)
+You must recognize these matrices.
 
-## Ockham’s Razor
-- Prefer the simplest model that adequately fits the data to avoid overfitting.
+| Gate | Symbol | Matrix | Effect |
+| :--- | :--- | :--- | :--- |
+| **Hadamard** | **H** | $\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$ | [cite_start]Creates superposition ($|0\rangle \to |+\rangle$, $|1\rangle \to |-\rangle$)[cite: 8525]. |
+| **Phase (S)** | **S** | $\begin{pmatrix} 1 & 0 \\ 0 & i \end{pmatrix}$ | [cite_start]Adds $90^{\circ}$ ($i$) phase to $|1\rangle$[cite: 8550]. |
+| **T Gate** | **T** | $\begin{pmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \end{pmatrix}$ | Adds $45^{\circ}$ phase to $|1\rangle$. [cite_start]It's the "square root" of S[cite: 8574]. |
+| **Y-Rotation** | **Ry** | $\begin{pmatrix} \cos(\theta/2) & -\sin(\theta/2) \\ \sin(\theta/2) & \cos(\theta/2) \end{pmatrix}$ | [cite_start]Rotates the state vector around the Y-axis[cite: 8595]. |
+| **CNOT** | **CX** | $\begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{pmatrix}$ | [cite_start]Flips the second qubit (Target) if the first (Control) is 1[cite: 8607]. |
 
-## α-Algorithm Steps
-1. Compute directly‐follows relation from log.  
-2. Identify sets of input/output for each task.  
-3. Build Petri net places for each pair of input/output sets.  
-4. Connect tasks and places to form WF-net.
-
-## Properties & Limitations of α-Algorithm
-- **Guarantees:** sound WF-net if no loops of length 1/2 and log complete.  
-- **Limitations:**  
-  - Fails on short loops (length 1 or 2).  
-  - Sensitive to noise and infrequent behavior.  
-  - Cannot detect invisible tasks or duplicate activities.
-
-## Handling Loops & Noise
-- **Short loops:** detect and merge via specialized heuristics.  
-- **Noise filtering:** remove infrequent relations below support threshold.
-
-## Bisimilarity Concepts
-- **Bisimilar:** two models exhibit exactly the same possible firing sequences.  
-- **Branching bisimilar:** preserve branching structure (choices) up to silent transitions.
+### 5. Adjoint and Hermitian Operators
+* **Adjoint ($\dagger$)**: The "conjugate transpose". You swap rows/columns AND flip the sign of imaginary numbers ($i \to -i$).
+    * [cite_start]$\hat{A}^\dagger_{ij} = A_{ji}^*$[cite: 8790].
+* **Hermitian Operator**: A matrix that is equal to its own adjoint ($\hat{A} = \hat{A}^\dagger$).
+    * [cite_start]*Significance:* These represent **measurable quantities** (observables) in physics (like energy)[cite: 8812].
+* **Unitary Operator**: A matrix whose inverse is its adjoint ($\hat{U}^{-1} = \hat{U}^\dagger$).
+    * [cite_start]*Significance:* All **quantum gates** must be unitary to preserve probability[cite: 8848].
 
 ---
 
-# Lecture 7: Advanced Discovery & Bias of Representation
+## ⏳ Lecture 4: Dynamics of Qubit States
+*Goal: Understand how qubits change over time and the math governing their rotation.*
 
-## Sources of Representation Bias
-- Formalism restrictions (e.g., no OR-joins in basic Petri nets).  
-- Algorithmic design choices (e.g., block‐structured assumption in process trees).  
-- Pre‐ and post‐processing filters.
+### 1. Key Theorems for Exam
+1.  **Conservation of Probability**: A unitary operator ($\hat{U}$) preserves the **norm** (length) of a vector. [cite_start]If you start with a valid quantum state (length 1), applying a gate keeps it a valid state (length 1)[cite: 4239].
+2.  **Eigenvalues**:
+    * [cite_start]**Hermitian** matrices have **Real** eigenvalues (measurable outcomes are real numbers)[cite: 4373].
+    * [cite_start]**Unitary** matrices have eigenvalues with **modulus 1** (complex numbers on the unit circle, $|e^{i\phi}| = 1$)[cite: 4389].
+3.  [cite_start]**Orthogonality**: Eigenvectors belonging to different eigenvalues are always orthogonal (perpendicular)[cite: 4409].
 
-## Completeness of Event Log
-- **Complete w.r.t. directly‐follows:** all possible directly‐follows pairs appear.  
-- **Affecting factors:** process variability, data volume, filtering, parallelism.  
-- **Challenges:** highly parallel systems, rare behavior; impractical to observe all variants.  
-- **Importance:** incomplete logs lead to incomplete or incorrect models.
+### 2. Spectral Decomposition
+Any "nice" matrix (Hermitian or Unitary) can be broken down into a sum of its eigenvalues and projectors:
+$$\hat{A} = \sum a_n |a_n\rangle\langle a_n|$$
+* Where $a_n$ are the eigenvalues and $|a_n\rangle$ are the eigenvectors. [cite_start]This is like writing a recipe for the matrix[cite: 4443].
 
-## State-Based Regions Algorithm
-1. Build transition system from log.  
-2. Identify regions (sets of states with consistent transitions).  
-3. Convert regions into places to form a Petri net.
+### 3. Functions of Matrices ($e^{\hat{A}}$)
+We often see exponentials of matrices, like $e^{i\hat{H}t}$.
+* [cite_start]**Definition**: You expand it as a Taylor series: $e^{\hat{A}} = \hat{I} + \hat{A} + \frac{\hat{A}^2}{2!} + \dots$[cite: 4471].
+* **Crucial Identity**: If $\hat{A}^2 = \hat{I}$ (which is true for Pauli matrices $X, Y, Z$), then:
+    $$e^{i\theta \hat{A}} = \cos(\theta)\hat{I} + i\sin(\theta)\hat{A}$$
+    * [cite_start]*Exam Tip:* This formula is used constantly to convert exponentials into readable gate operations[cite: 4513].
 
-## Language-Based Regions Algorithm
-1. Derive language (set of traces) from log.  
-2. Compute separation pairs for events not co-occurring in traces.  
-3. Construct places for each separating pair, connect to transitions.
+### 4. Rotation Operators
+Any single-qubit gate can be viewed as a rotation of the Bloch vector around some axis $\vec{n}$.
+$$\hat{R}_{\vec{n}}(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_{\vec{n}}} = \cos(\frac{\theta}{2})\hat{I} - i\sin(\frac{\theta}{2})\hat{\sigma}_{\vec{n}}$$
+* [cite_start]$\hat{\sigma}_{\vec{n}}$ is a mix of Pauli matrices ($X, Y, Z$) representing the axis of rotation[cite: 4557].
 
-## Evolutionary Computing for Discovery
-- **Approach:** encode candidate models as genotypes; evaluate fitness against log; apply genetic operators.  
-- **Representation Features:** variable‐length genomes, operators for crossover/mutation on graph structures, genotypephenotype mapping to valid WF-nets.
+**Decomposition Theorem (Z-Y-Z):**
+Any single-qubit unitary gate $\hat{U}$ can be broken down into three rotations:
+$$\hat{U} = e^{i\alpha} \hat{R}_z(\beta) \hat{R}_y(\gamma) \hat{R}_z(\delta)$$
+* [cite_start]This means you can build *any* qubit operation just by rotating around Z, then Y, then Z again[cite: 4721].
 
----
+### 5. Time Evolution (The Physics Part)
+How does a qubit change if we just leave it alone or apply a magnetic field?
+* **Schrödinger Equation**: Describes the change over time.
+    $$i\hbar \frac{d}{dt}|\psi(t)\rangle = \hat{H}|\psi(t)\rangle$$
+    * [cite_start]$\hat{H}$ is the **Hamiltonian** (the operator representing the Energy of the system)[cite: 4906].
+* **The Solution**: If $\hat{H}$ is constant, the state at time $t$ is:
+    $$|\psi(t)\rangle = e^{-\frac{i}{\hbar}\hat{H}t} |\psi(0)\rangle$$
+* [cite_start]**Key Insight**: Quantum gates are actually just time evolution operators where we engineer the Hamiltonian $\hat{H}$ and the time $t$ to get the rotation we want[cite: 4987].
 
-# Lecture 8: Heuristic & Inductive Miners
 
-## Heuristic Miner
-- **Heuristic variant:**  
-  - Compute dependency/frequency metrics.  
-  - Select arcs above thresholds to build causal graph.  
-- **Optimization variant:**  
-  - Define objective combining fitness, simplicity, precision.  
-  - Use optimizer (e.g., ILP) to select consistent subset of arcs.
+## 🔗 Lecture 5: Multi-Qubit States & Gates
+*Goal: Understand how to describe systems with more than one qubit (tensor products) and the unique quantum phenomenon of entanglement.*
 
-## Inductive Miner
-1. Discover process tree by recursively splitting log based on cut detection (sequence, XOR, parallel, loop).  
-2. Guarantees block-structured, sound models.  
-3. **Advantages:** handles noise, guarantees soundness.  
-4. **Disadvantages:** may over-split; results depend on cut detection thresholds; less flexible for unstructured processes.
+### 1. The Tensor Product (Gluing Spaces Together)
+[cite_start]When we have two qubits, $A$ and $B$, their combined state lives in a larger Hilbert space formed by the **Tensor Product** ($H^A \otimes H^B$)[cite: 30].
 
----
+* [cite_start]**Dimension**: If space $A$ has dimension $N$ and space $B$ has dimension $M$, the combined space has dimension $N \times M$[cite: 32]. For two qubits ($2 \times 2$), the space is 4-dimensional.
+* **Basis**: The new basis is formed by all combinations of the original basis vectors:
+    [cite_start]$$|00\rangle, |01\rangle, |10\rangle, |11\rangle$$ [cite: 130-133].
+    *(Note: $|00\rangle$ is shorthand for $|0\rangle \otimes |0\rangle$)*.
 
-# Lecture 9: Linear Programming Models
+**How to Calculate it (Kronecker Product):**
+[cite_start]To combine two vectors, you multiply every element of the first vector by the *entire* second vector[cite: 122].
+$$\begin{pmatrix} a \\ b \end{pmatrix} \otimes \begin{pmatrix} c \\ d \end{pmatrix} = \begin{pmatrix} a \cdot \begin{pmatrix} c \\ d \end{pmatrix} \\ b \cdot \begin{pmatrix} c \\ d \end{pmatrix} \end{pmatrix} = \begin{pmatrix} ac \\ ad \\ bc \\ bd \end{pmatrix}$$
 
-## LP Model Components
-- **Decision variables** x₁, x₂, …  
-- **Objective function** (linear): e.g., maximize cᵀx.  
-- **Constraints:** A x ≤ b, x ≥ 0.
+### 2. Entanglement vs. Separability
+Not all multi-qubit states are created equal.
+* [cite_start]**Separable States**: A state is separable if it can be written as a clean product of individual qubit states: $|\Psi\rangle = |\psi^A\rangle \otimes |\psi^B\rangle$[cite: 231].
+    * *Example:* $|00\rangle$ is separable because it is just qubit A in $|0\rangle$ and qubit B in $|0\rangle$.
+* [cite_start]**Entangled States**: A state is entangled if it **cannot** be broken down into individual qubit states[cite: 238].
+    * [cite_start]*Example (Bell State):* $|\Psi\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$[cite: 233]. You cannot say qubit A is definitely "0" or "1" without knowing qubit B. They are linked.
 
-## Optimal Solution
-- Located at a vertex of the feasible polyhedron.
+**Measuring Entanglement (Concurrence):**
+For a state $|\Psi\rangle = c_{00}|00\rangle + c_{01}|01\rangle + c_{10}|10\rangle + c_{11}|11\rangle$, we calculate **Concurrence ($C$)**:
+[cite_start]$$C = 2|c_{00}c_{11} - c_{01}c_{10}|$$[cite: 255].
+* If $C=0$, the state is Separable.
+* [cite_start]If $C=1$, the state is Maximally Entangled (like a Bell state)[cite: 259, 262].
 
-## Linearization Techniques
-- **Ratio objective:** maximize x/y → introduce t, constraints x – t y ≥ 0, y t = 1 (approximate via piecewise linear).  
-- **Minimax objective:** minimize maxᵢ{aᵢᵀx + bᵢ} → introduce t, constraints aᵢᵀx + bᵢ ≤ t ∀i.  
-- **Logical relationships:**  
-  - If y = 0 ⇒ x ≤ M·y (big-M method).  
-- **Absolute value:** |x| ≤ t → −t ≤ x ≤ t.  
-- **Alternative constraints:** represent “either-or” via binary variables and big-M.
+### 3. The Non-Cloning Theorem
+[cite_start]**Crucial Concept:** You cannot copy an unknown quantum state[cite: 341].
+* [cite_start]There is no unitary operation (quantum gate) $\hat{U}$ that can take an arbitrary state $|\psi\rangle$ and a blank state $|0\rangle$ and output two copies $|\psi\rangle \otimes |\psi\rangle$[cite: 341].
+* [cite_start]*Proof intuition:* Cloning would violate the linearity of quantum mechanics [cite: 369-389].
 
-## Example Model (ZIMPL)
-```zimpl
-param n := 3;
-set I := {1..n};
-param c[I];
-param A[I,I];
-param b[I];
-var x[I] >= 0;
-maximize obj: sum <i> c[i] * x[i];
-subto cons[j in I]: sum <i> A[j,i] * x[i] <= b[j];
-```
-(Adjust to specific natural‐language problem.)
-
----
-
-# Lecture 10: Constraint Synthesis & Grammatical Evolution
-
-## Constraint Synthesis Problem
-- **One-class variant:** infer constraints that capture all positive examples without negative samples.  
-- **Two-class variant:** infer constraints that separate positive from negative examples.  
-- **Properties:** underspecified problem; combinatorial search space; multiple valid solutions.
-
-## Curse of Dimensionality
-- As the number of features increases:  
-  - Data sparsity grows exponentially.  
-  - Distance metrics become less meaningful.  
-  - Model training and search become computationally infeasible.
-
-## Grammatical Evolution
-- **Mechanism:** evolve integer genome (codon list) interpreted via a predefined grammar to produce candidate solutions (e.g., mathematical expressions, rule sets).  
-- **Genotype representation:** sequence of integers; each codon selects a production rule:  
-    <Expr> ::= <Expr> "+" <Term> | <Term>  
-    <Term> ::= <Term> "*" <Factor> | <Factor>  
-    <Factor> ::= "(" <Expr> ")" | <Number>  
-  - Each codon value modulo the number of alternatives at a grammar node selects the rule.  
-- **Evolutionary process:**  
-  1. **Initialization:** random genomes.  
-  2. **Mapping:** codons → syntax tree via grammar.  
-  3. **Evaluation:** fitness of mapped solution on data.  
-  4. **Selection:** choose high-fitness genomes.  
-  5. **Crossover/Mutation:** produce new genomes.  
-  6. **Iteration** until convergence.
+### 4. Controlled Gates
+These are gates where one qubit (Control) decides whether an operation happens on another qubit (Target).
+* **Controlled-NOT (CNOT)**: Flips the target bit only if the control bit is $|1\rangle$.
+    * Formula: $cX = |0\rangle\langle 0| \otimes \hat{I} + |1\rangle\langle 1| [cite_start]\otimes \hat{X}$[cite: 951].
+* [cite_start]**Decomposition**: Any controlled unitary gate can be built from single-qubit gates and CNOTs[cite: 1101]. This is important because real hardware usually only supports a few basic gates.
 
 ---
 
-# Lecture 11: Conformance Checking & Auditing
+## 🔎 Lecture 6: Grover's Algorithm
+*Goal: Understand how to search a database faster than any classical computer.*
 
-## Objectives of Conformance Checking
-- Measure alignment between process model and execution log.  
-- Detect deviations for compliance and improvement.
+### 1. The Problem
+You have an unsorted database with $N$ items. You want to find a specific item $a$ (where $f(a)=1$).
+* **Classical Search**: You have to check items one by one. On average, you check $N/2$ items. [cite_start]Complexity: $O(N)$[cite: 2911].
+* **Grover's Algorithm**: Finds the item in roughly $\sqrt{N}$ steps. [cite_start]Complexity: $O(\sqrt{N})$[cite: 2921]. This is a **quadratic speedup**.
 
-## Interpreting Deviations
-- **Missing tokens:** model expects activity not executed (omissions).  
-- **Extra tokens:** executed activity not allowed by model (insertions).  
-- **Timing deviations:** execution order or timing conflicts.
+### 2. The Setup
+* **The Oracle ($U_f$)**: A "black box" function. If the input is the target solution $|a\rangle$, it flips its phase (multiplies by -1). [cite_start]If it's not the target, it does nothing[cite: 2932].
+    * [cite_start]Mathematically: $U_f|x\rangle = (-1)^{f(x)}|x\rangle$[cite: 2776].
+* **The Initial State ($|\phi\rangle$)**: We start in a "uniform superposition" of all possible answers. [cite_start]This means we have an equal probability amplitude for every item in the database[cite: 2951, 2955].
 
-## Audits
-- **Financial audit:** verify transactions adhere to financial regulations.  
-- **Operational audit:** assess process efficiency and adherence to operational standards.
+### 3. Geometric Interpretation (The Rotation)
+Imagine a 2D plane defined by two vectors:
+1.  $|a\rangle$: The solution we want.
+2.  [cite_start]$|a_{\perp}\rangle$: Everything that is *not* the solution[cite: 2935, 2943].
 
-## Conformance Metrics
-1. **Fitness:** degree to which log traces fit the model.  
-    $\text{fitness} = 1 - \frac{\text{cost_non_sync}}{\text{cost_all_moves}}$
-2. **Precision:** extent model prohibits unobserved behavior.  
-3. **Generalization:** ability to allow unseen but plausible behavior.  
-4. **Simplicity:** parsimony of model structure (apply Ockham’s razor).
+[cite_start]Grover's algorithm works by rotating our state vector $|\phi\rangle$ towards $|a\rangle$[cite: 2952].
+* [cite_start]**Step 1 (Oracle $\hat{V}$)**: Reflects the vector around $|a_{\perp}\rangle$[cite: 2969].
+* **Step 2 (Diffusion $\hat{W}$)**: Reflects the vector around the initial average state $|\phi\rangle$. [cite_start]This is often called "inversion about the mean"[cite: 3314].
 
-## Token-Based Replay Algorithm
-1. Initialize tokens at start place.  
-2. For each event in trace:  
-   - Fire corresponding transition if enabled.  
-   - Record missing tokens (if transition not enabled).  
-3. At end, count remaining tokens.  
-4. Compute fitness:  
-   fitness = 1 − (missing_tokens + remaining_tokens) ÷ produced_tokens
-
-## Footprint Matrix
-- Captures directly-follows relations for each pair (a,b):  
-  - “→” if a directly followed by b.  
-  - “←” if b directly followed by a.  
-  - “||” if concurrent.  
-  - “#” if unrelated.  
-- **Differential footprint:** compare model vs log matrices to highlight discrepancies.
-
-## Linear Temporal Logic Specification & Verification
-- **LTL rule preparation:** translate natural language constraint into LTL formula, e.g.:  
-  G ( order_placed → F order_paid )  
-- **Verification:** check each trace against the formula using model checking or log replay.
+**The Result:**
+[cite_start]Each pair of these operations (Oracle + Diffusion) rotates the state vector by an angle $2\theta$ closer to the solution $|a\rangle$[cite: 2994]. [cite_start]After about $\frac{\pi}{4}\sqrt{N}$ rotations, the state points almost exactly at $|a\rangle$[cite: 3121].
 
 ---
 
-# Lecture 12: Alignments & Advanced Conformance
+## 🌊 Lecture 7: Quantum Fourier Transform (QFT)
+*Goal: Learn the quantum version of the Discrete Fourier Transform, a tool essential for many advanced algorithms (like breaking encryption).*
 
-## Optimal Alignments
-- Align each trace to the model with minimal cost:  
-  - **Synchronous move:** event matches transition (cost 0).  
-  - **Model move:** transition without event (insert, cost >0).  
-  - **Log move:** event without transition (delete, cost >0).  
-- **Fitness via alignments:**  
-  $\text{fitness} = 1 - \frac{\text{sum(cost_non_sync)}}{\text{sum(cost_all_moves)}}$
+### 1. What is QFT?
+[cite_start]Just like the classical Fourier Transform changes data from the "time domain" to the "frequency domain," the QFT changes a quantum state into a new basis[cite: 7666].
+* [cite_start]It transforms a basis state $|x\rangle$ into a superposition of all states, weighted by complex phases (roots of unity)[cite: 7362].
+    [cite_start]$$QFT|x\rangle = \frac{1}{\sqrt{N}} \sum_{y=0}^{N-1} e^{\frac{2\pi i xy}{N}} |y\rangle$$[cite: 7362].
 
-## Properties of the Alignment Method
-- **Advantages:**  
-  - Handles invisible transitions.  
-  - Computes precise minimal deviations.  
-  - Supports customizable cost functions.  
-- **Disadvantages:**  
-  - Computationally expensive (search through state space).  
-  - May not scale to very large logs/models without optimizations.
+### 2. The Circuit Implementation
+Implementing QFT as a matrix is hard ($N \times N$ matrix is huge). But as a circuit, it's efficient.
+* **Key Components**:
+    1.  **Hadamard Gates (H)**: Create superposition.
+    2.  [cite_start]**Controlled Phase Rotations ($R_k$ or $CP$)**: These add specific phase shifts based on the relationship between qubits[cite: 7988].
+        * [cite_start]The rotation angles get smaller as you go deeper: $\pi/2, \pi/4, \pi/8 \dots$[cite: 7636].
+    3.  **SWAP Gates**: The QFT circuit naturally outputs bits in reverse order. [cite_start]We use SWAP gates at the end to flip them back to the correct order[cite: 7529].
 
-### Alignment Procedure
-1. **Construct an alignment matrix γ** for every trace σ (length *n*) and model *M*.
-2. **Define the move‑cost function δ(aᵢ, bᵢ)**  
-   - Synchronous move *(aᵢ = bᵢ ≠ »)* → 0  
-   - Model‑only **silent** move *(aᵢ = » ∧ bᵢ = τ)* → 0  
-   - Model‑only **visible** move *(aᵢ = » ∧ bᵢ ≠ τ)* → 1  
-   - Log‑only move *(aᵢ ≠ » ∧ bᵢ = »)* → 1
-3. **Search for optimal alignments** (minimal total cost) using A*, Dijkstra, or ILP.  
-   Several optimal alignments may exist for the same trace.
+### 3. Why is it useful?
+* **Period Finding**: QFT is incredibly good at finding repeating patterns (periods) in data.
+* **Phase Estimation**: It allows us to estimate the eigenvalues (phases) of a unitary operator, which is the core step in algorithms for quantum chemistry and factoring numbers.
 
-### Fitness Formulas
-- **Trace‑level fitness**
+---
 
-  fitness = 1 − cost of optimal alignment / cost of worst alignment (anti‑optimal alignment of only asynchronous moves)
-- **Log‑level fitness** – weight the trace‑level fitness by trace frequencies and average over the entire log.
+### 📝 Exam Cheat Sheet (Summary)
 
-### Precision via Alignments
-After replacing each trace by the bottom row of its optimal alignment (log L′):
+| Concept | Key Equation / Definition | Why it matters |
+| :--- | :--- | :--- |
+| **Tensor Product** | $\begin{pmatrix} a \\ b \end{pmatrix} \otimes \begin{pmatrix} c \\ d \end{pmatrix} = \begin{pmatrix} ac \\ ad \\ bc \\ bd \end{pmatrix}$ | Describes multi-qubit systems. |
+| **Entanglement** | Cannot factorize: $|\Psi\rangle \neq |\phi\rangle \otimes |\psi\rangle$ | Allows quantum correlations stronger than classical ones. |
+| **Non-Cloning** | No $\hat{U}$ exists s.t. $\hat{U}|\psi\rangle|0\rangle = |\psi\rangle|\psi\rangle$ | You can't copy quantum data; you must teleport or move it. |
+| **Grover's Algo** | Iterations $r \approx \frac{\pi}{4}\sqrt{N}$ | Quadratic speedup for searching unstructured data. |
+| **Oracle ($U_f$)** | $U_f|x\rangle = (-1)^{f(x)}|x\rangle$ | Marks the "correct" answer by flipping its phase. |
+| **Diffusion ($W$)** | $2|\phi\rangle\langle\phi| - \hat{I}$ | Amplifies the probability of the marked item (inversion about mean). |
+| **QFT** | Basis change using roots of unity | Exponentially faster than classical FFT; used for period finding. |
 
-$\text{precision}(L, M) = \frac{1}{|E|} \sum_{e \in E} \frac{|en_L(e)|}{|en_M(e)|}$
 
-where *en_L(e)* is the set of activities actually observed after the same history and *en_M(e)* the set enabled in the model.  
-Precision ∈ [0, 1]; low precision indicates under‑fitting.
+## ⏱️ Lecture 8: Quantum Phase Estimation (QPE)
+*Goal: Estimate the "phase" (eigenvalue) of a unitary operator. This is the engine behind many famous algorithms, including Shor's algorithm.*
 
-### Alignments vs. Token‑Based Replay
+### 1. The Core Problem
+We have a unitary operator $\hat{U}$ and its eigenvector $|u\rangle$.
+$$\hat{U}|u\rangle = e^{2\pi i \theta} |u\rangle$$
+We want to find the value of $\theta$ (the phase).
+* [cite_start]Since $\hat{U}$ is unitary, its eigenvalues always lie on the unit circle in the complex plane ($|\lambda|=1$)[cite: 5020].
+* The phase $\theta$ is a number between 0 and 1.
 
-| Aspect | **Alignments** | **Token‑based replay** |
-| --- | --- | --- |
-| Diagnostic detail | Exact end‑to‑end path, identifies every insertion/omission | Local token counts; later deviations may be hidden |
-| Handling duplicates & τ | Natural; τ‑moves cost 0 | Complicates token bookkeeping |
-| Quality measures | Fitness, precision, generalization from same alignments | Mainly fitness |
-| Complexity | Potentially exponential in model states | Linear; scales better but less precise |
+### 2. The Setup
+We need two registers:
+1.  **Clock Register (Auxiliary)**: $m$ qubits initialized to $|0\rangle$. These will store the estimated phase.
+2.  **Target Register**: Stores the eigenvector $|u\rangle$.
+
+**The Circuit Steps:**
+1.  [cite_start]**Hadamard**: Apply $H$ gates to all qubits in the Clock Register to create a uniform superposition [cite: 5127-5130].
+2.  **Controlled Unitaries**: Apply a sequence of controlled-$\hat{U}$ operations.
+    * The $k$-th qubit in the clock register controls the operation $\hat{U}^{2^k}$.
+    * [cite_start]This uses "Phase Kickback" to copy the phase information from the target register into the clock register's relative phases [cite: 5164-5166].
+3.  **Inverse QFT**: Apply the Inverse Quantum Fourier Transform ($QFT^\dagger$) to the Clock Register. [cite_start]This decodes the phase information from the "frequency domain" back into a binary number state[cite: 5333].
+4.  **Measurement**: Measure the Clock Register to get an integer $y$. [cite_start]The estimated phase is $\theta \approx y / 2^m$[cite: 5024].
+
+### 3. Precision vs. Qubits
+The more qubits ($m$) you use in the clock register, the more precise your estimate of $\theta$.
+* With $m$ qubits, you can distinguish $2^m$ different phases.
+* [cite_start]If $\theta$ cannot be written exactly as a fraction $y/2^m$, you will measure the closest approximation with high probability[cite: 5420, 5433].
+
+
+## 🧮 Lecture 9 & 10: HHL & VQE Algorithms
+*Goal: Use quantum computers for practical math problems: Solving linear equations (HHL) and finding ground state energies (VQE).*
+
+### 1. The HHL Algorithm (Solving Linear Systems)
+**Problem:** Solve $\hat{A}\vec{x} = \vec{b}$ for $\vec{x}$.
+* Classically, this is hard for large matrices. HHL can do it exponentially faster under specific conditions.
+
+**How it works (High Level):**
+1.  [cite_start]**State Preparation**: Encode the vector $\vec{b}$ into a quantum state $|b\rangle$[cite: 6814].
+2.  **Phase Estimation (QPE)**: Use $\hat{U} = e^{i\hat{A}t}$ to estimate the eigenvalues ($\lambda_i$) of matrix $\hat{A}$. [cite_start]These eigenvalues get stored in a clock register[cite: 6820].
+3.  **Rotation (The "Math" Step)**: Add an extra "ancilla" qubit. Rotate this qubit by an amount proportional to $1/\lambda_i$. [cite_start]This physically implements the division by the eigenvalues[cite: 6830].
+4.  [cite_start]**Uncomputation**: Run Inverse QPE to clean up the clock register (disentangle it)[cite: 6834].
+5.  **Measurement**: If you measure "1" on the ancilla qubit, the remaining register has the state proportional to $|x\rangle = \hat{A}^{-1}|b\rangle$.
+
+**Key Limitation**: You don't get the vector $\vec{x}$ as a list of numbers. You get a quantum state $|x\rangle$. To get useful info, you must measure specific properties (like expectation values) of $|x\rangle$.
+
+---
+
+### 2. The VQE Algorithm (Variational Quantum Eigensolver)
+**Problem:** Find the lowest energy (ground state) of a molecule or system described by Hamiltonian $\hat{H}$.
+* [cite_start]This is a **Hybrid Algorithm**: It uses a quantum computer *and* a classical computer working together in a loop [cite: 1982-2004].
+
+**How it works (The Loop):**
+1.  [cite_start]**Ansatz (Quantum)**: The quantum computer prepares a "guess" state $|\psi(\theta)\rangle$ using a circuit with tunable parameters $\theta$ (like rotation angles)[cite: 2382].
+2.  **Measurement (Quantum)**: The quantum computer measures the expectation value (average energy) $\langle \hat{H} \rangle$ for that state.
+    * [cite_start]Since we can't measure energy directly easily, we break $\hat{H}$ into simple Pauli terms (like $X, Y, Z$) and measure those separately: $\hat{H} = a\hat{X} + b\hat{Z} + \dots$ [cite: 1972-1974].
+3.  **Optimization (Classical)**: A classical computer looks at the energy result. [cite_start]If it's not the minimum, it tells the quantum computer to adjust the parameters $\theta$ to try and lower the energy[cite: 2695].
+4.  **Repeat**: This loop continues until the energy stops going down (convergence).
+
+**Why it's important:** VQE is robust against noise, making it the most promising algorithm for the current era of imperfect quantum computers (NISQ era).
+
+---
+
+### 📝 Exam Cheat Sheet (Algorithms)
+
+| Algorithm | Purpose | Key Quantum Mechanism |
+| :--- | :--- | :--- |
+| **QPE** | Estimate phase $\theta$ of eigenvalue | $H^{\otimes m} \to$ Controlled-$U$ $\to IQFT$ |
+| **HHL** | Solve linear equations $\hat{A}\vec{x}=\vec{b}$ | QPE on $\hat{A}$ $\to$ Rotation by $1/\lambda$ $\to$ Inverse QPE |
+| **VQE** | Find minimum eigenvalue (Energy) | Hybrid Loop: Quantum measures $\langle H \rangle$, Classical optimizes parameters. |
+
+**Important Python/Qiskit Note:**
+* **QPE**: Requires implementing `QFT` and its inverse `IQFT_dg`.
+* **VQE**: In Qiskit, you define a `QuantumCircuit` for the Ansatz (the guess) and use a classical optimizer (like `COBYLA` or `SPSA`) to update the parameters.

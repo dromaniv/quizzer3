@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Process Mining Study Suite</title>
+<title>Quantum Computing Study Lab</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <!-- ── Markdown‑it + highlight.js ───────────────────────── -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/atom-one-dark.min.css">
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/highlight.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
 <!-- Add MathJax for LaTeX rendering -->
@@ -25,192 +25,515 @@
 
 <!-- -----------------  DESIGN TOKENS  ----------------- -->
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
 :root{
-  /* light */
-  --brand:#f97316;      --brand-h:#ea580c;
-  --bg:#f9fafb;         --bg-h:#eff1f5;
-  --card:#ffffff;       --card-h:#e5e7eb;
-  --text:#0f172a;       --text-sub:#475569;
-  --border:#d1d5db;
-  --green:#16a34a;      --red:#dc2626;
-  --radius:.75rem;      --shadow:0 4px 14px rgb(0 0 0/.06);
+  /* Quantum-inspired color palette */
+  --brand:#8b5cf6;      --brand-h:#7c3aed;
+  --brand-gradient:linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+  --brand-gradient-2:linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+  --bg:#0a0a0f;         --bg-h:#12121a;
+  --card:rgba(20, 20, 35, 0.8);       --card-h:rgba(30, 30, 50, 0.9);
+  --text:#f1f5f9;       --text-sub:#94a3b8;
+  --border:rgba(139, 92, 246, 0.2);
+  --green:#10b981;      --red:#ef4444;
+  --radius:1rem;        --shadow:0 8px 32px rgb(139 92 246/.15);
   --transition-speed: 0.3s;
+  --glow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(6, 182, 212, 0.2);
+  --glass: rgba(255, 255, 255, 0.05);
 }
-/* dark */
-html.dark{
-  --bg:#0f172a;  --bg-h:#1e293b;
-  --card:#1e293b;--card-h:#334155;
-  --text:#f1f5f9;--text-sub:#94a3b8;
-  --border:#475569;--shadow:0 4px 18px rgb(0 0 0/.55);
+/* dark mode is default - light mode for those who prefer */
+html.light{
+  --bg:#f8fafc;  --bg-h:#e2e8f0;
+  --card:rgba(255,255,255,0.9);--card-h:rgba(241,245,249,0.95);
+  --text:#0f172a;--text-sub:#475569;
+  --border:rgba(139, 92, 246, 0.3);
+  --shadow:0 8px 32px rgb(139 92 246/.1);
+  --glass: rgba(255, 255, 255, 0.7);
 }
 *{box-sizing:border-box;margin:0;padding:0} html,body{height:100%}
 body{
-  font:400 1rem/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font:400 1rem/1.6 'Inter',system-ui,-apple-system,sans-serif;
   background:var(--bg);color:var(--text);display:flex;flex-direction:column;
   -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
+
+/* Animated background */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-2;
+  background:var(--bg);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 90%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+  animation: bgPulse 8s ease-in-out infinite alternate;
+}
+@keyframes bgPulse{
+  0%{opacity:.6;transform:scale(1)}
+  100%{opacity:1;transform:scale(1.05)}
+}
+
+/* Floating particles */
+.particles{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.particle{
+  position:absolute;width:4px;height:4px;
+  background:var(--brand);border-radius:50%;
+  opacity:0;animation:float 15s infinite;
+}
+@keyframes float{
+  0%{opacity:0;transform:translateY(100vh) scale(0)}
+  10%{opacity:.6}
+  90%{opacity:.6}
+  100%{opacity:0;transform:translateY(-100vh) scale(1)}
+}
+
 pre code{
   display:block;
   overflow-x:auto;
-  padding:1rem;
+  padding:1.25rem;
   border-radius:var(--radius);
-  background:var(--card-h);
+  background:rgba(15,15,25,0.9);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.9rem;
+  border:1px solid var(--border);
 }
 
 /* ---------- header & theme switch ---------- */
-header{padding:1rem 1.2rem;background:var(--brand);display:flex;justify-content:space-between;align-items:center;color:#fff;box-shadow:var(--shadow);z-index:200}
-header h1{font-size:1.15rem;font-weight:600}
+header{
+  padding:1.25rem 2rem;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  display:flex;justify-content:space-between;align-items:center;
+  color:var(--text);
+  border-bottom:1px solid var(--border);
+  z-index:200;
+  position:relative;
+}
+header::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:var(--brand-gradient);
+  opacity:.5;
+}
+header h1{
+  font-size:1.4rem;font-weight:700;
+  background:var(--brand-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:flex;align-items:center;gap:.6rem;
+}
+header h1::before{
+  content:'⚛';font-size:1.6rem;
+  -webkit-text-fill-color:#8b5cf6;
+  animation:spin 4s linear infinite;
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}to{transform:rotate(360deg)}
+}
 .switch{
-  --w:52px;--h:28px;position:relative;display:inline-block;width:var(--w);height:var(--h);cursor:pointer
+  --w:56px;--h:30px;position:relative;display:inline-block;width:var(--w);height:var(--h);cursor:pointer
 }
 .switch input{display:none}
 .slider{
-  background:#fde047;border-radius:var(--h);height:100%;transition:.3s
+  background:linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  border-radius:var(--h);height:100%;transition:.4s;
+  border:2px solid var(--border);
+  position:relative;
 }
 .slider::before{
-  content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.3s
+  content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;
+  background:var(--brand-gradient);
+  transition:.4s;
+  box-shadow:0 0 10px rgba(139, 92, 246, 0.5);
 }
-.slider svg{position:absolute;top:50%;transform:translateY(-50%);pointer-events:none}
-.sun{left:9px;fill:#facc15;font-size:14px}
-.moon{right:9px;fill:#cbd5e1;font-size:14px}
-input:checked + .slider{background:#334155}
-input:checked + .slider::before{transform:translateX(24px)}
+.slider svg{position:absolute;top:50%;transform:translateY(-50%);pointer-events:none;transition:.3s}
+.sun{left:8px;fill:#fbbf24;opacity:.4}
+.moon{right:8px;fill:#e0e7ff;opacity:1}
+input:checked + .slider{background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)}
+input:checked + .slider::before{transform:translateX(26px);background:linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)}
+input:checked + .slider .sun{opacity:1}
+input:checked + .slider .moon{opacity:.4}
 
 /* ---------- nav ---------- */
-nav{position:sticky;top:0;z-index:150;background:var(--card);display:flex;border-bottom:1px solid var(--border)}
-nav button{flex:1;padding:.9rem .5rem;background:none;border:0;font-weight:600;color:var(--text-sub);cursor:pointer}
-nav button:hover{background:var(--bg-h)}
-nav button.active{color:var(--brand);position:relative}
-nav button.active::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--brand)}
-
-main{flex:1;padding:1.25rem;display:flex;justify-content:center}
-.view{display:none;width:100%;max-width:960px;margin:auto}
-.view.active{display:block}
-
-.btn{
-  border-radius:var(--radius);font-weight:600;font-size:.95rem;padding:.65rem 1.35rem;
-  display:inline-flex;align-items:center;justify-content:center;transition:.25s;cursor:pointer;border:1px solid transparent
+nav{
+  position:sticky;top:0;z-index:150;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  display:flex;
+  border-bottom:1px solid var(--border);
+  padding:.5rem;
+  gap:.5rem;
 }
-.fill   {background:var(--brand);color:#fff;border-color:var(--brand)}
-.fill:hover{background:var(--brand-h);border-color:var(--brand-h)}
-.neutral{background:var(--bg-h);color:var(--text);border-color:var(--border)}
-.neutral:hover{background:var(--card-h)}
-.ghost  {background:none;color:var(--brand);border:2px solid var(--brand)}
-.ghost:hover{background:var(--brand);color:#fff}
+nav button{
+  flex:1;padding:.85rem .5rem;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:calc(var(--radius) - .25rem);
+  font-weight:600;
+  font-size:.9rem;
+  color:var(--text-sub);
+  cursor:pointer;
+  transition:all .3s ease;
+  position:relative;
+  overflow:hidden;
+}
+nav button::before{
+  content:'';position:absolute;inset:0;
+  background:var(--brand-gradient);
+  opacity:0;transition:.3s;
+  z-index:-1;
+}
+nav button:hover{
+  color:var(--text);
+  border-color:var(--border);
+  background:var(--glass);
+}
+nav button.active{
+  color:#fff;
+  border-color:transparent;
+  background:var(--brand-gradient);
+  box-shadow:var(--glow);
+}
+
+main{flex:1;padding:2rem 1.5rem;display:flex;justify-content:center}
+.view{display:none;width:100%;max-width:900px;margin:auto;animation:fadeIn .4s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Buttons */
+.btn{
+  border-radius:var(--radius);font-weight:600;font-size:.95rem;padding:.75rem 1.5rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  transition:all .3s ease;cursor:pointer;border:1px solid transparent;
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  opacity:0;transition:.3s;
+}
+.btn:hover::before{opacity:1}
+
+.fill{
+  background:var(--brand-gradient);color:#fff;
+  box-shadow:0 4px 15px rgba(139, 92, 246, 0.4);
+}
+.fill:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 25px rgba(139, 92, 246, 0.5);
+}
+.neutral{
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  color:var(--text);
+  border-color:var(--border);
+}
+.neutral:hover{
+  background:var(--card-h);
+  border-color:var(--brand);
+}
+.ghost{
+  background:transparent;
+  color:var(--brand);
+  border:2px solid var(--brand);
+}
+.ghost:hover{
+  background:var(--brand);
+  color:#fff;
+  box-shadow:var(--glow);
+}
 
 /* Flashcards */
-.card-box{perspective:1200px;width:100%;max-width:500px;margin:auto}
+.card-box{perspective:1200px;width:100%;max-width:550px;margin:auto}
 .card{
-  position:relative;width:100%;height:260px;border-radius:var(--radius);box-shadow:var(--shadow);background:var(--card);
-  transform-style:preserve-3d;transition:transform .6s;display:flex;align-items:center;justify-content:center;padding:1.25rem;text-align:center;font-size:1.15rem;font-weight:500
+  position:relative;width:100%;min-height:280px;
+  border-radius:var(--radius);
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  transform-style:preserve-3d;transition:transform .7s cubic-bezier(0.4,0,0.2,1);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;text-align:center;font-size:1.15rem;font-weight:500;
+  box-shadow:var(--shadow);
+  cursor:pointer;
 }
+.card::before{
+  content:'';position:absolute;inset:-1px;
+  border-radius:var(--radius);
+  background:var(--brand-gradient);
+  z-index:-1;opacity:.5;
+  filter:blur(20px);
+  transition:.3s;
+}
+.card:hover::before{opacity:.8;filter:blur(25px)}
 .card.flipped{transform:rotateY(180deg)}
-.side{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:1.25rem;backface-visibility:hidden}
-.back{transform:rotateY(180deg)}
-.row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1rem}
+.side{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:2rem;backface-visibility:hidden;
+  border-radius:var(--radius);
+}
+.front{background:linear-gradient(145deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)}
+.back{transform:rotateY(180deg);background:linear-gradient(145deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)}
+.row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
 
 /* MCQ */
-.block{margin-bottom:2.5rem;display:flex;flex-direction:column;gap:1rem}
-.option{
-  width:100%;padding:1rem;border-radius:var(--radius);background:var(--card-h);border:1px solid var(--border);
-  color:var(--text);text-align:left;font:inherit;cursor:pointer;transition:.2s
+.block{
+  margin-bottom:2.5rem;display:flex;flex-direction:column;gap:1rem;
+  background:var(--glass);
+  backdrop-filter:blur(15px);
+  padding:1.5rem;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
 }
-.option:hover:not(.disabled){background:var(--bg-h)}
-.option.disabled{cursor:not-allowed;opacity:.75}
-.correct{background:var(--green)!important;color:#fff;border-color:var(--green)!important}
-.wrong{background:var(--red)!important;color:#fff;border-color:var(--red)!important}
+.block > p:first-child{
+  font-size:1.1rem;
+  font-weight:600;
+  background:var(--brand-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.option{
+  width:100%;padding:1.1rem 1.25rem;
+  border-radius:calc(var(--radius) - .25rem);
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  color:var(--text);text-align:left;font:inherit;
+  cursor:pointer;transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+.option::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--brand-gradient);
+  transform:scaleY(0);transition:.3s;
+}
+.option:hover:not(.disabled){
+  background:var(--card-h);
+  border-color:var(--brand);
+  transform:translateX(5px);
+}
+.option:hover:not(.disabled)::before{transform:scaleY(1)}
+.option.disabled{cursor:not-allowed;opacity:.7}
+.correct{
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%)!important;
+  border-color:var(--green)!important;
+  color:var(--green)!important;
+}
+.correct::before{background:var(--green)!important;transform:scaleY(1)!important}
+.wrong{
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)!important;
+  border-color:var(--red)!important;
+  color:var(--red)!important;
+}
+.wrong::before{background:var(--red)!important;transform:scaleY(1)!important}
 
 /* textarea */
 textarea{
-  width:100%;min-height:150px;padding:1rem;background:var(--card-h);border-radius:var(--radius);
-  border:1px solid var(--border);resize:vertical;color:inherit
+  width:100%;min-height:160px;padding:1.25rem;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  resize:vertical;color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:1rem;
+  transition:all .3s ease;
 }
+textarea:focus{
+  outline:none;
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+textarea::placeholder{color:var(--text-sub)}
 
 /* notes */
-.notes{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6}
+.notes{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:2.5rem;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  line-height:1.7;
+}
 
 /* proper heading sizes inside rendered Markdown */
-.notes h1{font-size:2rem;font-weight:700;margin:.2em 0 .6em}
-.notes h2{font-size:1.6rem;font-weight:600;margin:1em 0 .5em}
-.notes h3{font-size:1.3rem;font-weight:600;margin:1em 0 .4em}
-.notes h4{font-size:1.1rem;font-weight:600;margin:1em 0 .3em}
+.notes h1{
+  font-size:2.2rem;font-weight:800;margin:.2em 0 .8em;
+  background:var(--brand-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.notes h2{
+  font-size:1.7rem;font-weight:700;margin:1.2em 0 .6em;
+  color:var(--brand);
+}
+.notes h3{font-size:1.35rem;font-weight:600;margin:1em 0 .5em;color:#06b6d4}
+.notes h4{font-size:1.15rem;font-weight:600;margin:1em 0 .4em;color:#10b981}
 
 /* list indentation & divider styling in notes */
-.notes ul,
-.notes ol{
-  margin-left:1.5rem;
-  padding-left:.5rem;
-}
-.notes ul ul,
-.notes ol ol{
-  margin-left:1.2rem;
-}
+.notes ul,.notes ol{margin-left:1.5rem;padding-left:.5rem}
+.notes ul ul,.notes ol ol{margin-left:1.2rem}
 .notes ul li{list-style:disc}
 .notes ul ul li{list-style:circle}
-.notes hr{
-  border:0;
-  border-top:1px solid var(--border);
-  margin:1.5rem 0;
+.notes hr{border:0;height:1px;background:var(--brand-gradient);margin:2rem 0;opacity:.5}
+.notes a{color:var(--brand);text-decoration:none;border-bottom:1px dashed var(--brand)}
+.notes a:hover{border-bottom-style:solid}
+.notes strong{color:var(--brand)}
+.notes code:not(pre code){
+  background:rgba(139, 92, 246, 0.15);
+  padding:.2em .5em;
+  border-radius:.3rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.9em;
+  color:#06b6d4;
 }
 
 /* collapsible animation */
-.collapsible{max-height:0;overflow:hidden;transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;opacity:0;border-radius:0 0 var(--radius) var(--radius);background:var(--card-h);padding:0 1rem;border:1px solid var(--border);border-top:none;font-weight:600}
-.collapsible.expanded{max-height:1000px;opacity:1;padding:1rem}
+.collapsible{
+  max-height:0;overflow:hidden;
+  transition:max-height var(--transition-speed) ease-out,opacity var(--transition-speed) ease-out,padding var(--transition-speed) ease-out;
+  opacity:0;
+  border-radius:0 0 var(--radius) var(--radius);
+  background:var(--card-h);
+  padding:0 1.25rem;
+  border:1px solid var(--border);
+  border-top:none;
+  font-weight:500;
+}
+.collapsible.expanded{max-height:1000px;opacity:1;padding:1.25rem}
 .accordion{margin-bottom:1rem}
-.toggle-btn{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;font-weight:600;transition:background-color .2s;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1.2rem}
-.toggle-btn.active{border-radius:var(--radius) var(--radius) 0 0;border-bottom:none}
-.toggle-btn::after{content:"▼";transition:transform var(--transition-speed) ease;margin-left:auto;font-size:.75rem}
+.toggle-btn{
+  display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;
+  font-weight:600;transition:all .3s;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem 1.25rem;
+}
+.toggle-btn:hover{border-color:var(--brand)}
+.toggle-btn.active{border-radius:var(--radius) var(--radius) 0 0;border-bottom:none;border-color:var(--brand)}
+.toggle-btn::after{
+  content:"▼";transition:transform var(--transition-speed) ease;
+  margin-left:auto;font-size:.75rem;color:var(--brand);
+}
 .toggle-btn.active::after{transform:rotate(180deg)}
 
 /* floating selection btn */
 #selAsk{
   position:fixed;
-  z-index:2147483647;    /* ensure it’s on top */
+  z-index:2147483647;
   display:none;
-  padding:.55rem 1.1rem; /* visual size back to normal */
-  background:var(--brand);
+  padding:.65rem 1.2rem;
+  background:var(--brand-gradient);
   color:#fff;
   border:0;
   border-radius:var(--radius);
   font-weight:600;
   font-size:.95rem;
-  box-shadow:var(--shadow);
+  box-shadow:var(--glow);
   align-items:center;
   justify-content:center;
   pointer-events:auto;
   cursor:pointer;
 }
 
-/* Minecraft parkour video button and player */
-#parkourBtn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:var(--brand);color:#fff;border:none;box-shadow:var(--shadow);cursor:pointer;z-index:9998;display:flex;align-items:center;justify-content:center;font-size:24px;transition:.3s}
-#parkourBtn:hover{transform:scale(1.1);background:var(--brand-h)}
-#videoContainer{position:fixed;bottom:20px;right:20px;width:280px;height:500px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);z-index:9997;overflow:hidden;transform-origin:bottom right;transform:scale(0);opacity:0;transition:transform .3s,opacity .3s;cursor:move}
+/* Quantum video button and player */
+#parkourBtn{
+  position:fixed;bottom:24px;right:24px;width:56px;height:56px;
+  border-radius:50%;
+  background:var(--brand-gradient);
+  color:#fff;border:none;
+  box-shadow:var(--glow);
+  cursor:pointer;z-index:9998;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;transition:.4s;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(6, 182, 212, 0.2)}
+  50%{box-shadow:0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(6, 182, 212, 0.3)}
+}
+#parkourBtn:hover{transform:scale(1.1) rotate(10deg)}
+#videoContainer{
+  position:fixed;bottom:24px;right:24px;width:300px;height:520px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);z-index:9997;
+  overflow:hidden;transform-origin:bottom right;
+  transform:scale(0);opacity:0;
+  transition:transform .4s cubic-bezier(0.4,0,0.2,1),opacity .3s;
+  cursor:move;
+}
 #videoContainer.active{transform:scale(1);opacity:1}
 #videoContainer iframe{width:100%;height:100%;border:none;aspect-ratio:9/16;object-fit:cover;pointer-events:none}
-#closeVideo{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;border:none;cursor:pointer;z-index:9999;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow);transition:background .2s}
-#closeVideo:hover{background:var(--brand-h)}
-@media (max-width:768px){#videoContainer{width:150px;height:267px}}
+#closeVideo{
+  position:absolute;top:12px;right:12px;width:38px;height:38px;
+  border-radius:50%;
+  background:var(--brand-gradient);
+  color:#fff;border:none;
+  cursor:pointer;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;box-shadow:var(--shadow);
+  transition:transform .3s;
+}
+#closeVideo:hover{transform:scale(1.1) rotate(90deg)}
+@media (max-width:768px){#videoContainer{width:160px;height:285px}}
+
+/* Score display */
+#mcqScore{
+  background:var(--brand-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  font-size:1.3rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{
+  background:var(--brand-gradient);
+  border-radius:5px;
+}
+::-webkit-scrollbar-thumb:hover{background:var(--brand)}
 </style>
 </head>
 
 <body>
+<div class="particles" id="particles"></div>
 <header>
-  <h1>Process Mining Study Suite</h1>
+  <h1>Quantum Computing Study Lab</h1>
   <label class="switch">
     <input type="checkbox" id="themeChk">
     <span class="slider">
-      <svg class="sun"  width="14" height="14" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m3.64-6.36L5 5m12.36 12.36L19 19m0-14-1.36 1.36M5 19l1.36-1.36"/></svg>
+      <svg class="sun" width="14" height="14" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m3.64-6.36L5 5m12.36 12.36L19 19m0-14-1.36 1.36M5 19l1.36-1.36"/></svg>
       <svg class="moon" width="14" height="14" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79Z"/></svg>
     </span>
   </label>
 </header>
 
 <nav>
-  <button data-view="flash"  class="active">Flashcards</button>
-  <button data-view="mcq">Multiple-Choice</button>
-  <button data-view="written">Written</button>
-  <button data-view="tf">True/False</button>
-  <button data-view="notes">Notes</button>
+  <button data-view="flash" class="active">⚛ Flashcards</button>
+  <button data-view="mcq">🔬 Quiz</button>
+  <button data-view="written">📝 Written</button>
+  <button data-view="tf">⚡ True/False</button>
+  <button data-view="notes">📚 Notes</button>
 </nav>
 
 <main>
@@ -219,11 +542,11 @@ textarea{
     <div class="card-box">
       <div class="card" id="fcCard">
         <div class="side front" id="fcQ"></div>
-        <div class="side back"  id="fcA"></div>
+        <div class="side back" id="fcA"></div>
       </div>
     </div>
-    <div class="row"><button id="fcPrev" class="btn neutral">Prev</button><button id="fcNext" class="btn fill">Next</button></div>
-    <div class="row" style="margin-top:.5rem"><button id="fcAsk" class="btn ghost">Ask ChatGPT</button></div>
+    <div class="row"><button id="fcPrev" class="btn neutral">← Previous</button><button id="fcNext" class="btn fill">Next →</button></div>
+    <div class="row" style="margin-top:.5rem"><button id="fcAsk" class="btn ghost">✨ Ask ChatGPT</button></div>
   </section>
 
   <!-- MCQ -->
@@ -233,15 +556,15 @@ textarea{
   <section id="written" class="view">
     <div class="block">
       <p id="waQ" style="font-weight:600"></p>
-      <textarea id="waInput" placeholder="Your answer…"></textarea>
+      <textarea id="waInput" placeholder="Enter your answer here…"></textarea>
 
       <div class="accordion">
-        <button id="waToggle" class="btn toggle-btn">Correct answer</button>
+        <button id="waToggle" class="btn toggle-btn">🔓 Reveal Correct Answer</button>
         <div id="waA" class="collapsible"></div>
       </div>
 
-      <div class="row"><button id="waPrev" class="btn neutral">Prev</button><button id="waNext" class="btn fill">Next</button></div>
-      <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">Ask ChatGPT</button></div>
+      <div class="row"><button id="waPrev" class="btn neutral">← Previous</button><button id="waNext" class="btn fill">Next →</button></div>
+      <div class="row" style="margin-top:.5rem"><button id="waAsk" class="btn ghost">✨ Ask ChatGPT</button></div>
     </div>
   </section>
 
@@ -249,18 +572,18 @@ textarea{
   <section id="tf" class="view">
     <div class="block">
       <p id="tfQ" style="font-weight:600"></p>
-      <div class="row"><button class="btn option" data-val="true">True</button><button class="btn option" data-val="false">False</button></div>
-      <div class="row"><button id="tfPrev" class="btn neutral">Prev</button><button id="tfNext" class="btn fill">Next</button></div>
-      <div class="row" style="margin-top:.5rem"><button id="tfAsk" class="btn ghost">Ask ChatGPT</button></div>
+      <div class="row"><button class="btn option" data-val="true">✓ True</button><button class="btn option" data-val="false">✗ False</button></div>
+      <div class="row"><button id="tfPrev" class="btn neutral">← Previous</button><button id="tfNext" class="btn fill">Next →</button></div>
+      <div class="row" style="margin-top:.5rem"><button id="tfAsk" class="btn ghost">✨ Ask ChatGPT</button></div>
     </div>
   </section>
 
   <!-- NOTES -->
-  <section id="notes" class="view"><article id="notesBox" class="notes">Loading…</article></section>
+  <section id="notes" class="view"><article id="notesBox" class="notes">Loading quantum data…</article></section>
 </main>
 
-<button id="selAsk">Ask ChatGPT</button>
-<button id="parkourBtn">🧠</button>
+<button id="selAsk">✨ Ask ChatGPT</button>
+<button id="parkourBtn">⚛</button>
 <div id="videoContainer">
   <button id="closeVideo">✖</button>
   <iframe id="parkourVideo" src="" frameborder="0" allowfullscreen></iframe>
@@ -268,6 +591,22 @@ textarea{
 
 <!-- ----------------------- APP ----------------------- -->
 <script>
+/* ---------- floating particles ---------- */
+(function(){
+  const container = document.getElementById('particles');
+  for(let i=0; i<30; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDelay = Math.random()*15+'s';
+    p.style.animationDuration = (10+Math.random()*10)+'s';
+    const colors = ['#8b5cf6','#06b6d4','#10b981','#ec4899'];
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.boxShadow = '0 0 6px '+p.style.background;
+    container.appendChild(p);
+  }
+})();
+
 /* ---------- markdown‑it + highlight helper ---------- */
 const md = window.markdownit({
   html: true,
@@ -291,9 +630,9 @@ const dataPromise=fetch('data.json').then(r=>r.json());
 
 /* ---------- theme persistence ---------- */
 const chk=$('#themeChk');
-const applyTheme=mode=>{document.documentElement.classList.toggle('dark',mode==='dark');chk.checked=mode==='dark';localStorage.theme=mode};
-applyTheme(localStorage.theme||'light');
-chk.onchange=()=>applyTheme(chk.checked?'dark':'light');
+const applyTheme=mode=>{document.documentElement.classList.toggle('light',mode==='light');chk.checked=mode==='light';localStorage.theme=mode};
+applyTheme(localStorage.theme||'dark');
+chk.onchange=()=>applyTheme(chk.checked?'light':'dark');
 
 /* ---------- nav switching + clear selection ---------- */
 $$('nav button').forEach(btn=>btn.onclick=()=>{$('nav .active').classList.remove('active');btn.classList.add('active');$('.view.active').classList.remove('active');$('#'+btn.dataset.view).classList.add('active');getSelection().removeAllRanges();$('#selAsk').style.display='none';});
@@ -329,8 +668,8 @@ function addSwipe(el,onLeft,onRight){
  const next=()=>{i=(i+1)%arr.length;render()};
  $('#fcPrev').onclick=prev;
  $('#fcNext').onclick=next;
- addSwipe($('#flash'),next,prev);           /* ← swipe left / right */
- $('#fcAsk').onclick=()=>ask(`Explain the following concept from process mining in simple terms:\n"${arr[i].q}"`);
+ addSwipe($('#flash'),next,prev);
+ $('#fcAsk').onclick=()=>ask(`Explain the following quantum computing concept in simple terms:\n"${arr[i].q}"`);
 })();
 
 /* ---------- MCQ ---------- */
@@ -339,7 +678,7 @@ function addSwipe(el,onLeft,onRight){
  const wrap=$('#mcqWrap'),score=$('#mcqScore');let sc=0;
  arr.forEach((q,idx)=>{
   shuffle(q.choices);
-  const blk=document.createElement('div');blk.className='block';blk.innerHTML=`<p>${idx+1}. ${q.question}</p>`;
+  const blk=document.createElement('div');blk.className='block';blk.innerHTML=`<p>Question ${idx+1}: ${q.question}</p>`;
   const optWrap=document.createElement('div');optWrap.style.display='grid';optWrap.style.gap='.75rem';
   const opts=[];
   q.choices.forEach(c=>{
@@ -348,12 +687,12 @@ function addSwipe(el,onLeft,onRight){
       opts.forEach(o=>{o.disabled=true;o.classList.add('disabled')});
       btn.classList.add(c===q.answer?'correct':'wrong');
       if(c===q.answer)sc++;else opts.find(o=>o.textContent===q.answer).classList.add('correct');
-      score.textContent=`Score ${sc}/${arr.length}`;
+      score.textContent=`⚛ Score: ${sc}/${arr.length}`;
     };
     opts.push(btn);optWrap.appendChild(btn);
   });
-  const askBtn=document.createElement('button');askBtn.className='btn ghost';askBtn.textContent='Ask ChatGPT';
-  askBtn.onclick=()=>ask(`Multiple-choice question on process mining:\n${q.question}\nOptions: ${q.choices.join(', ')}\nExplain why the correct answer ("${q.answer}") is right and others are wrong.`);
+  const askBtn=document.createElement('button');askBtn.className='btn ghost';askBtn.textContent='✨ Ask ChatGPT';
+  askBtn.onclick=()=>ask(`Quantum computing multiple-choice question:\n${q.question}\nOptions: ${q.choices.join(', ')}\nExplain why the correct answer ("${q.answer}") is right and others are wrong.`);
   blk.append(optWrap,askBtn);wrap.appendChild(blk);
  });
 })();
@@ -368,7 +707,7 @@ function addSwipe(el,onLeft,onRight){
    aBox.innerHTML='';
    aBox.classList.remove('expanded');
    tBtn.classList.remove('active');
-   tBtn.textContent='Correct answer';
+   tBtn.textContent='🔓 Reveal Correct Answer';
  };
  render();
 
@@ -383,8 +722,8 @@ function addSwipe(el,onLeft,onRight){
  const next=()=>{i=(i+1)%arr.length;render()};
  $('#waPrev').onclick=prev;
  $('#waNext').onclick=next;
- addSwipe($('#written'),next,prev);         /* ← swipe left / right */
- $('#waAsk').onclick=()=>ask(`I'm studying process mining. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
+ addSwipe($('#written'),next,prev);
+ $('#waAsk').onclick=()=>ask(`I'm studying quantum computing. Could you explain the following question for me?\n"${arr[i].q}"\n\nThe correct answer is: "${arr[i].a}"`);
 })();
 
 /* ---------- TRUE/FALSE ---------- */
@@ -404,8 +743,8 @@ function addSwipe(el,onLeft,onRight){
  const next=()=>{i=(i+1)%arr.length;render()};
  $('#tfPrev').onclick=prev;
  $('#tfNext').onclick=next;
- addSwipe($('#tf'),next,prev);             /* ← swipe left / right */
- $('#tfAsk').onclick=()=>ask(`Is the following statement about process mining true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
+ addSwipe($('#tf'),next,prev);
+ $('#tfAsk').onclick=()=>ask(`Is the following statement about quantum computing true or false? Explain.\n"${arr[i].q}"\n\nThe correct answer is: ${arr[i].a ? "True" : "False"}`);
  render();
 })();
 
@@ -414,7 +753,7 @@ function addSwipe(el,onLeft,onRight){
   const box = $('#notesBox');
   renderMD(box, await (await fetch('notes.md')).text());
   const float = $('#selAsk');
-  float.style.display = 'none';   // force‑hide on initial load
+  float.style.display = 'none';
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   let currentSelText = '';
 
@@ -428,7 +767,7 @@ function addSwipe(el,onLeft,onRight){
     currentSelText = sel.toString().trim();
     const r = sel.getRangeAt(0).getBoundingClientRect();
     float.style.position = 'fixed';
-    const extra = isMobile ? 36 : 20; /* give more breathing room on mobile */
+    const extra = isMobile ? 36 : 20;
     float.style.top = `${r.bottom + extra}px`;
     float.style.left = `${r.left}px`;
     float.style.display = 'flex';
@@ -437,13 +776,11 @@ function addSwipe(el,onLeft,onRight){
     if (fr.right > vw) float.style.left = `${vw - fr.width - 10}px`;
   };
 
-  /* keep the button visible while tapping */
   const askSelection = () => {
     if (currentSelText)
-      ask(`Explain this excerpt from my notes on process mining:\n"${currentSelText}"`);
+      ask(`Explain this excerpt from my quantum computing notes:\n"${currentSelText}"`);
   };
 
-  /* interaction */
   float.addEventListener('click', e => { e.preventDefault(); askSelection(); });
   if (isMobile) {
     float.addEventListener('touchend', e => { e.preventDefault(); askSelection(); });
@@ -461,7 +798,7 @@ function addSwipe(el,onLeft,onRight){
   });
 })();
 
-/* ---------- PARKOUR VIDEO ---------- */
+/* ---------- QUANTUM VIDEO ---------- */
 const parkourBtn=document.getElementById('parkourBtn');
 const videoContainer=document.getElementById('videoContainer');
 const closeVideo=document.getElementById('closeVideo');
@@ -504,7 +841,7 @@ parkourBtn.addEventListener('click',()=>{
   const url=parkourVideos[Math.floor(Math.random()*parkourVideos.length)];
   parkourVideo.src=url;
   parkourBtn.style.opacity='0';
-  setTimeout(()=>{parkourBtn.style.display='none';videoContainer.style.right='20px';videoContainer.style.bottom='20px';videoContainer.style.left='auto';videoContainer.style.top='auto';videoContainer.style.display='block';setTimeout(()=>videoContainer.classList.add('active'),10);},300);
+  setTimeout(()=>{parkourBtn.style.display='none';videoContainer.style.right='24px';videoContainer.style.bottom='24px';videoContainer.style.left='auto';videoContainer.style.top='auto';videoContainer.style.display='block';setTimeout(()=>videoContainer.classList.add('active'),10);},300);
 });
 function hideVideo(){
   videoContainer.classList.remove('active');

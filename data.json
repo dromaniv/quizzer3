@@ -1,105 +1,310 @@
 {
   "flashcards": [
-    {"q":"What is a normative process model and what are its main applications?","a":"A handcrafted representation of how a process should ideally work, used for process design, compliance certification, and stakeholder agreement."},
-    {"q":"What is a descriptive process model and where is it applied?","a":"A model derived from event-log data showing how the process actually executed, used for conformance checking, performance analysis, and root-cause investigation."},
-    {"q":"Describe the Six Sigma management methodology.","a":"A data-driven approach to reduce process variation, structured around the DMAIC cycle (Define, Measure, Analyze, Improve, Control) to achieve near-perfect quality."},
-    {"q":"What is the 1.5σ shift in Six Sigma and why does it matter?","a":"An empirical mean drift observed in long-running processes; it increases the effective defect rate slightly but still keeps defects under 3.4 per million."},
-    {"q":"Outline the core principles of Lean management.","a":"Eliminate waste, minimize waiting, build quality in, optimize flow, and pursue continuous improvement across the value stream."},
-    {"q":"What constitutes a transition system representation of a process?","a":"A set of states and labeled transitions encoding all reachable process states and the events that move the system between them."},
-    {"q":"How does a Petri net execute, and what are its main components?","a":"Places (conditions), transitions (activities), and tokens. A transition fires when all input places have tokens, consuming them and producing tokens in output places."},
-    {"q":"What distinguishes a WF-net from a general Petri net?","a":"A WF-net has a single source place and a single sink place; every node lies on some path from source to sink, ensuring proper workflow structure."},
-    {"q":"What are the main gateway types in BPMN, and what do they do?","a":"AND (parallel split/join), XOR (exclusive choice/merge), and OR (inclusive choice/merge), controlling token flow through the process model."},
-    {"q":"Why are process trees sound by construction?","a":"They are block-structured: each internal operator (sequence, XOR, AND, loop) guarantees proper completion and no deadlocks by design."},
-    {"q":"What features does YAWL add to basic workflow nets?","a":"Composite tasks, multiple instance tasks, cancellation regions, and extended OR-join semantics for complex control flow."},
-    {"q":"Describe a causal net (C-net) and its main semantics.","a":"A graph of activities with input/output bindings; semantics define valid binding sequences but checking soundness is NP-complete."},
-    {"q":"What is a workflow system?","a":"Software that executes process models, manages work items, integrates with enterprise data sources, and provides monitoring and reporting (e.g., YAWL, jBPM, ProM)."},
-    {"q":"Define a KPI and list the main types used in process analysis.","a":"A quantitative or qualitative metric to assess process performance. Types include time metrics (lead time), cost metrics (labor cost), quality metrics (defect rate), and resource metrics (utilization)."},
-    {"q":"What is Overall Equipment Effectiveness (OEE) and how is it calculated?","a":"OEE = Availability × Performance × Quality, where Availability = operating time/scheduled time, Performance = actual/theoretical output rate, Quality = good units/total units."},
-    {"q":"Differentiate lead time, service time, waiting time, and synchronization time.","a":"Lead time: total elapsed time per case; Service time: active processing duration; Waiting time: idle time before activity starts; Synchronization time: wait for parallel branches to rejoin."},
-    {"q":"What are the required fields in an event log for process mining?","a":"Case ID, Activity Name, Timestamp; optional: resource, lifecycle transition, cost. Each event must belong to exactly one case and be time-ordered."},
-    {"q":"Summarize the ETL process for preparing event logs.","a":"Extract raw data from source systems, Transform by cleaning, filtering, and deriving case IDs and timestamps, Load into a process-mining repository (e.g., XES file)."},
-    {"q":"How does a data warehouse differ from a transactional database in the process-mining context?","a":"Data warehouses use denormalized schemas optimized for historical analysis and large-scale queries, whereas transactional DBs are normalized for frequent small reads/writes."},
-    {"q":"List and briefly describe the four measures of process-model evaluation.","a":"Fitness: fraction of log behavior captured; Precision: model’s restriction to observed behavior; Generalization: allowance for unseen but likely behavior; Simplicity: parsimony of model structure."},
-    {"q":"What are the main steps of the α-algorithm for process discovery?","a":"Compute directly-follows relations, identify input/output clusters per activity, create places for each cluster, connect transitions and places to form a WF-net."},
-    {"q":"What are the key limitations and biases of the α-algorithm?","a":"Cannot handle short loops (length 1 or 2), invisible transitions, duplicate labels; sensitive to noise and incomplete logs."},
-    {"q":"Describe the Heuristic Miner’s basic approach to discovery.","a":"Compute frequency-based dependency measures between activities, apply thresholds to filter edges, and build a causal graph from surviving dependencies."},
-    {"q":"What guarantees does the Inductive Miner provide, and what are its drawbacks?","a":"Guarantees a sound, block-structured model and handles noise; may overfit, over-split rare variants, and struggle with highly unstructured logs."},
-    {"q":"Outline the state-based regions algorithm.","a":"Construct a transition system from the log, identify consistent state regions, map them to places, and assemble a Petri net capturing observed behavior."},
-    {"q":"Briefly explain the language-based regions algorithm.","a":"Derive the trace language from the log, find pairs of activities that never co-occur, create places enforcing these separations, and build the net."},
-    {"q":"How is evolutionary computing applied to process-model discovery?","a":"Encode candidate models as genomes, evaluate fitness against the log (e.g., fitness/precision), and apply genetic operators to evolve better models."},
-    {"q":"What is token-based replay in conformance checking?","a":"Simulate token flow on a WF-net for each trace, record missing and leftover tokens, and compute fitness based on produced vs. consumed tokens."},
-    {"q":"Define alignments in conformance checking and why they are useful.","a":"Optimal correspondence between model moves and log events minimizing cost of insertions/deletions; handle invisible transitions and provide precise deviation metrics."}
+    {"q":"What are the two main types of access to IBM Quantum resources?","a":"Open Plan (free, via IBM Quantum Platform) and Premium Plan (paid, via IBM Cloud or Platform)."},
+    {"q":"What is the core software library (SDK) used in this course for quantum programming?","a":"Qiskit (Quantum Information Science Kit), written in Python."},
+    {"q":"Identify the physical implementation of qubits used by IonQ and Quantinuum.","a":"Trapped Ions."},
+    {"q":"What physical implementation does IBM and Google (Rigetti) use for their quantum processors?","a":"Superconducting qubits (cryogenic)."},
+    {"q":"What is the Hilbert Space for a single qubit?","a":"A two-dimensional complex vector space (C²)."},
+    {"q":"Define the computational basis for a single qubit.","a":"The orthonormal basis vectors |0⟩ and |1⟩, represented as [1, 0]ᵀ and [0, 1]ᵀ."},
+    {"q":"What is the normalization condition for a state vector |ψ⟩ = c₀|0⟩ + c₁|1⟩?","a":"|c₀|² + |c₁|² = 1."},
+    {"q":"What does the Bloch Sphere represent?","a":"A geometric representation of the pure state space of a single qubit."},
+    {"q":"What is a Linear Operator?","a":"A mapping between vector spaces that preserves vector addition and scalar multiplication."},
+    {"q":"Define the Hermitian Conjugate (Adjoint) of a matrix A.","a":"The transpose of the complex conjugate of the matrix, denoted A†."},
+    {"q":"What is a Hermitian operator?","a":"An operator that is equal to its own adjoint (A = A†). Its eigenvalues are real."},
+    {"q":"What is a Unitary operator?","a":"An operator whose inverse is its adjoint (U†U = I). It preserves norms and inner products."},
+    {"q":"Write the matrix representation of the Hadamard (H) gate.","a":"1/√2 * [[1, 1], [1, -1]]."},
+    {"q":"What is the effect of the Pauli-X gate on the state |0⟩?","a":"It flips the state to |1⟩ (analogous to classical NOT)."},
+    {"q":"What is the Pauli-Z gate matrix?","a":"[[1, 0], [0, -1]]."},
+    {"q":"State the Schrödinger equation for time evolution of a pure state.","a":"iħ d/dt |ψ(t)⟩ = Ĥ|ψ(t)⟩, where Ĥ is the Hamiltonian."},
+    {"q":"How is the time evolution operator U(t, t₀) related to a time-independent Hamiltonian?","a":"U(t, t₀) = exp(-iĤ(t-t₀)/ħ)."},
+    {"q":"What is the Tensor Product used for in quantum mechanics?","a":"To describe the state space of composite systems (multi-qubit systems) by combining individual Hilbert spaces."},
+    {"q":"Define an Entangled State.","a":"A multi-qubit state that cannot be written as a tensor product of individual qubit states."},
+    {"q":"What is the Bell State |Φ⁺⟩?","a":"A maximally entangled state: 1/√2 (|00⟩ + |11⟩)."},
+    {"q":"State the No-Cloning Theorem.","a":"It is impossible to create an identical copy of an arbitrary unknown quantum state using a unitary operation."},
+    {"q":"What is the purpose of Grover's Algorithm?","a":"To search an unstructured database of N items for a specific target in O(√N) steps."},
+    {"q":"What are the two main operations in Grover's iterator?","a":"The Oracle (U_f) and the Diffusion Operator (W)."},
+    {"q":"What does the Oracle do in Grover's algorithm?","a":"It flips the phase of the target state |x⟩ (where f(x)=1) and leaves other states unchanged."},
+    {"q":"What is the Quantum Fourier Transform (QFT)?","a":"The quantum analogue of the discrete Fourier transform, changing the basis from computational to Fourier basis."},
+    {"q":"What is the complexity of the QFT circuit on n qubits?","a":"O(n²), which is exponentially faster than the classical FFT."},
+    {"q":"What is Phase Kickback?","a":"A phenomenon where the phase applied to a target qubit by a controlled operation is transferred to the control qubit."},
+    {"q":"What is the goal of Quantum Phase Estimation (QPE)?","a":"To estimate the eigenvalue (phase θ) of a unitary operator U corresponding to an eigenvector |u⟩."},
+    {"q":"What two registers are required for QPE?","a":"A 'clock' (or auxiliary) register to store the phase, and a 'target' register storing the eigenvector."},
+    {"q":"What is the HHL Algorithm used for?","a":"Solving systems of linear equations Ax = b on a quantum computer."},
+    {"q":"What is the complexity of the HHL algorithm?","a":"Logarithmic in the dimension of the matrix N (O(log N)), providing exponential speedup over classical methods."},
+    {"q":"What is the core idea of Hamiltonian encoding in HHL?","a":"Encoding the matrix A into the time evolution operator U = e^(iAt)."},
+    {"q":"What does VQE stand for?","a":"Variational Quantum Eigensolver."},
+    {"q":"What is the main application of VQE?","a":"Finding the ground state energy (minimum eigenvalue) of a Hamiltonian, often for quantum chemistry."},
+    {"q":"Describe the 'Hybrid' nature of VQE.","a":"It uses a quantum computer to measure expectation values and a classical computer to optimize parameters."},
+    {"q":"What is an Ansatz in VQE?","a":"A parameterized quantum circuit used to prepare a trial state |ψ(θ)⟩."},
+    {"q":"What is the Variational Principle?","a":"The expectation value of the Hamiltonian for any trial state is always greater than or equal to the ground state energy."},
+    {"q":"What is a CNOT gate?","a":"A controlled-NOT gate that flips the target qubit if and only if the control qubit is |1⟩."},
+    {"q":"What is the SWAP gate?","a":"A two-qubit gate that exchanges the states of two qubits."},
+    {"q":"What is the Toffoli gate (CCX)?","a":"A double-controlled NOT gate; it flips the target only if both control qubits are |1⟩."},
+    {"q":"What is the trace of a matrix?","a":"The sum of the diagonal elements of the matrix."},
+    {"q":"What is Quantum Concurrence?","a":"A measure of entanglement for a two-qubit mixed state (0 for separable, 1 for maximally entangled)."},
+    {"q":"How do you convert a binary fraction 0.x₁x₂... to a decimal?","a":"Sum x_k * 2^(-k) for k=1 to n."},
+    {"q":"What is the inverse of the QFT?","a":"The Inverse QFT (IQFT), represented by the adjoint matrix of the QFT."},
+    {"q":"What is the geometric interpretation of a single qubit phase gate P(φ)?","a":"A rotation around the Z-axis of the Bloch sphere by angle φ."},
+    {"q":"What does 'Ansatz' mean in the context of VQE?","a":"An educated guess or template for the wavefunction structure, parameterized by adjustable variables."},
+    {"q":"Why is 'Uncomputation' necessary in HHL?","a":"To disentangle the clock register from the target register after the rotation step."},
+    {"q":"What is the role of the classical optimizer in VQE?","a":"To update the parameters θ of the ansatz to minimize the cost function (energy)."},
+    {"q":"What is the output of HHL?","a":"A quantum state |x⟩ proportional to the solution vector, not the classical vector values directly."},
+    {"q":"What does 'NISQ' stand for?","a":"Noisy Intermediate-Scale Quantum (the current era of quantum computing)."}
   ],
   "multipleChoice": [
     {
-      "question":"Which operator in a process tree corresponds to an exclusive choice?","choices":["Sequence","AND","XOR","Loop"],"answer":"XOR"
+      "question":"Which of the following is NOT a quantum hardware technology mentioned?","choices":["Superconducting Qubits","Ion Traps","Liquid Transistors","Neutral Atoms"],"answer":"Liquid Transistors"
     },
     {
-      "question":"Soundness of a WF-net requires all except:","choices":["No deadlocks","Proper completion","Option to complete","Maximal token count"],"answer":"Maximal token count"
+      "question":"The Qiskit command to visualize a circuit is:","choices":["circuit.show()","circuit.draw()","circuit.plot()","circuit.display()"],"answer":"circuit.draw()"
     },
     {
-      "question":"In BPMN, an inclusive gateway is denoted by:","choices":["Circle with a plus","Diamond with a circle","Diamond with an X","Pentagon"],"answer":"Diamond with a circle"
+      "question":"The inner product <ψ|φ> is also known as:","choices":["The Bra-Ket","The Tensor Product","The Cross Product","The Outer Product"],"answer":"The Bra-Ket"
     },
     {
-      "question":"Which algorithm is robust to noise and guarantees sound, block-structured models?","choices":["α-algorithm","Heuristic Miner","Inductive Miner","State-based regions"],"answer":"Inductive Miner"
+      "question":"If a state is |+⟩ = 1/√2(|0⟩ + |1⟩), what is the probability of measuring 0?","choices":["0","0.5","1","0.25"],"answer":"0.5"
     },
     {
-      "question":"OEE’s Quality component is defined as:","choices":["Operating time/scheduled time","Actual/theoretical output rate","Good units/total units","Downtime/uptime"],"answer":"Good units/total units"
+      "question":"Geometrically, the state |1⟩ is located where on the Bloch Sphere?","choices":["North Pole","Equator","South Pole","Center"],"answer":"South Pole"
     },
     {
-      "question":"Precision in model evaluation measures:","choices":["Captured log behavior","Model’s restrictiveness","Model simplicity","Allowed unobserved behavior"],"answer":"Model’s restrictiveness"
+      "question":"A matrix is Unitary if:","choices":["A = A†","A†A = I","A = -A","Tr(A) = 1"],"answer":"A†A = I"
     },
     {
-      "question":"The α-algorithm fails on logs with:","choices":["No loops","Only sequence","Short loops","Clear start/end"],"answer":"Short loops"
+      "question":"Which gate corresponds to a rotation of π (180°) around the X-axis?","choices":["Z","H","X","S"],"answer":"X"
     },
     {
-      "question":"Heuristic Miner primarily uses:","choices":["Genetic operators","Frequency thresholds","Grammar evolution","State regions"],"answer":"Frequency thresholds"
+      "question":"The T gate corresponds to a phase rotation of:","choices":["π","π/2","π/4","π/8"],"answer":"π/4"
     },
     {
-      "question":"Which event-log attribute is mandatory?","choices":["Resource","Lifecycle","Case ID","Cost"],"answer":"Case ID"
+      "question":"Which equation governs the time evolution of a closed quantum system?","choices":["Maxwell's Equation","Newton's Second Law","Schrödinger Equation","Einstein's Field Equation"],"answer":"Schrödinger Equation"
     },
     {
-      "question":"Token-based replay records:","choices":["CPU usage","Missing tokens","Event durations","Model complexity"],"answer":"Missing tokens"
+      "question":"If H is the Hamiltonian, the evolution operator U(t) is:","choices":["e^(-iHt/ħ)","e^(Ht)","sin(Ht)","H^(-1)"],"answer":"e^(-iHt/ħ)"
     },
     {
-      "question":"Alignments differ from token replay because they:","choices":["Ignore invisible transitions","Use block-structured nets","Minimize cost of deviations","Require no log processing"],"answer":"Minimize cost of deviations"
+      "question":"The dimension of a Hilbert space for 3 qubits is:","choices":["3","6","8","9"],"answer":"8"
     },
     {
-      "question":"A workflow system feature includes:","choices":["Grammar editing","Event alignment","Integrated execution engine","Eigenvalue analysis"],"answer":"Integrated execution engine"
+      "question":"Which of these states is Entangled?","choices":["|00⟩","1/√2(|00⟩ + |11⟩)","1/2(|00⟩ + |01⟩ + |10⟩ + |11⟩)","|0⟩⊗|1⟩"],"answer":"1/√2(|00⟩ + |11⟩)"
+    },
+    {
+      "question":"The CNOT gate flips the target qubit if the control is:","choices":["|0⟩","|1⟩","|+⟩","|-⟩"],"answer":"|1⟩"
+    },
+    {
+      "question":"Grover's Algorithm provides what kind of speedup?","choices":["Linear","Quadratic","Exponential","None"],"answer":"Quadratic"
+    },
+    {
+      "question":"The optimal number of iterations in Grover's algorithm for N items is proportional to:","choices":["N","N^2","√N","log(N)"],"answer":"√N"
+    },
+    {
+      "question":"In Grover's algorithm, the diffusion operator performs inversion about the:","choices":["Target","Mean","Zero state","Basis"],"answer":"Mean"
+    },
+    {
+      "question":"The Quantum Fourier Transform (QFT) on basis state |x⟩ results in:","choices":["|x⟩","A superposition of all states with specific phases","The inverse state |-x⟩","State |0⟩"],"answer":"A superposition of all states with specific phases"
+    },
+    {
+      "question":"To implement QFT efficiently, we primarily use Hadamard gates and:","choices":["Controlled Phase Rotations","CNOTs","Toffoli gates","X gates"],"answer":"Controlled Phase Rotations"
+    },
+    {
+      "question":"Phase Kickback is essential for which algorithm?","choices":["Teleportation","Superdense Coding","Quantum Phase Estimation","Bernstein-Vazirani"],"answer":"Quantum Phase Estimation"
+    },
+    {
+      "question":"In QPE, if the phase is θ = 0.5, the measured binary value in the clock register will likely be:","choices":["0...0","100...0","010...0","111...1"],"answer":"100...0"
+    },
+    {
+      "question":"The HHL algorithm is designed to solve:","choices":["Factorization","Database Search","Linear Systems of Equations","Optimization Problems"],"answer":"Linear Systems of Equations"
+    },
+    {
+      "question":"In HHL, the matrix A must be encoded as a:","choices":["Hamiltonian","State Vector","Measurement Operator","Classical Bit string"],"answer":"Hamiltonian"
+    },
+    {
+      "question":"Which step is NOT part of the HHL algorithm?","choices":["Phase Estimation","Controlled Rotation","Grover Diffusion","Uncomputation"],"answer":"Grover Diffusion"
+    },
+    {
+      "question":"VQE is an example of what type of algorithm?","choices":["Purely Quantum","Hybrid Quantum-Classical","Classical Simulation","Recursive"],"answer":"Hybrid Quantum-Classical"
+    },
+    {
+      "question":"The 'Cost Function' in VQE usually represents:","choices":["Time","Expectation Value of Energy","Circuit Depth","Number of Qubits"],"answer":"Expectation Value of Energy"
+    },
+    {
+      "question":"Which classical optimizer was mentioned in the VQE lecture context?","choices":["Adam","COBYLA","Gradient Descent","Newton-Raphson"],"answer":"COBYLA"
+    },
+    {
+      "question":"A 'pure' quantum state is represented by a:","choices":["Vector","Density Matrix with trace < 1","Scalar","Tensor"],"answer":"Vector"
+    },
+    {
+      "question":"The S gate is the square root of which gate?","choices":["X","Y","Z","H"],"answer":"Z"
+    },
+    {
+      "question":"What does the command `pip install qiskit` do?","choices":["Runs a quantum circuit","Installs the Qiskit SDK","Updates firmware","Connects to IBM Cloud"],"answer":"Installs the Qiskit SDK"
+    },
+    {
+      "question":"The conjugate transpose of a column vector is a:","choices":["Column vector","Row vector","Matrix","Scalar"],"answer":"Row vector"
+    },
+    {
+      "question":"Which property ensures that quantum probabilities sum to 1?","choices":["Linearity","Unitarity","Hermiticity","Commutativity"],"answer":"Unitarity"
+    },
+    {
+      "question":"What is the result of applying H twice (HH)?","choices":["H","X","I (Identity)","Z"],"answer":"I (Identity)"
+    },
+    {
+      "question":"Eigenvectors of a Hermitian operator corresponding to different eigenvalues are:","choices":["Parallel","Orthogonal","Identical","Random"],"answer":"Orthogonal"
+    },
+    {
+      "question":"Any single-qubit unitary gate can be decomposed into rotations around which axes?","choices":["X and Y","Z and Y","X and Z","Any two axes"],"answer":"Z and Y"
+    },
+    {
+      "question":"How many complex numbers are needed to describe the state of 2 qubits?","choices":["2","4","8","16"],"answer":"4"
+    },
+    {
+      "question":"Which operation creates a uniform superposition from the state |00...0⟩?","choices":["X applied to all qubits","H applied to all qubits","CNOT ladder","QFT"],"answer":"H applied to all qubits"
+    },
+    {
+      "question":"In the Qiskit `plot_histogram`, the x-axis represents:","choices":["Probabilities","Time","Measurement outcomes (bitstrings)","Qubit indices"],"answer":"Measurement outcomes (bitstrings)"
+    },
+    {
+      "question":"The 'Little-endian' convention in Qiskit means:","choices":["q0 is the most significant bit","q0 is the least significant bit","Bits are read left to right","Bits are inverted"],"answer":"q0 is the least significant bit"
+    },
+    {
+      "question":"What is the eigenvalues of the Pauli-Z matrix?","choices":["0 and 1","1 and -1","i and -i","1 and 0"],"answer":"1 and -1"
+    },
+    {
+      "question":"The matrix [[0, -i], [i, 0]] corresponds to which gate?","choices":["X","Y","Z","H"],"answer":"Y"
+    },
+    {
+      "question":"In VQE, the Hamiltonian is decomposed into a sum of:","choices":["Unitary matrices","Pauli strings/operators","Vectors","Eigenvalues"],"answer":"Pauli strings/operators"
+    },
+    {
+      "question":"The measurement of a qubit collapses its state to:","choices":["A random vector","A basis state","The zero vector","The origin"],"answer":"A basis state"
+    },
+    {
+      "question":"The probability of result '0' in a Z-measurement is given by:","choices":["|<0|ψ>|","|<0|ψ>|²","<ψ|0>","<0|0>"],"answer":"|<0|ψ>|²"
+    },
+    {
+      "question":"Which platform is an aggregator of multiple quantum hardware providers?","choices":["IBM Quantum","Amazon Braket","Google Quantum AI","Rigetti Forest"],"answer":"Amazon Braket"
+    },
+    {
+      "question":"The inverse of the S gate is:","choices":["S","T","S† (S-dagger)","Z"],"answer":"S† (S-dagger)"
+    },
+    {
+      "question":"For n=3, the state |7⟩ in binary is:","choices":["100","011","111","110"],"answer":"111"
+    },
+    {
+      "question":"A rotation gate `Ry(theta)` rotates the state around the:","choices":["X-axis","Y-axis","Z-axis","Bloch vector"],"answer":"Y-axis"
+    },
+    {
+      "question":"The gate `ccx` in Qiskit corresponds to:","choices":["CNOT","SWAP","Toffoli","Fredkin"],"answer":"Toffoli"
+    },
+    {
+      "question":"In QPE, if we use `m` qubits for the clock register, the precision is:","choices":["1/m","1/2^m","1/m^2","m"],"answer":"1/2^m"
+    },
+    {
+      "question":"The final step of the HHL algorithm involves:","choices":["Measuring the clock register","Measuring the ancilla qubit","Measuring the input vector","Measuring the Hamiltonian"],"answer":"Measuring the ancilla qubit"
     }
   ],
   "writtenAnswer": [
-    {"q":"Outline the DMAIC cycle in Six Sigma.","a":"Define the problem, Measure baseline performance, Analyze root causes, Improve the process, Control to sustain gains."},
-    {"q":"Given scheduled time = 8h, uptime = 7h, actual output = 640 good units, theoretical max = 800 units, calculate OEE.","a":"Availability = 7/8 = 0.875; Performance = 640/ (800×7/8)=640/700≈0.914; Quality = 640/640 =1; OEE≈0.875×0.914×1≈0.800."},
-    {"q":"Describe the main steps of the α-algorithm on a simple two-activity log.","a":"Compute directly-follows matrix, identify input/output sets, create places for each relation, connect transitions and places to form a WF-net."},
-    {"q":"Explain the difference between fitness and precision.","a":"Fitness measures how much log behavior the model can replay; precision measures how much extra behavior the model allows that was never observed."},
-    {"q":"List the ETL steps to prepare an XES event log from ERP tables.","a":"Extract: query case ID, activity, timestamp; Transform: filter, clean timestamps, assign lifecycle; Load: export to CSV and convert to XES format."},
-    {"q":"Explain how the Inductive Miner recursively discovers a process tree.","a":"Detect a cut (sequence, XOR, parallel, loop) in the log, split the log into sublogs per branch, recurse on each sublog, and assemble the tree."},
-    {"q":"Outline support and confidence in the context of discovering frequent directly-follows patterns.","a":"Support = frequency of a directly-follows relation in the log; Confidence = frequency divided by total occurrences of the predecessor activity."},
-    {"q":"Derive the conditions that ensure a WF-net is sound.","a":"No deadlocks (every reachable marking can complete), proper completion (only one token in sink place on completion), and option to complete (from any marking, the sink can be reached)."},
-    {"q":"Describe how to compute a single‐trace alignment and its fitness cost.","a":"Construct the synchronous product of trace and model, search for minimal‐cost path of synchronous, model, and log moves; cost of non-sync moves divided by total moves yields fitness."},
-    {"q":"Compare state-based and language-based regions discovery methods.","a":"State-based builds from a transition system of states and transitions; language-based uses trace language to identify separating activity pairs and create places enforcing them."}
+    {"q":"Explain the difference between a qubit and a classical bit.","a":"A classical bit must be either 0 or 1. A qubit can be in a superposition of both states simultaneously, represented by a vector in a complex vector space."},
+    {"q":"Why do we normalize quantum state vectors?","a":"To ensure that the sum of the probabilities of all possible measurement outcomes equals 1 (100%)."},
+    {"q":"Describe the role of the Hamiltonian in quantum dynamics.","a":"The Hamiltonian is the operator corresponding to the total energy of the system and generates the time evolution of the quantum state via the Schrödinger equation."},
+    {"q":"How do you calculate the probability of measuring '0' given a state vector?","a":"You take the inner product of the state vector with the basis vector |0⟩, and then take the square of the modulus of that result (|<0|ψ>|²)."},
+    {"q":"What defines a Linear Operator?","a":"An operator that satisfies additivity (A(|u>+|v>) = A|u> + A|v>) and homogeneity (A(c|u>) = cA|u>)."},
+    {"q":"Explain what a Hermitian operator is and why it is important in physics.","a":"A Hermitian operator is equal to its adjoint (A=A†). They are important because their eigenvalues are real, representing measurable physical quantities (observables)."},
+    {"q":"Write out the matrix for the Identity operator I.","a":"[[1, 0], [0, 1]]."},
+    {"q":"What is the difference between a Separable state and an Entangled state?","a":"A separable state can be written as a tensor product of individual qubit states. An entangled state cannot; the qubits are correlated such that one cannot be described independently of the other."},
+    {"q":"Describe the action of the CNOT gate.","a":"It takes two qubits, control and target. If the control is |0⟩, it does nothing. If the control is |1⟩, it flips the target qubit (applies X gate)."},
+    {"q":"What is the basic idea behind Grover's Algorithm?","a":"It uses amplitude amplification to iteratively increase the probability amplitude of the target state while decreasing others, allowing detection in fewer steps than classical search."},
+    {"q":"What geometric operation does the Oracle perform in Grover's algorithm?","a":"It performs a reflection of the state vector about the hyperplane orthogonal to the target state |a⟩."},
+    {"q":"How does the Quantum Fourier Transform differ from the classical FFT in terms of output?","a":"The QFT outputs a quantum state where the Fourier coefficients are encoded in the amplitudes, whereas classical FFT outputs the list of coefficients directly."},
+    {"q":"Explain the concept of Phase Kickback.","a":"When a controlled unitary U acts on an eigenvector |u⟩ of U, the eigenvalue (phase) e^(iθ) is transferred ('kicked back') to the relative phase of the control qubit."},
+    {"q":"What is the purpose of the 'Uncomputation' step in HHL?","a":"To reverse the Phase Estimation part, disentangling the clock register from the target so the clock register can be reset or ignored, leaving only the solution state."},
+    {"q":"What is the 'Ansatz' in VQE and why is it important?","a":"The Ansatz is a parameterized guess for the wave function. A good Ansatz is crucial because it must be capable of representing the true ground state with few parameters to be efficient."},
+    {"q":"Why is VQE considered a 'hybrid' algorithm?","a":"It offloads the state preparation and measurement to the QPU (Quantum Processing Unit), while the optimization of parameters is done on a classical CPU."},
+    {"q":"What is a Tensor Product?","a":"A mathematical operation that combines two vector spaces into a larger one, used to describe the state of multiple quantum particles."},
+    {"q":"Explain the 'No-Cloning Theorem'.","a":"It states that there is no unitary operator that can take an arbitrary unknown quantum state |ψ⟩ and a blank state |0⟩ and produce |ψ⟩⊗|ψ⟩."},
+    {"q":"What is the computational complexity advantage of HHL?","a":"HHL solves linear systems in O(log N) time, whereas the best classical algorithms take O(N) or O(N log N), offering an exponential speedup."},
+    {"q":"What are Pauli Matrices?","a":"A set of three 2x2 Hermitian and Unitary matrices (X, Y, Z) that, along with Identity, form a basis for single-qubit operators."},
+    {"q":"Describe the Bloch Sphere representation.","a":"It visualizes a qubit state as a vector on the surface of a unit sphere, defined by angles θ (latitude) and φ (longitude)."},
+    {"q":"What is the result of the operation H on state |1⟩?","a":"The state |-⟩, which is 1/√2(|0⟩ - |1⟩)."},
+    {"q":"What is a 'Ket' and a 'Bra'?","a":"'Ket' |ψ⟩ is a column vector representing the state. 'Bra' <ψ| is the conjugate transpose (row vector) of the Ket."},
+    {"q":"What does the command `Operator.is_unitary()` check?","a":"It checks if a given matrix U satisfies the condition U†U = I, ensuring it represents a valid quantum gate."},
+    {"q":"Why are Unitary operators reversible?","a":"Because U†U = I, the adjoint U† acts as the inverse U⁻¹, allowing you to undo the operation."},
+    {"q":"How many basis states does a 3-qubit system have?","a":"2³ = 8 basis states (|000⟩ through |111⟩)."},
+    {"q":"What is the 'Little-endian' convention?","a":"A convention where the least significant bit (qubit 0) is written on the right or represented as the fastest changing index in the state vector."},
+    {"q":"In QPE, what determines the precision of the phase estimate?","a":"The number of qubits 'm' in the clock/counting register; more qubits allow distinguishing finer phase differences."},
+    {"q":"What does the 'Oracle' do in the context of database search?","a":"It is a black-box function that identifies the solution; in quantum computing, it flips the sign of the solution state."},
+    {"q":"What is the physical meaning of the commutator [A, B] = 0?","a":"It means the operators A and B commute, sharing a common set of eigenvectors, and their corresponding physical quantities can be measured simultaneously."},
+    {"q":"What is the expectation value <A>?","a":"The average value of measurement outcomes of observable A over many identical preparations of the state |ψ⟩, calculated as <ψ|A|ψ>."},
+    {"q":"Describe the layout of the HHL circuit.","a":"It consists of three main stages: Quantum Phase Estimation (to extract eigenvalues), Controlled Rotation (to invert eigenvalues), and Inverse QPE (to clean up)."},
+    {"q":"What is amplitude encoding?","a":"Encoding classical data into the amplitudes of a quantum state vector, allowing N numbers to be stored in log2(N) qubits."},
+    {"q":"What is the SWAP gate's matrix?","a":"[[1,0,0,0], [0,0,1,0], [0,1,0,0], [0,0,0,1]]."},
+    {"q":"Why is QFT useful in Shor's algorithm?","a":"It enables period finding, which is the quantum step needed to factor integers efficiently."},
+    {"q":"How is a controlled-U operation denoted mathematically?","a":"|0⟩⟨0|⊗I + |1⟩⟨1|⊗U."},
+    {"q":"What is the trace of the Identity matrix of size N?","a":"N (since it has N ones on the diagonal)."},
+    {"q":"What is the eigenvalue of the state |+⟩ for the Pauli-X operator?","a":"+1."},
+    {"q":"In VQE, how is the Hamiltonian measured?","a":"It is decomposed into Pauli strings (e.g., Z⊗Z, X⊗I). Each term is measured separately, and the results are summed with weights."},
+    {"q":"What is the 'Ground State'?","a":"The eigenstate of the Hamiltonian with the lowest energy eigenvalue."},
+    {"q":"Why do we use 'shots' in quantum execution?","a":"Because quantum measurement is probabilistic; multiple shots (runs) are needed to build a statistical distribution of outcomes."},
+    {"q":"What is 'Unitarity' in the context of time evolution?","a":"It guarantees that probabilities are conserved (sum to 1) as the system evolves over time."},
+    {"q":"What is the matrix for the Phase Gate P(φ)?","a":"[[1, 0], [0, e^(iφ)]]."},
+    {"q":"Explain the 'Measurement Problem' briefly.","a":"The dilemma of how and why a quantum superposition collapses into a definite classical state upon measurement."},
+    {"q":"What does the notation <j|A|i> represent?","a":"The matrix element of operator A at row j and column i."},
+    {"q":"What is the Frobenius inner product for matrices?","a":"<A, B> = Trace(A†B)."},
+    {"q":"What is the 'Cost Function' in the context of VQE?","a":"It is the expectation value of the Hamiltonian <ψ(θ)|H|ψ(θ)>, which we want to minimize."},
+    {"q":"What is decoherence?","a":"The loss of quantum information (superposition/entanglement) due to the system interacting with its environment."},
+    {"q":"What does it mean for a set of vectors to be orthonormal?","a":"They are all orthogonal to each other (dot product is 0) and each has a length of 1."},
+    {"q":"What is the maximum probability of success in Grover's algorithm?","a":"It can approach 1 (100%) after the optimal number of iterations."}
   ],
   "trueFalse": [
-    {"q":"A Petri net transition is enabled only when all its input places contain at least one token.","a":true},
-    {"q":"A WF-net must have exactly one source place and one sink place.","a":true},
-    {"q":"BPMN natively supports an inclusive OR-join gateway.","a":false},
-    {"q":"Process trees guarantee sound models by their block-structured nature.","a":true},
-    {"q":"Checking soundness of a general C-net is polynomial in the number of places.","a":false},
-    {"q":"Lean management aims primarily to eliminate all forms of process waste.","a":true},
-    {"q":"OEE is the product of availability, performance, and quality metrics.","a":true},
-    {"q":"Lead time always equals the sum of service times across all activities.","a":false},
-    {"q":"Every event log must include a timestamp for each event.","a":true},
-    {"q":"XES extensions define additional attributes and semantics for events.","a":true},
-    {"q":"The α-algorithm can correctly rediscover loops of length one.","a":false},
-    {"q":"Heuristic Miner filters relations based on frequency thresholds.","a":true},
-    {"q":"Inductive Miner can guarantee deadlock-free models.","a":true},
-    {"q":"Alignments can handle invisible (silent) transitions in the model.","a":true},
-    {"q":"Token-based replay always finds the globally optimal alignment.","a":false},
-    {"q":"Simplicity in model evaluation rewards more complex nets.","a":false},
-    {"q":"Generalization penalizes models that overfit to the event log.","a":true},
-    {"q":"Fitness measures how much observed behavior is covered by the model.","a":true},
-    {"q":"Evolutionary process discovery requires a mapping from genome to process model.","a":true},
-    {"q":"The curse of dimensionality primarily refers to challenges in high-dimensional process data.","a":false}
+    {"q":"A qubit can be in a state that is 60% |0> and 40% |1> simultaneously.","a":true},
+    {"q":"Hermitian matrices always have complex eigenvalues.","a":false},
+    {"q":"The CNOT gate is reversible.","a":true},
+    {"q":"Qiskit code is written in C++.","a":false},
+    {"q":"The Hadamard gate is its own inverse (H = H⁻¹).","a":true},
+    {"q":"Entanglement allows for faster-than-light communication.","a":false},
+    {"q":"The HHL algorithm provides an exponential speedup over classical linear algebra algorithms.","a":true},
+    {"q":"In Grover's algorithm, we perform the diffusion operator before the oracle.","a":false},
+    {"q":"Unitary operators preserve the length (norm) of a vector.","a":true},
+    {"q":"QFT is the same as the classical FFT but runs on quantum hardware.","a":false},
+    {"q":"A pure quantum state is represented by a vector of length 1.","a":true},
+    {"q":"Measurement in quantum mechanics is deterministic.","a":false},
+    {"q":"The eigenvalues of a Unitary matrix always have a modulus of 1.","a":true},
+    {"q":"The Pauli-Z gate flips the bit from |0> to |1>.","a":false},
+    {"q":"VQE creates a trail state called an Ansatz.","a":true},
+    {"q":"Tensor product of two 2x2 matrices results in a 2x2 matrix.","a":false},
+    {"q":"Amazon Braket allows access to hardware from multiple providers like IonQ and Rigetti.","a":true},
+    {"q":"The adjoint of a matrix is just its transpose.","a":false},
+    {"q":"Any single-qubit gate can be decomposed into rotations Z-Y-Z.","a":true},
+    {"q":"Phase kickback happens when the control qubit is in state |0>.","a":false},
+    {"q":"The trace of a matrix is the product of its diagonal elements.","a":false},
+    {"q":"A separable state can be written as a tensor product.","a":true},
+    {"q":"Grover's algorithm searches a database in O(N) steps.","a":false},
+    {"q":"IBM Quantum uses superconducting transmon qubits.","a":true},
+    {"q":"The inner product of orthogonal vectors is 1.","a":false},
+    {"q":"The identity operator I leaves a vector unchanged.","a":true},
+    {"q":"In QPE, the precision increases exponentially with the number of counting qubits.","a":true},
+    {"q":"HHL requires the matrix A to be Hermitian (or expanded to be so).","a":true},
+    {"q":"VQE guarantees finding the global minimum energy.","a":false},
+    {"q":"Quantum gates must be linear operators.","a":true},
+    {"q":"The probability of measuring 0 is the square of the amplitude c₀.","a":false},
+    {"q":"The Bloch sphere can represent entangled states.","a":false},
+    {"q":"The inverse of a unitary matrix is its conjugate transpose.","a":true},
+    {"q":"Phase estimation uses the Inverse QFT.","a":true},
+    {"q":"The state |+> is an eigenstate of the X operator.","a":true},
+    {"q":"Toffoli gate is a 3-qubit gate.","a":true},
+    {"q":"Classical computers can simulate quantum circuits efficiently for any number of qubits.","a":false},
+    {"q":"Operators in quantum mechanics are generally commutative (AB = BA).","a":false},
+    {"q":"A mixed state is represented by a density matrix, not a vector.","a":true},
+    {"q":"In the 'Little-endian' convention, the rightmost bit is the least significant.","a":true},
+    {"q":"The probability amplitudes in a quantum state vector can be complex numbers.","a":true},
+    {"q":"HHL outputs the solution vector x as a readable list of numbers.","a":false},
+    {"q":"The rotation gate Ry(θ) uses only real numbers in its matrix.","a":true},
+    {"q":"Quantum Teleportation transmits matter.","a":false},
+    {"q":"The S gate adds a 90 degree phase shift.","a":true},
+    {"q":"Measuring a qubit is a reversible operation.","a":false},
+    {"q":"Superposition allows a qubit to be 0 and 1 at the same time.","a":true},
+    {"q":"The norm of a vector is the square root of its inner product with itself.","a":true},
+    {"q":"QPE stands for Quantum Position Estimation.","a":false},
+    {"q":"The Hamiltonian represents the total energy of the system.","a":true}
   ]
 }
