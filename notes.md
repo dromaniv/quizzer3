@@ -124,9 +124,9 @@ When we measure a qubit, we can't "see" the vector $|\psi\rangle$. We only see a
 | Concept | Definition | Math / Matrix |
 | :--- | :--- | :--- |
 | **Ket** | A column vector representing state | $\vert\psi\rangle = \begin{pmatrix} c_0 \\ c_1 \end{pmatrix}$ |
-| **Bra** | A row vector (conjugate transpose) | $\langle\psi\vert = (c_0^*, c_1^*)$ |
-| **Bra-Ket** | Inner product (measures overlap) | $\langle\phi\vert\psi\rangle$ (Scalar number) |
-| **Normalization** | Requirement for total prob. to be 1 | $\sqrt{\langle\psi\vert\psi\rangle} = 1$ |
+| **Bra** | A row vector (conjugate transpose) | $\langle\psi\rvert = (c_0^*, c_1^*)$ |
+| **Bra-Ket** | Inner product (measures overlap) | $\langle\phi\rvert\psi\rangle$ (Scalar number) |
+| **Normalization** | Requirement for total prob. to be 1 | $\sqrt{\langle\psi\rvert\psi\rangle} = 1$ |
 | **Basis \|0>** | "Ground" state (North Pole) | $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ |
 | **Basis \|1>** | "Excited" state (South Pole) | $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ |
 | **Bloch Vector** | 3D representation of the state | Vector $\vec{n}$ inside the sphere |
@@ -208,7 +208,7 @@ We often see exponentials of matrices, like $e^{i\hat{H}t}$.
 
 ### 4. Rotation Operators
 Any single-qubit gate can be viewed as a rotation of the Bloch vector around some axis $\vec{n}$.
-$$\hat{R}_{\vec{n}}(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_{\vec{n}}} = \cos(\frac{\theta}{2})\hat{I} - i\sin(\frac{\theta}{2})\hat{\sigma}_{\vec{n}}$$
+$$\hat{R}_{\vec{n}}(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_{\vec{n}}} = \cos\left(\frac{\theta}{2}\right)\hat{I} - i\sin\left(\frac{\theta}{2}\right)\hat{\sigma}_{\vec{n}}$$
 * $\hat{\sigma}_{\vec{n}}$ is a mix of Pauli matrices ($X, Y, Z$) representing the axis of rotation.
 
 **Decomposition Theorem (Z-Y-Z):**
@@ -325,7 +325,7 @@ Implementing QFT as a matrix is hard ($N \times N$ matrix is huge). But as a cir
 | **Non-Cloning** | No $\hat{U}$ exists s.t. $\hat{U}\vert\psi\rangle\vert 0\rangle = \vert\psi\rangle\vert\psi\rangle$ | You can't copy quantum data; you must teleport or move it. |
 | **Grover's Algo** | Iterations $r \approx \frac{\pi}{4}\sqrt{N}$ | Quadratic speedup for searching unstructured data. |
 | **Oracle ($U_f$)** | $U_f\vert x\rangle = (-1)^{f(x)}\vert x\rangle$ | Marks the "correct" answer by flipping its phase. |
-| **Diffusion ($W$)** | $2\vert\phi\rangle\langle\phi\vert - \hat{I}$ | Amplifies the probability of the marked item (inversion about mean). |
+| **Diffusion ($W$)** | $2\vert\phi\rangle\langle\phi\rvert - \hat{I}$ | Amplifies the probability of the marked item (inversion about mean). |
 | **QFT** | Basis change using roots of unity | Exponentially faster than classical FFT; used for period finding. |
 
 
