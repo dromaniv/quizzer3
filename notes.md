@@ -123,12 +123,12 @@ When we measure a qubit, we can't "see" the vector $|\psi\rangle$. We only see a
 
 | Concept | Definition | Math / Matrix |
 | :--- | :--- | :--- |
-| **Ket** | A column vector representing state | $\vert\psi\rangle = \begin{pmatrix} c_0 \\ c_1 \end{pmatrix}$ |
-| **Bra** | A row vector (conjugate transpose) | $\langle\psi\rvert = (c_0^*, c_1^*)$ |
-| **Bra-Ket** | Inner product (measures overlap) | $\langle\phi\rvert\psi\rangle$ (Scalar number) |
-| **Normalization** | Requirement for total prob. to be 1 | $\sqrt{\langle\psi\rvert\psi\rangle} = 1$ |
-| **Basis \|0>** | "Ground" state (North Pole) | $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ |
-| **Basis \|1>** | "Excited" state (South Pole) | $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ |
+| **Ket** | A column vector representing state | $\lvert\psi\rangle = \begin{pmatrix} c_0 \\\\ c_1 \end{pmatrix}$ |
+| **Bra** | A row vector (conjugate transpose) | $\langle\psi\rvert = (c_0^\*, c_1^\*)$ |
+| **Bra-Ket** | Inner product (measures overlap) | $\langle\phi\lvert\psi\rangle$ (Scalar number) |
+| **Normalization** | Requirement for total prob. to be 1 | $\sqrt{\langle\psi\lvert\psi\rangle} = 1$ |
+| **Basis** $\lvert 0\rangle$ | "Ground" state (North Pole) | $\begin{pmatrix} 1 \\\\ 0 \end{pmatrix}$ |
+| **Basis** $\lvert 1\rangle$ | "Excited" state (South Pole) | $\begin{pmatrix} 0 \\\\ 1 \end{pmatrix}$ |
 | **Bloch Vector** | 3D representation of the state | Vector $\vec{n}$ inside the sphere |
 
 **Important Python/Qiskit Note:**
@@ -168,11 +168,11 @@ You must recognize these matrices.
 
 | Gate | Symbol | Matrix | Effect |
 | :--- | :--- | :--- | :--- |
-| **Hadamard** | **H** | $\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$ | Creates superposition ($\vert 0\rangle \to \vert +\rangle$, $\vert 1\rangle \to \vert -\rangle$). |
-| **Phase (S)** | **S** | $\begin{pmatrix} 1 & 0 \\ 0 & i \end{pmatrix}$ | Adds $90^{\circ}$ ($i$) phase to $\vert 1\rangle$. |
-| **T Gate** | **T** | $\begin{pmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \end{pmatrix}$ | Adds $45^{\circ}$ phase to $\vert 1\rangle$. It's the "square root" of S. |
-| **Y-Rotation** | **Ry** | $\begin{pmatrix} \cos(\theta/2) & -\sin(\theta/2) \\ \sin(\theta/2) & \cos(\theta/2) \end{pmatrix}$ | Rotates the state vector around the Y-axis. |
-| **CNOT** | **CX** | $\begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{pmatrix}$ | Flips the second qubit (Target) if the first (Control) is 1. |
+| **Hadamard** | **H** | $\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\\\ 1 & -1 \end{pmatrix}$ | Creates superposition ($\lvert 0\rangle \to \lvert +\rangle$, $\lvert 1\rangle \to \lvert -\rangle$). |
+| **Phase (S)** | **S** | $\begin{pmatrix} 1 & 0 \\\\ 0 & i \end{pmatrix}$ | Adds $90^{\circ}$ ($i$) phase to $\lvert 1\rangle$. |
+| **T Gate** | **T** | $\begin{pmatrix} 1 & 0 \\\\ 0 & e^{i\pi/4} \end{pmatrix}$ | Adds $45^{\circ}$ phase to $\lvert 1\rangle$. It's the "square root" of S. |
+| **Y-Rotation** | **Ry** | $\begin{pmatrix} \cos(\theta/2) & -\sin(\theta/2) \\\\ \sin(\theta/2) & \cos(\theta/2) \end{pmatrix}$ | Rotates the state vector around the Y-axis. |
+| **CNOT** | **CX** | $\begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ 0 & 0 & 1 & 0 \end{pmatrix}$ | Flips the second qubit (Target) if the first (Control) is 1. |
 
 ### 5. Adjoint and Hermitian Operators
 * **Adjoint ($\dagger$)**: The "conjugate transpose". You swap rows/columns AND flip the sign of imaginary numbers ($i \to -i$).
@@ -208,12 +208,16 @@ We often see exponentials of matrices, like $e^{i\hat{H}t}$.
 
 ### 4. Rotation Operators
 Any single-qubit gate can be viewed as a rotation of the Bloch vector around some axis $\vec{n}$.
+
 $$\hat{R}_{\vec{n}}(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_{\vec{n}}} = \cos\left(\frac{\theta}{2}\right)\hat{I} - i\sin\left(\frac{\theta}{2}\right)\hat{\sigma}_{\vec{n}}$$
+
 * $\hat{\sigma}_{\vec{n}}$ is a mix of Pauli matrices ($X, Y, Z$) representing the axis of rotation.
 
 **Decomposition Theorem (Z-Y-Z):**
 Any single-qubit unitary gate $\hat{U}$ can be broken down into three rotations:
+
 $$\hat{U} = e^{i\alpha} \hat{R}_z(\beta) \hat{R}_y(\gamma) \hat{R}_z(\delta)$$
+
 * This means you can build *any* qubit operation just by rotating around Z, then Y, then Z again.
 
 ### 5. Time Evolution (The Physics Part)
@@ -320,12 +324,12 @@ Implementing QFT as a matrix is hard ($N \times N$ matrix is huge). But as a cir
 
 | Concept | Key Equation / Definition | Why it matters |
 | :--- | :--- | :--- |
-| **Tensor Product** | $\begin{pmatrix} a \\ b \end{pmatrix} \otimes \begin{pmatrix} c \\ d \end{pmatrix} = \begin{pmatrix} ac \\ ad \\ bc \\ bd \end{pmatrix}$ | Describes multi-qubit systems. |
-| **Entanglement** | Cannot factorize: $\vert\Psi\rangle \neq \vert\phi\rangle \otimes \vert\psi\rangle$ | Allows quantum correlations stronger than classical ones. |
-| **Non-Cloning** | No $\hat{U}$ exists s.t. $\hat{U}\vert\psi\rangle\vert 0\rangle = \vert\psi\rangle\vert\psi\rangle$ | You can't copy quantum data; you must teleport or move it. |
+| **Tensor Product** | $\begin{pmatrix} a \\\\ b \end{pmatrix} \otimes \begin{pmatrix} c \\\\ d \end{pmatrix} = \begin{pmatrix} ac \\\\ ad \\\\ bc \\\\ bd \end{pmatrix}$ | Describes multi-qubit systems. |
+| **Entanglement** | Cannot factorize: $\lvert\Psi\rangle \neq \lvert\phi\rangle \otimes \lvert\psi\rangle$ | Allows quantum correlations stronger than classical ones. |
+| **Non-Cloning** | No $\hat{U}$ exists s.t. $\hat{U}\lvert\psi\rangle\lvert 0\rangle = \lvert\psi\rangle\lvert\psi\rangle$ | You can't copy quantum data; you must teleport or move it. |
 | **Grover's Algo** | Iterations $r \approx \frac{\pi}{4}\sqrt{N}$ | Quadratic speedup for searching unstructured data. |
-| **Oracle ($U_f$)** | $U_f\vert x\rangle = (-1)^{f(x)}\vert x\rangle$ | Marks the "correct" answer by flipping its phase. |
-| **Diffusion ($W$)** | $2\vert\phi\rangle\langle\phi\rvert - \hat{I}$ | Amplifies the probability of the marked item (inversion about mean). |
+| **Oracle ($U_f$)** | $U_f\lvert x\rangle = (-1)^{f(x)}\lvert x\rangle$ | Marks the "correct" answer by flipping its phase. |
+| **Diffusion ($W$)** | $2\lvert\phi\rangle\langle\phi\rvert - \hat{I}$ | Amplifies the probability of the marked item (inversion about mean). |
 | **QFT** | Basis change using roots of unity | Exponentially faster than classical FFT; used for period finding. |
 
 
@@ -395,7 +399,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 
 | Algorithm | Purpose | Key Quantum Mechanism |
 | :--- | :--- | :--- |
-| **QPE** | Estimate phase $\theta$ of eigenvalue | $H^{\otimes m} \to$ Controlled-$U$ $\to IQFT$ |
+| **QPE** | Estimate phase $\theta$ of eigenvalue | $H^{\otimes m} \to$ Controlled-$U$ $\to$ IQFT |
 | **HHL** | Solve linear equations $\hat{A}\vec{x}=\vec{b}$ | QPE on $\hat{A}$ $\to$ Rotation by $1/\lambda$ $\to$ Inverse QPE |
 | **VQE** | Find minimum eigenvalue (Energy) | Hybrid Loop: Quantum measures $\langle H \rangle$, Classical optimizes parameters. |
 
