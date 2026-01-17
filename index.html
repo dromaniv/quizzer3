@@ -92,7 +92,8 @@ header{
   color:var(--text);
   border-bottom:1px solid var(--border);
   z-index:200;
-  position:relative;
+  position:sticky;
+  top:0;
 }
 header h1{
   font-size:1.25rem;font-weight:700;
@@ -146,7 +147,7 @@ header h1::before{
 
 /* ---------- nav ---------- */
 nav{
-  position:sticky;top:0;z-index:150;
+  position:sticky;top:57px;z-index:150;
   background:var(--card);
   display:flex;
   border-bottom:1px solid var(--border);
