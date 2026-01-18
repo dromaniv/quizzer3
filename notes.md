@@ -407,7 +407,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 * **QPE**: Requires implementing `QFT` and its inverse `IQFT_dg`.
 * **VQE**: In Qiskit, you define a `QuantumCircuit` for the Ansatz (the guess) and use a classical optimizer (like `COBYLA` or `SPSA`) to update the parameters.
 
-# Solving Multiple Choice & Short Questions
+# Solving Multiple Choice Questions
 
 ---
 
@@ -416,7 +416,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 ### **Q: Choosing a Quantum Computer**
 **The Dilemma:** You have options with different "Number of qubits" and "Quantum Volume (QV)".
 * **The Rule:** Qubit count isn't everything. A machine with 100 qubits is useless if they are too noisy to finish a calculation. **Quantum Volume (QV)** is the "holistic" metric that measures the *actual* useful power of the computer, accounting for gate errors, connectivity, and coherence time.
-* **Strategy:** Always choose the machine with the **highest Quantum Volume** first. [cite_start]If QVs are equal, then choose the higher qubit count [cite: 5882-5902].
+* **Strategy:** Always choose the machine with the **highest Quantum Volume** first. If QVs are equal, then choose the higher qubit count.
 
 ### **Q: Interpreting Qiskit Results**
 **The Format:** `{'0': 1, '1': 0}` or `{'00': 500, '11': 500}`.
@@ -426,7 +426,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 * **Strategy:**
     * If the total count is 1 (e.g., `{'0': 1}`), the circuit was run **once** (1 shot).
     * If you see two keys (e.g., `'0': 500` and `'1': 500`), the circuit was run **multiple times**.
-    * [cite_start]The length of the key string (e.g., `'00'` vs `'0'`) tells you how many qubits were measured [cite: 8294-8300].
+    * The length of the key string (e.g., `'00'` vs `'0'`) tells you how many qubits were measured.
 
 ### **Q: Qiskit Visualization (`plot_bloch_vector`)**
 **The Syntax:** `plot_bloch_vector([a, b, c], coord_type='...')`
@@ -434,7 +434,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 * **Strategy:** Check the `coord_type`.
     * `'cartesian'`: The list is `[x, y, z]`.
     * `'spherical'`: The list is `[r, theta, phi]` (Radius, Latitude, Longitude).
-    * [cite_start]*Exam Tip:* If you see $\pi$ in the list (e.g., `[1, pi, 0]`), it's almost certainly **spherical** coordinates because $\pi$ is an angle [cite: 1364-1365].
+    * *Exam Tip:* If you see $\pi$ in the list (e.g., `[1, pi, 0]`), it's almost certainly **spherical** coordinates because $\pi$ is an angle.
 
 ---
 
@@ -446,7 +446,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
     1.  **Tensor Product:** First, expand the Ket. $|0\rangle|1\rangle$ means $|0\rangle \otimes |1\rangle$. In the standard basis:
         $$|0\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad |1\rangle = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \implies |01\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix} \otimes \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \end{pmatrix}$$
     2.  **Conjugate Transpose:** To get the Bra, turn the column into a row. Since the numbers are real (0 and 1), you don't need to change signs.
-* [cite_start]**Strategy:** Look for the row vector with a "1" in the same position as the "1" in your calculated column vector [cite: 130-133, 8626-8631].
+* **Strategy:** Look for the row vector with a "1" in the same position as the "1" in your calculated column vector.
 
 ### **Q: Calculating Probabilities from Coefficients**
 **The Problem:** Given a state like $|00\rangle + |01\rangle + |10\rangle + |11\rangle$, what is the probability of measuring a specific state?
@@ -456,7 +456,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
     2.  Calculate the sum of squares: $1^2 + 1^2 + 1^2 + 1^2 = 4$.
     3.  The normalization factor is $\sqrt{4} = 2$.
     4.  The probability for *any one* state is $(1/2)^2 = 1/4 = 0.25$.
-    5.  [cite_start]*Trick:* If the coefficients are different (e.g., $0.374$ and $0.125$), pick the one that matches the specific state you are asked about [cite: 1194-1199].
+    5.  *Trick:* If the coefficients are different (e.g., $0.374$ and $0.125$), pick the one that matches the specific state you are asked about.
 
 ### **Q: Identifying Matrix Types**
 **The Problem:** Is Matrix $M$ Unitary? Hermitian? Both?
@@ -466,7 +466,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 * **Unitary Rule ($M^\dagger M = I$):**
     * Rows/Cols must be normalized (length 1).
     * Rows/Cols must be orthogonal (dot product 0).
-* **Strategy:** Check the diagonal first. If you see $i$ on the diagonal, it's **not** Hermitian. [cite_start]If columns look orthogonal (like $[1, 1]$ and $[1, -1]$), check for Unitary [cite: 4371-4390].
+* **Strategy:** Check the diagonal first. If you see $i$ on the diagonal, it's **not** Hermitian. If columns look orthogonal (like $[1, 1]$ and $[1, -1]$), check for Unitary.
 
 ---
 
@@ -478,11 +478,11 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 * **Strategy:**
     * First argument (`q[1]`) is the **Control** (Dot $\bullet$).
     * Second argument (`q[0]`) is the **Target** (Cross $\oplus$).
-    * *Visual Check:* Look for the line labeled $q_1$. Does it have the dot? Look for $q_0$. [cite_start]Does it have the cross? [cite: 8617-8621].
+    * *Visual Check:* Look for the line labeled $q_1$. Does it have the dot? Look for $q_0$. Does it have the cross?
 
 ### **Q: What is Transpilation?**
 **The Definition:** Real quantum computers don't support every gate you write in code. "Transpilation" converts your abstract circuit into the specific "basis gates" (like CNOT, ID, RZ, SX) that the actual hardware can execute.
-* [cite_start]**Strategy:** Look for the answer describing "converting to a universal set of gates favored by the computer"[cite: 5882].
+* **Strategy:** Look for the answer describing "converting to a universal set of gates favored by the computer".
 
 ---
 
@@ -491,19 +491,19 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 ### **Q: The Oracle's Reflection**
 **The Concept:** The Oracle $\hat{U}_f$ marks the solution $|a\rangle$ by flipping its phase.
 * **Geometric Interpretation:** In the 2D plane spanned by the solution $|a\rangle$ and non-solutions $|a_\perp\rangle$, the Oracle performs a reflection across the axis of the **non-solutions** ($|a_\perp\rangle$).
-* [cite_start]**Strategy:** Look for "reflection relative to... vector $|a_\perp\rangle$" or "perpendicular to the solution" [cite: 2970-2974].
+* **Strategy:** Look for "reflection relative to... vector $|a_\perp\rangle$" or "perpendicular to the solution".
 
 ### **Q: The Diffusion Operator's Reflection**
 **The Concept:** The Diffusion operator $\hat{W}$ amplifies probability.
 * **Geometric Interpretation:** It reflects the state vector across the **initial uniform superposition state** $|\phi\rangle$ (the state before the algorithm starts searching).
-* [cite_start]**Strategy:** Look for "reflection relative to... initial vector" or "uniform superposition" [cite: 3289-3298].
+* **Strategy:** Look for "reflection relative to... initial vector" or "uniform superposition".
 
 ### **Q: Optimal Iterations**
 **The Formula:** $r \approx \frac{\pi}{4}\sqrt{N}$.
 * **Strategy:**
     1.  If $n=2$ qubits, then $N = 2^2 = 4$.
     2.  Calculate: $\frac{\pi}{4}\sqrt{4} = \frac{\pi}{4}(2) = \frac{\pi}{2} \approx 1.57$.
-    3.  [cite_start]Round to the nearest integer: **1 iteration** is usually sufficient for $N=4$ [cite: 3118-3121].
+    3.  Round to the nearest integer: **1 iteration** is usually sufficient for $N=4$.
 
 ---
 
@@ -511,7 +511,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 
 ### **Q: 1-Qubit QFT**
 **The Fact:** The Quantum Fourier Transform on a single qubit ($H$) transforms $|0\rangle \to |+\rangle$ and $|1\rangle \to |-\rangle$.
-* [cite_start]**Strategy:** This is exactly the definition of the **Hadamard Gate**[cite: 7549].
+* **Strategy:** This is exactly the definition of the **Hadamard Gate**.
 
 ### **Q: Interpreting QPE Histograms**
 **The Problem:** You see a peak at a binary value (e.g., `101`). What is the phase?
@@ -523,7 +523,7 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
     2.  **Count the qubits:** How many bits in the string? (e.g., `10` is 2 bits, so $m=2$).
     3.  **Calculate Phase:** $\theta = \text{Integer Value} / 2^m$.
         * Example: $2 / 2^2 = 2/4 = 0.5$.
-    4.  [cite_start]**Binary Fraction:** Write the bitstring after a decimal point: `0.10` [cite: 5434-5439].
+    4.  **Binary Fraction:** Write the bitstring after a decimal point: `0.10`.
 
 ---
 
@@ -531,18 +531,18 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 
 ### **Q: HHL Matrix Requirements**
 **The Rule:** HHL solves $Ax=b$. For the quantum simulation $e^{iAt}$ to work directly, $A$ must be **Hermitian** ($A=A^\dagger$). To solve it, $A$ must be **Invertible** ($\det(A) \neq 0$).
-* [cite_start]**Strategy:** Look for the option satisfying both "Hermitian" and "Invertible" (Determinant $\neq 0$) [cite: 6683-6684].
+* **Strategy:** Look for the option satisfying both "Hermitian" and "Invertible" (Determinant $\neq 0$).
 
 ### **Q: Simulation Time 't' in HHL**
 **The Concept:** We want to map the eigenvalues of $A$ to phases that fit nicely into our register.
 * **The Logic:** If eigenvalues are integers (e.g., $\lambda=2$), we want the phase $\theta$ to be a useful fraction.
     * Phase $\theta = \frac{\lambda t}{2\pi}$.
 * **Strategy:** If you are given eigenvalues and a target phase representation (e.g., trying to map $\lambda=1 \to |01\rangle$ and $\lambda=2 \to |10\rangle$), solve for $t$ such that $\frac{\lambda t}{2\pi}$ equals the desired binary fraction (like $1/4$ or $2/4$).
-    * [cite_start]*Example:* If $\lambda=1$ needs to map to state `1` ($y=1$) in a 2-qubit register ($m=2$), then $\frac{1 \cdot t}{2\pi} = \frac{1}{2^2} \implies t = \frac{2\pi}{4} = \frac{\pi}{2}$ [cite: 6930-6935].
+    * *Example:* If $\lambda=1$ needs to map to state `1` ($y=1$) in a 2-qubit register ($m=2$), then $\frac{1 \cdot t}{2\pi} = \frac{1}{2^2} \implies t = \frac{2\pi}{4} = \frac{\pi}{2}$.
 
 ### **Q: VQE Algorithm Type**
 **The Fact:** VQE does the heavy lifting (state prep, measurement) on a Quantum computer, but the optimization (finding the next parameters) on a Classical computer.
-* [cite_start]**Strategy:** Select **Hybrid** (partly quantum, partly classical) [cite: 1982-2004].
+* **Strategy:** Select **Hybrid** (partly quantum, partly classical).
 
 # Solving the Problem Tasks
 
@@ -559,7 +559,7 @@ You are given an initial state (usually $|00\rangle$) and a circuit diagram with
 **1. Start with the Initial Vector**
 For a 2-qubit system starting at $|00\rangle$, your vector is:
 $$|\psi_0\rangle = \begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \end{pmatrix}$$
-[cite_start]*(Note: The indices represent states $|00\rangle, |01\rangle, |10\rangle, |11\rangle$)* [cite: 130-133].
+*(Note: The indices represent states $|00\rangle, |01\rangle, |10\rangle, |11\rangle$)*.
 
 **2. Apply Single Qubit Gates (Tensor Product)**
 If a gate (like **H**) is applied to **one** qubit, you must calculate the matrix for the **whole** system using the Tensor Product ($\otimes$).
@@ -567,7 +567,7 @@ If a gate (like **H**) is applied to **one** qubit, you must calculate the matri
     $$M = H \otimes I$$
 * **Rule:** If H is on Qubit 1 and nothing is on Qubit 0:
     $$M = I \otimes H$$
-* [cite_start]**Calculation:** Multiply this large $4 \times 4$ matrix by your current state vector [cite: 285-288].
+* **Calculation:** Multiply this large $4 \times 4$ matrix by your current state vector.
 
 > **Shortcut for Exam:**
 > If you apply H to the first qubit of $|00\rangle$, just change that specific qubit's state:
@@ -596,13 +596,13 @@ You solve the "Characteristic Equation":
 $$\det(M - \lambda I) = 0$$
 * Subtract $\lambda$ from the diagonal elements of matrix $M$.
 * Calculate the determinant ($ad - bc$ for a $2 \times 2$ matrix).
-* Solve for $\lambda$. [cite_start]These are your possible measurement outcomes[cite: 4299].
+* Solve for $\lambda$. These are your possible measurement outcomes.
 
 **2. Find Eigenvectors ($|v\rangle$)**
 For each $\lambda$ you found, solve the equation:
 $$(M - \lambda I)|v\rangle = 0$$
 * This gives you a system of linear equations. Solve for the components of $|v\rangle$.
-* **Crucial Step:** **Normalize** the vector! [cite_start]Divide by its length so that $\langle v | v \rangle = 1$[cite: 1199].
+* **Crucial Step:** **Normalize** the vector! Divide by its length so that $\langle v | v \rangle = 1$.
 
 ### Part B: Expected (Average) Value
 **Method:** Calculate the "sandwich":
@@ -610,7 +610,7 @@ $$\langle M \rangle = \langle \psi | M | \psi \rangle$$
 1.  **Ket:** Start with your state column vector $|\psi\rangle$.
 2.  **Operation:** Multiply the matrix $M$ by the vector $|\psi\rangle$. This gives you a new vector, let's call it $|\psi'\rangle$.
 3.  **Bra:** Take the conjugate transpose of your original state ($\langle \psi |$).
-4.  **Result:** Multiply the row vector $\langle \psi |$ by the new column vector $|\psi'\rangle$. [cite_start]The result is a single number (scalar)[cite: 1931].
+4.  **Result:** Multiply the row vector $\langle \psi |$ by the new column vector $|\psi'\rangle$. The result is a single number (scalar).
 
 ---
 
@@ -623,7 +623,7 @@ $$H = aI + bX + cY + dZ$$
 We need to find the numbers $a, b, c, d$.
 
 ### The "Trace Trick" Method
-[cite_start]There is a magic formula to find these coefficients using the **Trace** (sum of diagonal elements)[cite: 2170]:
+There is a magic formula to find these coefficients using the **Trace** (sum of diagonal elements):
 $$c_k = \frac{1}{2} \text{Tr}(H \cdot \sigma_k)$$
 * Where $\sigma_k$ is one of the Pauli matrices ($I, X, Y, Z$).
 
@@ -644,10 +644,10 @@ $$d = \frac{1}{2} \text{Tr}\left( \begin{pmatrix} H_{00} & H_{01} \\ H_{10} & H_
 
 ### The Definition
 The trace is the sum of the diagonal elements:
-[cite_start]$$\text{Tr}(M) = \sum M_{ii}$$[cite: 4578].
+$$\text{Tr}(M) = \sum M_{ii}$$
 
 ### The Shortcut Method (Inner Product)
-[cite_start]The trace of a product $\text{Tr}(A^\dagger B)$ is actually defined as the **Hilbert-Schmidt Inner Product** of the two matrices[cite: 2116].
+The trace of a product $\text{Tr}(A^\dagger B)$ is actually defined as the **Hilbert-Schmidt Inner Product** of the two matrices.
 
 If you are asked for $\text{Tr}(AB)$:
 1.  You *could* multiply matrix $A$ and matrix $B$ fully, then sum the diagonal.
@@ -656,6 +656,6 @@ If you are asked for $\text{Tr}(AB)$:
     $$(AB)_{11} = (\text{Row } 1 \text{ of } A) \cdot (\text{Col } 1 \text{ of } B)$$
     $$\text{Trace} = (AB)_{00} + (AB)_{11} + \dots$$
 
-### [cite_start]Important Properties to Remember [cite: 4613]
+### Important Properties to Remember
 * **Cyclic Property:** $\text{Tr}(ABC) = \text{Tr}(BCA) = \text{Tr}(CAB)$. You can cycle the matrices, but you cannot swap them arbitrarily.
 * **Linearity:** $\text{Tr}(A + B) = \text{Tr}(A) + \text{Tr}(B)$.
