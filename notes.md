@@ -406,3 +406,256 @@ The more qubits ($m$) you use in the clock register, the more precise your estim
 **Important Python/Qiskit Note:**
 * **QPE**: Requires implementing `QFT` and its inverse `IQFT_dg`.
 * **VQE**: In Qiskit, you define a `QuantumCircuit` for the Ansatz (the guess) and use a classical optimizer (like `COBYLA` or `SPSA`) to update the parameters.
+
+# Solving Multiple Choice & Short Questions
+
+---
+
+## 🖥️ 1. Quantum Hardware & Qiskit Syntax
+
+### **Q: Choosing a Quantum Computer**
+**The Dilemma:** You have options with different "Number of qubits" and "Quantum Volume (QV)".
+* **The Rule:** Qubit count isn't everything. A machine with 100 qubits is useless if they are too noisy to finish a calculation. **Quantum Volume (QV)** is the "holistic" metric that measures the *actual* useful power of the computer, accounting for gate errors, connectivity, and coherence time.
+* **Strategy:** Always choose the machine with the **highest Quantum Volume** first. [cite_start]If QVs are equal, then choose the higher qubit count [cite: 5882-5902].
+
+### **Q: Interpreting Qiskit Results**
+**The Format:** `{'0': 1, '1': 0}` or `{'00': 500, '11': 500}`.
+* **The Logic:** This is a Python dictionary: `{ 'Outcome': Count }`.
+    * **Keys ('0', '1'):** These are the measurement results (bitstrings).
+    * **Values (1, 0, 500):** These are the *number of times* that specific result occurred (the "shots").
+* **Strategy:**
+    * If the total count is 1 (e.g., `{'0': 1}`), the circuit was run **once** (1 shot).
+    * If you see two keys (e.g., `'0': 500` and `'1': 500`), the circuit was run **multiple times**.
+    * [cite_start]The length of the key string (e.g., `'00'` vs `'0'`) tells you how many qubits were measured [cite: 8294-8300].
+
+### **Q: Qiskit Visualization (`plot_bloch_vector`)**
+**The Syntax:** `plot_bloch_vector([a, b, c], coord_type='...')`
+* **The Logic:** The function plots a state on the Bloch Sphere. The list `[a, b, c]` represents the coordinates.
+* **Strategy:** Check the `coord_type`.
+    * `'cartesian'`: The list is `[x, y, z]`.
+    * `'spherical'`: The list is `[r, theta, phi]` (Radius, Latitude, Longitude).
+    * [cite_start]*Exam Tip:* If you see $\pi$ in the list (e.g., `[1, pi, 0]`), it's almost certainly **spherical** coordinates because $\pi$ is an angle [cite: 1364-1365].
+
+---
+
+## 📐 2. Linear Algebra & State Vectors
+
+### **Q: Converting Ket to Bra**
+**The Problem:** Given Ket $| \psi \rangle = |0\rangle|1\rangle$, find the Bra $\langle \psi |$.
+* **The Logic:**
+    1.  **Tensor Product:** First, expand the Ket. $|0\rangle|1\rangle$ means $|0\rangle \otimes |1\rangle$. In the standard basis:
+        $$|0\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad |1\rangle = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \implies |01\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix} \otimes \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \end{pmatrix}$$
+    2.  **Conjugate Transpose:** To get the Bra, turn the column into a row. Since the numbers are real (0 and 1), you don't need to change signs.
+* [cite_start]**Strategy:** Look for the row vector with a "1" in the same position as the "1" in your calculated column vector [cite: 130-133, 8626-8631].
+
+### **Q: Calculating Probabilities from Coefficients**
+**The Problem:** Given a state like $|00\rangle + |01\rangle + |10\rangle + |11\rangle$, what is the probability of measuring a specific state?
+* **The Logic:** $P(x) = \frac{|\text{Coefficient of } x|^2}{\text{Normalization Factor}^2}$.
+* **Strategy:**
+    1.  Count the terms. Here we have 4 terms, each with an implicit coefficient of 1.
+    2.  Calculate the sum of squares: $1^2 + 1^2 + 1^2 + 1^2 = 4$.
+    3.  The normalization factor is $\sqrt{4} = 2$.
+    4.  The probability for *any one* state is $(1/2)^2 = 1/4 = 0.25$.
+    5.  [cite_start]*Trick:* If the coefficients are different (e.g., $0.374$ and $0.125$), pick the one that matches the specific state you are asked about [cite: 1194-1199].
+
+### **Q: Identifying Matrix Types**
+**The Problem:** Is Matrix $M$ Unitary? Hermitian? Both?
+* **Hermitian Rule ($M = M^\dagger$):**
+    * Diagonal elements *must* be real numbers.
+    * Off-diagonal elements must be "mirror images" with opposite signs for imaginary parts ($a+bi$ reflects to $a-bi$).
+* **Unitary Rule ($M^\dagger M = I$):**
+    * Rows/Cols must be normalized (length 1).
+    * Rows/Cols must be orthogonal (dot product 0).
+* **Strategy:** Check the diagonal first. If you see $i$ on the diagonal, it's **not** Hermitian. [cite_start]If columns look orthogonal (like $[1, 1]$ and $[1, -1]$), check for Unitary [cite: 4371-4390].
+
+---
+
+## ⚡ 3. Circuits & Transpilation
+
+### **Q: Circuit Equivalence**
+**The Problem:** Which circuit matches the code `circuita.cx(q[1], q[0])`?
+* **The Logic:** In Qiskit, `cx(control, target)`.
+* **Strategy:**
+    * First argument (`q[1]`) is the **Control** (Dot $\bullet$).
+    * Second argument (`q[0]`) is the **Target** (Cross $\oplus$).
+    * *Visual Check:* Look for the line labeled $q_1$. Does it have the dot? Look for $q_0$. [cite_start]Does it have the cross? [cite: 8617-8621].
+
+### **Q: What is Transpilation?**
+**The Definition:** Real quantum computers don't support every gate you write in code. "Transpilation" converts your abstract circuit into the specific "basis gates" (like CNOT, ID, RZ, SX) that the actual hardware can execute.
+* [cite_start]**Strategy:** Look for the answer describing "converting to a universal set of gates favored by the computer"[cite: 5882].
+
+---
+
+## 🔎 4. Grover's Algorithm
+
+### **Q: The Oracle's Reflection**
+**The Concept:** The Oracle $\hat{U}_f$ marks the solution $|a\rangle$ by flipping its phase.
+* **Geometric Interpretation:** In the 2D plane spanned by the solution $|a\rangle$ and non-solutions $|a_\perp\rangle$, the Oracle performs a reflection across the axis of the **non-solutions** ($|a_\perp\rangle$).
+* [cite_start]**Strategy:** Look for "reflection relative to... vector $|a_\perp\rangle$" or "perpendicular to the solution" [cite: 2970-2974].
+
+### **Q: The Diffusion Operator's Reflection**
+**The Concept:** The Diffusion operator $\hat{W}$ amplifies probability.
+* **Geometric Interpretation:** It reflects the state vector across the **initial uniform superposition state** $|\phi\rangle$ (the state before the algorithm starts searching).
+* [cite_start]**Strategy:** Look for "reflection relative to... initial vector" or "uniform superposition" [cite: 3289-3298].
+
+### **Q: Optimal Iterations**
+**The Formula:** $r \approx \frac{\pi}{4}\sqrt{N}$.
+* **Strategy:**
+    1.  If $n=2$ qubits, then $N = 2^2 = 4$.
+    2.  Calculate: $\frac{\pi}{4}\sqrt{4} = \frac{\pi}{4}(2) = \frac{\pi}{2} \approx 1.57$.
+    3.  [cite_start]Round to the nearest integer: **1 iteration** is usually sufficient for $N=4$ [cite: 3118-3121].
+
+---
+
+## 🌊 5. QFT & Phase Estimation (QPE)
+
+### **Q: 1-Qubit QFT**
+**The Fact:** The Quantum Fourier Transform on a single qubit ($H$) transforms $|0\rangle \to |+\rangle$ and $|1\rangle \to |-\rangle$.
+* [cite_start]**Strategy:** This is exactly the definition of the **Hadamard Gate**[cite: 7549].
+
+### **Q: Interpreting QPE Histograms**
+**The Problem:** You see a peak at a binary value (e.g., `101`). What is the phase?
+* **The Logic:** The QPE circuit stores the value $y = 2^m \cdot \theta$ in the register.
+    * $\theta$ is the phase (a decimal between 0 and 1).
+    * $m$ is the number of qubits in the counting register.
+* **Strategy:**
+    1.  **Identify the peak:** Which bitstring has the highest probability? (e.g., `10` corresponds to integer 2).
+    2.  **Count the qubits:** How many bits in the string? (e.g., `10` is 2 bits, so $m=2$).
+    3.  **Calculate Phase:** $\theta = \text{Integer Value} / 2^m$.
+        * Example: $2 / 2^2 = 2/4 = 0.5$.
+    4.  [cite_start]**Binary Fraction:** Write the bitstring after a decimal point: `0.10` [cite: 5434-5439].
+
+---
+
+## 🧮 6. HHL & VQE Algorithms
+
+### **Q: HHL Matrix Requirements**
+**The Rule:** HHL solves $Ax=b$. For the quantum simulation $e^{iAt}$ to work directly, $A$ must be **Hermitian** ($A=A^\dagger$). To solve it, $A$ must be **Invertible** ($\det(A) \neq 0$).
+* [cite_start]**Strategy:** Look for the option satisfying both "Hermitian" and "Invertible" (Determinant $\neq 0$) [cite: 6683-6684].
+
+### **Q: Simulation Time 't' in HHL**
+**The Concept:** We want to map the eigenvalues of $A$ to phases that fit nicely into our register.
+* **The Logic:** If eigenvalues are integers (e.g., $\lambda=2$), we want the phase $\theta$ to be a useful fraction.
+    * Phase $\theta = \frac{\lambda t}{2\pi}$.
+* **Strategy:** If you are given eigenvalues and a target phase representation (e.g., trying to map $\lambda=1 \to |01\rangle$ and $\lambda=2 \to |10\rangle$), solve for $t$ such that $\frac{\lambda t}{2\pi}$ equals the desired binary fraction (like $1/4$ or $2/4$).
+    * [cite_start]*Example:* If $\lambda=1$ needs to map to state `1` ($y=1$) in a 2-qubit register ($m=2$), then $\frac{1 \cdot t}{2\pi} = \frac{1}{2^2} \implies t = \frac{2\pi}{4} = \frac{\pi}{2}$ [cite: 6930-6935].
+
+### **Q: VQE Algorithm Type**
+**The Fact:** VQE does the heavy lifting (state prep, measurement) on a Quantum computer, but the optimization (finding the next parameters) on a Classical computer.
+* [cite_start]**Strategy:** Select **Hybrid** (partly quantum, partly classical) [cite: 1982-2004].
+
+# Solving the Problem Tasks
+
+---
+
+## 🧩 Task 1: Tracing Quantum Circuits
+*Goal: Determine the final state vector of a register after passing through a series of gates.*
+
+### The Problem Type
+You are given an initial state (usually $|00\rangle$) and a circuit diagram with gates like **Hadamard (H)** and **CNOT**. You need to calculate the state at specific "barriers" or at the very end.
+
+### Step-by-Step Method
+
+**1. Start with the Initial Vector**
+For a 2-qubit system starting at $|00\rangle$, your vector is:
+$$|\psi_0\rangle = \begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \end{pmatrix}$$
+[cite_start]*(Note: The indices represent states $|00\rangle, |01\rangle, |10\rangle, |11\rangle$)* [cite: 130-133].
+
+**2. Apply Single Qubit Gates (Tensor Product)**
+If a gate (like **H**) is applied to **one** qubit, you must calculate the matrix for the **whole** system using the Tensor Product ($\otimes$).
+* **Rule:** If H is on Qubit 0 and nothing (Identity $I$) is on Qubit 1:
+    $$M = H \otimes I$$
+* **Rule:** If H is on Qubit 1 and nothing is on Qubit 0:
+    $$M = I \otimes H$$
+* [cite_start]**Calculation:** Multiply this large $4 \times 4$ matrix by your current state vector [cite: 285-288].
+
+> **Shortcut for Exam:**
+> If you apply H to the first qubit of $|00\rangle$, just change that specific qubit's state:
+> $$H|0\rangle \otimes |0\rangle = |+\rangle \otimes |0\rangle = \frac{|00\rangle + |10\rangle}{\sqrt{2}}$$
+
+**3. Apply Two-Qubit Gates (CNOT)**
+The CNOT (or CX) gate entangles qubits.
+* **Identify Control & Target:** In Qiskit/diagrams, the dot is Control, the cross ($\oplus$) is Target.
+* **Logic:** "If Control is 1, flip Target."
+* **Vector Operation:** Swap the coefficients of the states where the control bit is 1.
+    * If Control is Qubit 0 (Left bit in binary): Swap coefficients of $|10\rangle$ and $|11\rangle$.
+    * If Control is Qubit 1 (Right bit in binary): Swap coefficients of $|01\rangle$ and $|11\rangle$.
+
+**4. Final State**
+Write down the resulting vector.
+* Example Result: $\frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$ (This is a Bell State).
+
+---
+
+## 📊 Task 2: Observables & Eigenvalues
+*Goal: Analyze a matrix $M$ representing a physical observable (like Energy).*
+
+### Part A: Eigenvalues and Eigenvectors
+**1. Find Eigenvalues ($\lambda$)**
+You solve the "Characteristic Equation":
+$$\det(M - \lambda I) = 0$$
+* Subtract $\lambda$ from the diagonal elements of matrix $M$.
+* Calculate the determinant ($ad - bc$ for a $2 \times 2$ matrix).
+* Solve for $\lambda$. [cite_start]These are your possible measurement outcomes[cite: 4299].
+
+**2. Find Eigenvectors ($|v\rangle$)**
+For each $\lambda$ you found, solve the equation:
+$$(M - \lambda I)|v\rangle = 0$$
+* This gives you a system of linear equations. Solve for the components of $|v\rangle$.
+* **Crucial Step:** **Normalize** the vector! [cite_start]Divide by its length so that $\langle v | v \rangle = 1$[cite: 1199].
+
+### Part B: Expected (Average) Value
+**Method:** Calculate the "sandwich":
+$$\langle M \rangle = \langle \psi | M | \psi \rangle$$
+1.  **Ket:** Start with your state column vector $|\psi\rangle$.
+2.  **Operation:** Multiply the matrix $M$ by the vector $|\psi\rangle$. This gives you a new vector, let's call it $|\psi'\rangle$.
+3.  **Bra:** Take the conjugate transpose of your original state ($\langle \psi |$).
+4.  **Result:** Multiply the row vector $\langle \psi |$ by the new column vector $|\psi'\rangle$. [cite_start]The result is a single number (scalar)[cite: 1931].
+
+---
+
+## 🧱 Task 3: Decomposition Coefficients
+*Goal: Break down a complex matrix $H$ into simple Pauli components ($I, X, Y, Z$).*
+
+### The Concept
+Any $2 \times 2$ matrix can be written as a sum:
+$$H = aI + bX + cY + dZ$$
+We need to find the numbers $a, b, c, d$.
+
+### The "Trace Trick" Method
+[cite_start]There is a magic formula to find these coefficients using the **Trace** (sum of diagonal elements)[cite: 2170]:
+$$c_k = \frac{1}{2} \text{Tr}(H \cdot \sigma_k)$$
+* Where $\sigma_k$ is one of the Pauli matrices ($I, X, Y, Z$).
+
+**Step-by-Step:**
+1.  **Find coefficient for I:** Calculate $\text{Tr}(H \cdot I) = \text{Tr}(H)$. Divide by 2.
+2.  **Find coefficient for X:** Multiply $H \cdot X$. Calculate the Trace. Divide by 2.
+3.  **Find coefficient for Y:** Multiply $H \cdot Y$. Calculate the Trace. Divide by 2.
+4.  **Find coefficient for Z:** Multiply $H \cdot Z$. Calculate the Trace. Divide by 2.
+
+*Example:*
+To find the $Z$ coefficient for matrix $H$:
+$$d = \frac{1}{2} \text{Tr}\left( \begin{pmatrix} H_{00} & H_{01} \\ H_{10} & H_{11} \end{pmatrix} \cdot \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \right) = \frac{1}{2} (H_{00} - H_{11})$$
+
+---
+
+## 🔄 Task 4: Trace of a Product
+*Goal: Calculate $\text{Tr}(AB)$ without doing full matrix multiplication.*
+
+### The Definition
+The trace is the sum of the diagonal elements:
+[cite_start]$$\text{Tr}(M) = \sum M_{ii}$$[cite: 4578].
+
+### The Shortcut Method (Inner Product)
+[cite_start]The trace of a product $\text{Tr}(A^\dagger B)$ is actually defined as the **Hilbert-Schmidt Inner Product** of the two matrices[cite: 2116].
+
+If you are asked for $\text{Tr}(AB)$:
+1.  You *could* multiply matrix $A$ and matrix $B$ fully, then sum the diagonal.
+2.  **Faster Way:** Sum the products of rows of $A$ and columns of $B$ corresponding to diagonal positions only.
+    $$(AB)_{00} = (\text{Row } 0 \text{ of } A) \cdot (\text{Col } 0 \text{ of } B)$$
+    $$(AB)_{11} = (\text{Row } 1 \text{ of } A) \cdot (\text{Col } 1 \text{ of } B)$$
+    $$\text{Trace} = (AB)_{00} + (AB)_{11} + \dots$$
+
+### [cite_start]Important Properties to Remember [cite: 4613]
+* **Cyclic Property:** $\text{Tr}(ABC) = \text{Tr}(BCA) = \text{Tr}(CAB)$. You can cycle the matrices, but you cannot swap them arbitrarily.
+* **Linearity:** $\text{Tr}(A + B) = \text{Tr}(A) + \text{Tr}(B)$.
