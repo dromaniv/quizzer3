@@ -658,7 +658,7 @@ $$(AB)_{00} = (\text{Row } 0 \text{ of } A) \cdot (\text{Col } 0 \text{ of } B)$
 
 $$(AB)_{11} = (\text{Row } 1 \text{ of } A) \cdot (\text{Col } 1 \text{ of } B)$$
 
-$$\operatorname{Tr}(AB) = (AB)_{00} + (AB)_{11} + \cdots$$
+$$Tr(AB) = (AB)\ _{00} + (AB)\ _{11} + ...$$
 
 ### Important Properties to Remember
 * **Cyclic Property:** $\text{Tr}(ABC) = \text{Tr}(BCA) = \text{Tr}(CAB)$. You can cycle the matrices, but you cannot swap them arbitrarily.
