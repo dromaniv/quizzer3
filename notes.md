@@ -209,9 +209,9 @@ We often see exponentials of matrices, like $e^{i\hat{H}t}$.
 ### 4. Rotation Operators
 Any single-qubit gate can be viewed as a rotation of the Bloch vector around some axis $\vec{n}$.
 
-$$\hat{R}_{\vec{n}}(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_{\vec{n}}} = \cos\left(\frac{\theta}{2}\right)\hat{I} - i\sin\left(\frac{\theta}{2}\right)\hat{\sigma}_{\vec{n}}$$
+$$\hat{R}_n(\theta) = e^{-i\frac{\theta}{2} \hat{\sigma}_n} = \cos\left(\frac{\theta}{2}\right)\hat{I} - i\sin\left(\frac{\theta}{2}\right)\hat{\sigma}_n$$
 
-* $\hat{\sigma}_{\vec{n}}$ is a mix of Pauli matrices ($X, Y, Z$) representing the axis of rotation.
+* $\hat{\sigma}_n$ is a mix of Pauli matrices ($X, Y, Z$) representing the axis of rotation.
 
 **Decomposition Theorem (Z-Y-Z):**
 Any single-qubit unitary gate $\hat{U}$ can be broken down into three rotations:
@@ -650,11 +650,15 @@ $$\text{Tr}(M) = \sum M_{ii}$$
 The trace of a product $\text{Tr}(A^\dagger B)$ is actually defined as the **Hilbert-Schmidt Inner Product** of the two matrices.
 
 If you are asked for $\text{Tr}(AB)$:
+
 1.  You *could* multiply matrix $A$ and matrix $B$ fully, then sum the diagonal.
 2.  **Faster Way:** Sum the products of rows of $A$ and columns of $B$ corresponding to diagonal positions only.
-    $$(AB)_{00} = (\text{Row } 0 \text{ of } A) \cdot (\text{Col } 0 \text{ of } B)$$
-    $$(AB)_{11} = (\text{Row } 1 \text{ of } A) \cdot (\text{Col } 1 \text{ of } B)$$
-    $$\text{Trace} = (AB)_{00} + (AB)_{11} + \dots$$
+
+$$(AB)_{00} = (\text{Row } 0 \text{ of } A) \cdot (\text{Col } 0 \text{ of } B)$$
+
+$$(AB)_{11} = (\text{Row } 1 \text{ of } A) \cdot (\text{Col } 1 \text{ of } B)$$
+
+$$\text{Trace} = (AB)_{00} + (AB)_{11} + \dots$$
 
 ### Important Properties to Remember
 * **Cyclic Property:** $\text{Tr}(ABC) = \text{Tr}(BCA) = \text{Tr}(CAB)$. You can cycle the matrices, but you cannot swap them arbitrarily.
