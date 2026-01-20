@@ -53,154 +53,254 @@
   ],
   "multipleChoice": [
     {
-      "question":"Which of the following is NOT a quantum hardware technology mentioned?","choices":["Superconducting Qubits","Ion Traps","Liquid Transistors","Neutral Atoms"],"answer":"Liquid Transistors"
+      "question": "Which metric specifically measures the number of complex circuits a quantum computer can run successfully, accounting for gate errors and coherence times?",
+      "choices": ["CLOPS (Circuit Layer Operations Per Second)", "Quantum Volume (QV)", "Qubit Count", "Clock Speed"],
+      "answer": "Quantum Volume (QV)"
     },
     {
-      "question":"The Qiskit command to visualize a circuit is:","choices":["circuit.show()","circuit.draw()","circuit.plot()","circuit.display()"],"answer":"circuit.draw()"
+      "question": "If you need a quantum platform that aggregates hardware from multiple providers like IonQ, Rigetti, and OQC, which service would you choose?",
+      "choices": ["IBM Quantum Platform", "Amazon Braket", "Google Quantum AI", "Qiskit Runtime"],
+      "answer": "Amazon Braket"
     },
     {
-      "question":"The inner product <ψ|φ> is also known as:","choices":["The Bra-Ket","The Tensor Product","The Cross Product","The Outer Product"],"answer":"The Bra-Ket"
+      "question": "When defining a quantum state vector in Qiskit, which coordinate system uses a radius, theta, and phi?",
+      "choices": ["Cartesian", "Cylindrical", "Spherical", "Hilbert"],
+      "answer": "Spherical"
     },
     {
-      "question":"If a state is |+⟩ = 1/√2(|0⟩ + |1⟩), what is the probability of measuring 0?","choices":["0","0.5","1","0.25"],"answer":"0.5"
+      "question": "In the 'Little-endian' convention used by Qiskit, the state |10⟩ represents:",
+      "choices": ["Qubit 0 is 1, Qubit 1 is 0", "Qubit 0 is 0, Qubit 1 is 1", "Both qubits are in superposition", "An entangled Bell state"],
+      "answer": "Qubit 0 is 0, Qubit 1 is 1"
     },
     {
-      "question":"Geometrically, the state |1⟩ is located where on the Bloch Sphere?","choices":["North Pole","Equator","South Pole","Center"],"answer":"South Pole"
+      "question": "Which of the following is a requirement for a matrix to represent a valid physical observable (like Energy)?",
+      "choices": ["It must be Unitary", "It must be Hermitian", "It must be Invertible", "It must have a trace of 0"],
+      "answer": "It must be Hermitian"
     },
     {
-      "question":"A matrix is Unitary if:","choices":["A = A†","A†A = I","A = -A","Tr(A) = 1"],"answer":"A†A = I"
+      "question": "The trace of the density matrix representing a pure quantum state is always:",
+      "choices": ["0", "1", "Undefined", "Dependent on the number of qubits"],
+      "answer": "1"
     },
     {
-      "question":"Which gate corresponds to a rotation of π (180°) around the X-axis?","choices":["Z","H","X","S"],"answer":"X"
+      "question": "What is the result of the operation <1|0> in an orthonormal basis?",
+      "choices": ["1", "0", "i", "-1"],
+      "answer": "0"
     },
     {
-      "question":"The T gate corresponds to a phase rotation of:","choices":["π","π/2","π/4","π/8"],"answer":"π/4"
+      "question": "Which quantum gate creates a superposition state |+⟩ when applied to the basis state |0⟩?",
+      "choices": ["Pauli-X", "Pauli-Z", "Hadamard (H)", "CNOT"],
+      "answer": "Hadamard (H)"
     },
     {
-      "question":"Which equation governs the time evolution of a closed quantum system?","choices":["Maxwell's Equation","Newton's Second Law","Schrödinger Equation","Einstein's Field Equation"],"answer":"Schrödinger Equation"
+      "question": "The matrix representation [[1, 0], [0, i]] corresponds to which single-qubit gate?",
+      "choices": ["T gate", "S gate", "Z gate", "Y gate"],
+      "answer": "S gate"
     },
     {
-      "question":"If H is the Hamiltonian, the evolution operator U(t) is:","choices":["e^(-iHt/ħ)","e^(Ht)","sin(Ht)","H^(-1)"],"answer":"e^(-iHt/ħ)"
+      "question": "In a Python Qiskit script, what does the argument 'shots=1024' specify?",
+      "choices": ["The number of qubits in the circuit", "The number of times the circuit is executed to gather statistics", "The depth of the transpiled circuit", "The optimization level of the compiler"],
+      "answer": "The number of times the circuit is executed to gather statistics"
     },
     {
-      "question":"The dimension of a Hilbert space for 3 qubits is:","choices":["3","6","8","9"],"answer":"8"
+      "question": "If a unitary operator U satisfies U^2 = I, then the eigenvalues of U must be:",
+      "choices": ["0 and 1", "1 and -1", "i and -i", "Any complex number on the unit circle"],
+      "answer": "1 and -1"
     },
     {
-      "question":"Which of these states is Entangled?","choices":["|00⟩","1/√2(|00⟩ + |11⟩)","1/2(|00⟩ + |01⟩ + |10⟩ + |11⟩)","|0⟩⊗|1⟩"],"answer":"1/√2(|00⟩ + |11⟩)"
+      "question": "Which of the following identities correctly describes the action of the adjoint operator on a product (AB)†?",
+      "choices": ["A† B†", "B† A†", "A B†", "B A"],
+      "answer": "B† A†"
     },
     {
-      "question":"The CNOT gate flips the target qubit if the control is:","choices":["|0⟩","|1⟩","|+⟩","|-⟩"],"answer":"|1⟩"
+      "question": "What is the dimension of the Hilbert space for a system of 4 qubits?",
+      "choices": ["4", "8", "16", "32"],
+      "answer": "16"
     },
     {
-      "question":"Grover's Algorithm provides what kind of speedup?","choices":["Linear","Quadratic","Exponential","None"],"answer":"Quadratic"
+      "question": "Which of the following states is a product (separable) state?",
+      "choices": ["1/√2 (|00⟩ + |11⟩)", "1/√2 (|01⟩ + |10⟩)", "|0⟩ ⊗ |1⟩", "1/√2 (|00⟩ - |11⟩)"],
+      "answer": "|0⟩ ⊗ |1⟩"
     },
     {
-      "question":"The optimal number of iterations in Grover's algorithm for N items is proportional to:","choices":["N","N^2","√N","log(N)"],"answer":"√N"
+      "question": "In Grover's algorithm, what is the initial state of the register before the oracle is applied?",
+      "choices": ["The all-zero state |00...0⟩", "An equal superposition of all computational basis states", "The target state |w⟩", "A random classical state"],
+      "answer": "An equal superposition of all computational basis states"
     },
     {
-      "question":"In Grover's algorithm, the diffusion operator performs inversion about the:","choices":["Target","Mean","Zero state","Basis"],"answer":"Mean"
+      "question": "The Diffusion Operator in Grover's algorithm can be geometrically interpreted as:",
+      "choices": ["A reflection about the target state", "A reflection about the initial average state", "A rotation by pi/4", "A projection onto the solution subspace"],
+      "answer": "A reflection about the initial average state"
     },
     {
-      "question":"The Quantum Fourier Transform (QFT) on basis state |x⟩ results in:","choices":["|x⟩","A superposition of all states with specific phases","The inverse state |-x⟩","State |0⟩"],"answer":"A superposition of all states with specific phases"
+      "question": "What is the complexity class of the Quantum Fourier Transform (QFT) circuit relative to the number of qubits n?",
+      "choices": ["O(n 2^n)", "O(n^2)", "O(n log n)", "O(2^n)"],
+      "answer": "O(n^2)"
     },
     {
-      "question":"To implement QFT efficiently, we primarily use Hadamard gates and:","choices":["Controlled Phase Rotations","CNOTs","Toffoli gates","X gates"],"answer":"Controlled Phase Rotations"
+      "question": "In the Quantum Phase Estimation (QPE) algorithm, the 'Phase Kickback' mechanism transfers phase information from:",
+      "choices": ["The clock register to the target register", "The target eigenstate to the control qubit", "The measurement device to the circuit", "The ancilla qubit to the classical register"],
+      "answer": "The target eigenstate to the control qubit"
     },
     {
-      "question":"Phase Kickback is essential for which algorithm?","choices":["Teleportation","Superdense Coding","Quantum Phase Estimation","Bernstein-Vazirani"],"answer":"Quantum Phase Estimation"
+      "question": "If QPE on a 3-qubit clock register outputs the binary string '100', what is the estimated decimal phase theta?",
+      "choices": ["0.125", "0.25", "0.5", "0.75"],
+      "answer": "0.5"
     },
     {
-      "question":"In QPE, if the phase is θ = 0.5, the measured binary value in the clock register will likely be:","choices":["0...0","100...0","010...0","111...1"],"answer":"100...0"
+      "question": "The matrix for the SWAP gate acting on two qubits is:",
+      "choices": ["Identity matrix", "Permutation matrix exchanging states |01⟩ and |10⟩", "Diagonal matrix with -1 on the last element", "Tensor product of two Hadamard matrices"],
+      "answer": "Permutation matrix exchanging states |01⟩ and |10⟩"
     },
     {
-      "question":"The HHL algorithm is designed to solve:","choices":["Factorization","Database Search","Linear Systems of Equations","Optimization Problems"],"answer":"Linear Systems of Equations"
+      "question": "Which component is strictly necessary for the HHL algorithm to function?",
+      "choices": ["Quantum Phase Estimation", "Quantum Teleportation", "Quantum Error Correction", "Quantum Annealing"],
+      "answer": "Quantum Phase Estimation"
     },
     {
-      "question":"In HHL, the matrix A must be encoded as a:","choices":["Hamiltonian","State Vector","Measurement Operator","Classical Bit string"],"answer":"Hamiltonian"
+      "question": "In HHL, the rotation of the ancilla qubit is controlled by:",
+      "choices": ["The input vector |b⟩", "The eigenvalues stored in the clock register", "The Hamiltonian of the system", "The measurement result of the target"],
+      "answer": "The eigenvalues stored in the clock register"
     },
     {
-      "question":"Which step is NOT part of the HHL algorithm?","choices":["Phase Estimation","Controlled Rotation","Grover Diffusion","Uncomputation"],"answer":"Grover Diffusion"
+      "question": "The VQE algorithm is primarily used to approximate:",
+      "choices": ["The solution to a linear system", "The period of a function", "The ground state energy (minimum eigenvalue) of a Hamiltonian", "The prime factors of a number"],
+      "answer": "The ground state energy (minimum eigenvalue) of a Hamiltonian"
     },
     {
-      "question":"VQE is an example of what type of algorithm?","choices":["Purely Quantum","Hybrid Quantum-Classical","Classical Simulation","Recursive"],"answer":"Hybrid Quantum-Classical"
+      "question": "In VQE, the 'Ansatz' refers to:",
+      "choices": ["The classical optimizer used", "The final measurement result", "The parameterized quantum circuit acting as a trial wavefunction", "The Hamiltonian decomposition"],
+      "answer": "The parameterized quantum circuit acting as a trial wavefunction"
     },
     {
-      "question":"The 'Cost Function' in VQE usually represents:","choices":["Time","Expectation Value of Energy","Circuit Depth","Number of Qubits"],"answer":"Expectation Value of Energy"
+      "question": "Which of the following is a valid decomposition of a single-qubit unitary gate U?",
+      "choices": ["Rx Ry Rx", "Rz Ry Rz", "H X H", "S T S"],
+      "answer": "Rz Ry Rz"
     },
     {
-      "question":"Which classical optimizer was mentioned in the VQE lecture context?","choices":["Adam","COBYLA","Gradient Descent","Newton-Raphson"],"answer":"COBYLA"
+      "question": "The commutator [A, B] is defined as:",
+      "choices": ["AB + BA", "AB - BA", "A + B", "A / B"],
+      "answer": "AB - BA"
     },
     {
-      "question":"A 'pure' quantum state is represented by a:","choices":["Vector","Density Matrix with trace < 1","Scalar","Tensor"],"answer":"Vector"
+      "question": "Which gate is represented by the matrix [[0, 1], [1, 0]]?",
+      "choices": ["Pauli-Z", "Pauli-Y", "Pauli-X", "Hadamard"],
+      "answer": "Pauli-X"
     },
     {
-      "question":"The S gate is the square root of which gate?","choices":["X","Y","Z","H"],"answer":"Z"
+      "question": "If you perform a measurement on the state |ψ⟩ = 0.6|0⟩ + 0.8|1⟩, what is the probability of obtaining 1?",
+      "choices": ["0.36", "0.64", "0.8", "0.6"],
+      "answer": "0.64"
     },
     {
-      "question":"What does the command `pip install qiskit` do?","choices":["Runs a quantum circuit","Installs the Qiskit SDK","Updates firmware","Connects to IBM Cloud"],"answer":"Installs the Qiskit SDK"
+      "question": "What is the purpose of the 'uncomputation' step (Inverse QPE) in the HHL algorithm?",
+      "choices": ["To measure the final result", "To disentangle the clock register from the target register", "To invert the matrix A", "To load the vector b"],
+      "answer": "To disentangle the clock register from the target register"
     },
     {
-      "question":"The conjugate transpose of a column vector is a:","choices":["Column vector","Row vector","Matrix","Scalar"],"answer":"Row vector"
+      "question": "Which statement about the CNOT gate is true?",
+      "choices": ["It is non-reversible", "It is its own inverse", "It creates entanglement from any input state", "It only operates on single qubits"],
+      "answer": "It is its own inverse"
     },
     {
-      "question":"Which property ensures that quantum probabilities sum to 1?","choices":["Linearity","Unitarity","Hermiticity","Commutativity"],"answer":"Unitarity"
+      "question": "The 'cost function' in the VQE algorithm is calculated by:",
+      "choices": ["Counting the number of gates", "Measuring the expectation value of the Hamiltonian", "Measuring the fidelity of the state", "Calculating the inverse of the matrix"],
+      "answer": "Measuring the expectation value of the Hamiltonian"
     },
     {
-      "question":"What is the result of applying H twice (HH)?","choices":["H","X","I (Identity)","Z"],"answer":"I (Identity)"
+      "question": "What does the code `QuantumCircuit(2, 2)` create?",
+      "choices": ["A circuit with 2 qubits and 0 classical bits", "A circuit with 2 qubits and 2 classical bits", "A register of 4 qubits", "Two separate circuits"],
+      "answer": "A circuit with 2 qubits and 2 classical bits"
     },
     {
-      "question":"Eigenvectors of a Hermitian operator corresponding to different eigenvalues are:","choices":["Parallel","Orthogonal","Identical","Random"],"answer":"Orthogonal"
+      "question": "The Pauli vector sigma is composed of which matrices?",
+      "choices": ["I, X, Y", "X, Y, Z", "H, S, T", "RX, RY, RZ"],
+      "answer": "X, Y, Z"
     },
     {
-      "question":"Any single-qubit unitary gate can be decomposed into rotations around which axes?","choices":["X and Y","Z and Y","X and Z","Any two axes"],"answer":"Z and Y"
+      "question": "In Qiskit, `circuit.barrier()` is used to:",
+      "choices": ["Stop the execution of the code", "Prevent compiler optimizations across the barrier", "Measure the qubits", "Reset the qubits to |0⟩"],
+      "answer": "Prevent compiler optimizations across the barrier"
     },
     {
-      "question":"How many complex numbers are needed to describe the state of 2 qubits?","choices":["2","4","8","16"],"answer":"4"
+      "question": "Which of the following is true for a pure quantum state?",
+      "choices": ["Trace(rho^2) < 1", "Trace(rho^2) = 1", "It cannot be represented by a vector", "It has maximum entropy"],
+      "answer": "Trace(rho^2) = 1"
     },
     {
-      "question":"Which operation creates a uniform superposition from the state |00...0⟩?","choices":["X applied to all qubits","H applied to all qubits","CNOT ladder","QFT"],"answer":"H applied to all qubits"
+      "question": "The rotation operator R_n(theta) for angle theta=0 is equivalent to:",
+      "choices": ["The Pauli-X gate", "The Identity matrix", "The Hadamard gate", "The Zero matrix"],
+      "answer": "The Identity matrix"
     },
     {
-      "question":"In the Qiskit `plot_histogram`, the x-axis represents:","choices":["Probabilities","Time","Measurement outcomes (bitstrings)","Qubit indices"],"answer":"Measurement outcomes (bitstrings)"
+      "question": "What is the output state if a CNOT gate is applied to control |0⟩ and target |1⟩?",
+      "choices": ["|00⟩", "|01⟩", "|10⟩", "|11⟩"],
+      "answer": "|01⟩"
     },
     {
-      "question":"The 'Little-endian' convention in Qiskit means:","choices":["q0 is the most significant bit","q0 is the least significant bit","Bits are read left to right","Bits are inverted"],"answer":"q0 is the least significant bit"
+      "question": "The number of iterations required in Grover's algorithm for N=4 items is approximately:",
+      "choices": ["1", "2", "3", "4"],
+      "answer": "1"
     },
     {
-      "question":"What is the eigenvalues of the Pauli-Z matrix?","choices":["0 and 1","1 and -1","i and -i","1 and 0"],"answer":"1 and -1"
+      "question": "Which classical optimizer is gradient-free and commonly used in VQE?",
+      "choices": ["Adam", "COBYLA", "SGD", "Momentum"],
+      "answer": "COBYLA"
     },
     {
-      "question":"The matrix [[0, -i], [i, 0]] corresponds to which gate?","choices":["X","Y","Z","H"],"answer":"Y"
+      "question": "The eigenvalues of a Hermitian matrix are guaranteed to be:",
+      "choices": ["Integer", "Real", "Imaginary", "Unitary"],
+      "answer": "Real"
     },
     {
-      "question":"In VQE, the Hamiltonian is decomposed into a sum of:","choices":["Unitary matrices","Pauli strings/operators","Vectors","Eigenvalues"],"answer":"Pauli strings/operators"
+      "question": "What is the primary advantage of HHL over classical linear solvers?",
+      "choices": ["It provides the full vector x as output", "It offers exponential speedup in finding the quantum state |x⟩", "It works for non-square matrices directly", "It requires no error correction"],
+      "answer": "It offers exponential speedup in finding the quantum state |x⟩"
     },
     {
-      "question":"The measurement of a qubit collapses its state to:","choices":["A random vector","A basis state","The zero vector","The origin"],"answer":"A basis state"
+      "question": "Which gate is known as the 'square root of NOT'?",
+      "choices": ["H", "S", "SX (or √X)", "T"],
+      "answer": "SX (or √X)"
     },
     {
-      "question":"The probability of result '0' in a Z-measurement is given by:","choices":["|<0|ψ>|","|<0|ψ>|²","<ψ|0>","<0|0>"],"answer":"|<0|ψ>|²"
+      "question": "In the Bloch sphere representation, orthogonal states (like |0⟩ and |1⟩) are separated by an angle of:",
+      "choices": ["90 degrees (pi/2)", "180 degrees (pi)", "45 degrees (pi/4)", "360 degrees (2pi)"],
+      "answer": "180 degrees (pi)"
     },
     {
-      "question":"Which platform is an aggregator of multiple quantum hardware providers?","choices":["IBM Quantum","Amazon Braket","Google Quantum AI","Rigetti Forest"],"answer":"Amazon Braket"
+      "question": "The Toffoli gate is functionally equivalent to:",
+      "choices": ["Controlled-Controlled-NOT", "Controlled-Hadamard", "SWAP", "Fredkin Gate"],
+      "answer": "Controlled-Controlled-NOT"
     },
     {
-      "question":"The inverse of the S gate is:","choices":["S","T","S† (S-dagger)","Z"],"answer":"S† (S-dagger)"
+      "question": "If we measure the state |+⟩ in the computational (Z) basis, the outcome is:",
+      "choices": ["Always 0", "Always 1", "Randomly 0 or 1 with equal probability", "Always +"],
+      "answer": "Randomly 0 or 1 with equal probability"
     },
     {
-      "question":"For n=3, the state |7⟩ in binary is:","choices":["100","011","111","110"],"answer":"111"
+      "question": "For a system of equations Ax=b, if A is not Hermitian, HHL solves this by:",
+      "choices": ["Ignoring the non-Hermitian part", "Using the matrix A^2", "Embedding A into a larger Hermitian block matrix", "Running VQE instead"],
+      "answer": "Embedding A into a larger Hermitian block matrix"
     },
     {
-      "question":"A rotation gate `Ry(theta)` rotates the state around the:","choices":["X-axis","Y-axis","Z-axis","Bloch vector"],"answer":"Y-axis"
+      "question": "In Qiskit, the result `{'101': 100}` implies the measurement of which qubits?",
+      "choices": ["3 qubits", "2 qubits", "101 qubits", "1 qubit"],
+      "answer": "3 qubits"
     },
     {
-      "question":"The gate `ccx` in Qiskit corresponds to:","choices":["CNOT","SWAP","Toffoli","Fredkin"],"answer":"Toffoli"
+      "question": "The probability of a specific outcome in Grover's algorithm varies essentially as:",
+      "choices": ["cos^2((2k+1)theta)", "sin^2((2k+1)theta)", "tan(theta)", "exp(-k)"],
+      "answer": "sin^2((2k+1)theta)"
     },
     {
-      "question":"In QPE, if we use `m` qubits for the clock register, the precision is:","choices":["1/m","1/2^m","1/m^2","m"],"answer":"1/2^m"
+      "question": "Which property allows the exponential of a sum of matrices to be split e^(A+B) = e^A e^B?",
+      "choices": ["If A and B are Unitary", "If A and B Commute", "If A and B are Hermitian", "It is always true"],
+      "answer": "If A and B Commute"
     },
     {
-      "question":"The final step of the HHL algorithm involves:","choices":["Measuring the clock register","Measuring the ancilla qubit","Measuring the input vector","Measuring the Hamiltonian"],"answer":"Measuring the ancilla qubit"
+      "question": "The adjoint of the gate S is:",
+      "choices": ["S", "T", "S_dagger (S†)", "Z"],
+      "answer": "S_dagger (S†)"
     }
   ],
   "writtenAnswer": [
